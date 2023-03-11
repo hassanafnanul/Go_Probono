@@ -1,0 +1,46 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="shortcut icon" href="{%static '/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{%static 'css/mainstyle.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/simple-line-icons.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/responsive_1d_form.min.css'%}"> 
+<link rel="stylesheet" href="{%static 'css/multiselector.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/toastr.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/datetimepicker.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/commonstyle.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/loadscreen.min.css'%}">
+<script src="https://kit.fontawesome.com/fe53be412d.js" crossorigin="anonymous"></script>
+<script src="{%static 'js/jquery.min.js'%}"></script>
+<script src="https://inorganik.github.io/countUp.js/dist/countUp.umd.js"></script>
+<script src="{%static 'js/toastr.min.js'%}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{%block title %}
+{%endblock %}
+{%block style%}
+{%endblock%}
+</head>
+<body class="app sidebar-fixed sidebar-lg-show">
+<div id="load_screen" >
+    <div class="spinner">
+    </div>
+</div>
+{%spaceless%}
+{%block content%}
+{%endblock content%}
+{%endspaceless%}
+{%block js%}
+{%endblock%}
+<script>window.addEventListener("load", function(){var loadScreen = document.getElementById("load_screen");document.body.removeChild(loadScreen);})
+</script>
+<script src="{%static 'js/popper.min.js'%}"></script>
+<script src="{%static 'js/bootstrap.min.js'%}"></script>
+<script src="{%static 'js/coreui.min.js'%}"></script>
+<script src="{%static 'js/multiselector.min.js'%}"></script>
+<script src="{%static 'js/moment.min.js'%}"></script>
+<script src="{%static 'js/datetimepicker.min.js'%}"></script>
+</body>
+</html>

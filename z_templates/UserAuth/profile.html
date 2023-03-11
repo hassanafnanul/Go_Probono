@@ -1,0 +1,102 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>profile</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+{%block content%}
+{% include 'Common/navbar.html'%}
+{%if messages%}
+    {%for message in messages%}
+    <script type="text/javascript">
+      toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+    </script>
+    {%endfor%}
+{%endif%}
+<div class="app-body">
+  {% include 'Common/sidebar.html' with data=cnav %}
+  <main class="main">
+    <div class="card">
+      <div class="card-header" style="text-align: center;">Profile</div>
+        <form style="width:100%;"  method="POST" enctype='multipart/form-data'>
+          {%csrf_token%}
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-12 col-md-7 col-lg-7">
+                <div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="userFullName" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Full Name:</label>
+                    <input type="text" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" value="{{userObj.first_name}}" disabled>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="displayName" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Short Name:</label>
+                    <input type="text" value="{{userObj.last_name}}" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" disabled>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="userName" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Username:</label>
+                    <input type="text" value="{{userObj.username}}" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" disabled>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="useremail" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Email Address:</label>
+                    <input type="email" value="{{userObj.email}}" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" disabled>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="mobileno" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Mobile Number:</label>
+                    <input type="tel" value="{{userdata.Mobile}}" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" disabled>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="company" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Company:</label>
+                    <select id="company" class="form-control col-12 col-md-8 col-lg-8 col-xl-8" disabled>
+                      <option value="">{{userdata.company}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="currentpass" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Current Password:</label>
+                    <input type="password" class="is-invalid form-control col-12 col-md-8 col-lg-8 col-xl-8" id="currentpass" name="currentpass" required placeholder="Enter your old passowrd">
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="newpass" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">New Password:</label>
+                    <input type="password" class="is-invalid form-control col-12 col-md-8 col-lg-8 col-xl-8" id="newpass" name="newpass" required placeholder="Enter your new passowrd">
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <label for="confirmpassword" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label">Confirm Password :</label>
+                    <input type="password" class="is-invalid form-control col-12 col-md-8 col-lg-8 col-xl-8" id="confirmpassword" name="confirmpassword" placeholder="Confirm your new passowrd" required>
+                  </div>
+                  <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                    <div class="col-12 col-md-4 col-lg-4 col-xl-4"></div>
+                    <div class="col-12 col-md-8 col-lg-8 col-xl-8" style="font-size: 11px; color: #20a8d8; padding:0">Password should be minimum 6 characters long and must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 symbol.</div>
+                  </div>
+                </div>
+              </div>
+    
+              <div class="col-sm-12 col-md-5 col-lg-5">
+                <img id="prevw_img" src='{{userdata.ProfilePic.url}}' style="border: 1px solid black; width: 120px; border-radius: 3px;">
+                <div style="display:flex; flex-direction:column;justify-content:space-between;">
+                  <div style="background: #ddffdd;border: 1px solid #04ce04;border-radius: 4px;padding: 10px; margin-top: 30px; margin-bottom: 25px;">
+                    Besides username, you can also login using your verified email address and verified mobile number.
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer" style="display:flex; justify-content:center">
+            <button type="submit" class="submit btn btn-sm btn-primary">
+              <i class="fa fa-dot-circle-o"></i> Update
+            </button>
+            <div style="width:10px;"></div>
+            <button type="reset" class="reset btn btn-sm btn-danger">
+              <i class="fa fa-ban"></i> Reset
+            </button>
+            <div style="width:10px;"></div>
+            <button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();" >
+              <i class="fa fa-angle-left"></i> Back
+            </button>
+          </div>
+        </form>
+    </div>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}

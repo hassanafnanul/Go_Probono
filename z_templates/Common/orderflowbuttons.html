@@ -1,0 +1,72 @@
+
+        <div style="background-color: white; padding: 25px 25px;">
+            {% if status_count.status != 'all_order' %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}">All<br>Orders</a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1" href="{%url 'eShopOrderManagement' %}" style="color: black;">All<br>Orders</a>
+            {% endif %}
+
+
+            {% if status_count.status != 'Pending'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=Pending">Pending <br><b>({{status_count.pending_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1">Pending <br><b>({{status_count.pending_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'Hold'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=Hold">Hold <br><b>({{status_count.hold_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1" >Hold <br><b>({{status_count.hold_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'pop'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'PurchaseOrderProcessing' %}" >PO Generation <br><b>({{status_count.po_generation_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1" >PO Generation <br><b>({{status_count.po_generation_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'po_all' %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'SupplierOrder' %}">All<br>PO</a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1" href="{%url 'SupplierOrder' %}" style="color: black;">All<br>PO</a>
+            {% endif %}
+
+
+            {% if status_count.status != 'po_Pending'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'SupplierOrder' %}?status=Pending" >PO Approval <br><b>({{status_count.po_approval_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1">PO Approval <br><b>({{status_count.po_approval_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'po_Approved'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'SupplierOrder' %}?status=Approved" >Product StockIN <br><b>({{status_count.po_stockin_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1" >Product StockIN <br><b>({{status_count.po_stockin_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'Approved'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=Approved">Waiting For Processing <br><b>({{status_count.approved_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1">Waiting For Processing <br><b>({{status_count.approved_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'Processing'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=Processing">Ready TO Deliver <br><b>({{status_count.processing_count}})</b></a>
+            {% else  %}
+            <a class="btn btn-sm btn-outline-secondary m-1">Ready TO Deliver <br><b>({{status_count.processing_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'OnTheWay'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=OnTheWay">Complete Delivery <br><b>({{status_count.onTheWay_count}})</b></a>
+            {% else %}
+            <a class="btn btn-sm btn-outline-secondary m-1">Complete Delivery <br><b>({{status_count.onTheWay_count}})</b></a>
+            {% endif %}
+
+            {% if status_count.status != 'Delivered'  %}
+            <a class="btn btn-sm btn-secondary m-1" href="{%url 'eShopOrderManagement' %}?status=Delivered">Order Completion <br><b>({{status_count.delivered_count}})</b></a>
+            {% else %}
+            <a class="btn btn-sm btn-outline-secondary m-1">Order Completion <br><b>({{status_count.delivered_count}})</b></a>
+            {% endif %}
+            
+        </div>
+

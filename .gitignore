@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+/media
+/media/
+.vscode
+vscode
+Pipfile.lock
+Pipfile
+.idea/
+env_goprobono/
+static/

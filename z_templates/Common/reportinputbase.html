@@ -1,0 +1,41 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="shortcut icon" href="{%static '/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{%static 'css/mainstyle.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/simple-line-icons.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/responsive_1d_form.min.css'%}"> 
+<link rel="stylesheet" href="{%static 'css/multiselector.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/toastr.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/datetimepicker.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/commonstyle.min.css'%}">
+<link rel="stylesheet" href="{%static 'css/loadscreen.min.css'%}">
+<script src="https://kit.fontawesome.com/fe53be412d.js" crossorigin="anonymous"></script>
+<script src="{%static 'js/jquery.min.js'%}"></script>
+<script src="{%static 'js/toastr.min.js'%}"></script>
+{%block title %}
+{%endblock %}
+{%block style%}
+{%endblock%}
+</head>
+<body class="app header-fixed sidebar-fixed sidebar-lg-show" id="mainbody">
+<div id="load_screen"><div class="spinner"></div></div>
+{%spaceless%}
+{%block content%}
+{%endblock content%}
+{%endspaceless%}
+{%block js%}
+{%endblock%}
+<script>window.addEventListener("load", function(){var loadScreen = document.getElementById("load_screen");document.body.removeChild(loadScreen);})
+</script>
+<script src="{%static 'js/popper.min.js'%}"></script>
+<script src="{%static 'js/bootstrap.min.js'%}"></script>
+<script src="{%static 'js/coreui.min.js'%}"></script>
+<script src="{%static 'js/multiselector.min.js'%}"></script>
+<script src="{%static 'js/moment.min.js'%}"></script>
+<script src="{%static 'js/datetimepicker.min.js'%}"></script>
+</body>
+</html>
