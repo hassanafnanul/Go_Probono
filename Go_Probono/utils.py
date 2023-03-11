@@ -8,7 +8,7 @@ from inspect import getargspec
 
 from ModuleManagement.models import Module, Task
 # from Category.models import Category
-# from RoleAssignment.models import UserWithTask
+from RoleAssignment.models import UserWithTask
 # from Item.models import Category
 # from MarketingManagement.models import URLs
 
@@ -17,6 +17,59 @@ from ModuleManagement.models import Module, Task
 
 
 fronendURL = 'http://127.0.0.1:4200'
+
+
+def view_permission_required(function):
+    def wrap(request, *args, **kwargs):
+        argspec = getargspec(function)
+        CurrentUser = request.user
+        print(CurrentUser.username, argspec.defaults[0], argspec.defaults[1])
+        try:
+            assigned_priv = UserWithTask.objects.get(task__task_url=argspec.defaults[0], user=CurrentUser)
+        except:
+            messages.warning(request, f'you are not allowed to access this route')
+            return redirect('gohome')
+        redflag = True
+        if argspec.defaults[1] == 'main':
+            redflag = False
+        elif argspec.defaults[1] == 'view' and assigned_priv.view_task:
+            redflag = False
+        elif argspec.defaults[1] == 'add' and assigned_priv.add_task:
+            redflag = False
+        elif argspec.defaults[1] == 'edit' and assigned_priv.edit_task:
+            redflag = False
+        elif argspec.defaults[1] == 'delete' and assigned_priv.delete_task:
+            redflag = False
+        elif argspec.defaults[1] == 'cancel' and assigned_priv.cancel_task:
+            redflag = False
+        elif argspec.defaults[1] == 'print' and assigned_priv.print_task:
+            redflag = False
+        elif argspec.defaults[1] == 'reset' and assigned_priv.reset_task:
+            redflag = False
+        elif argspec.defaults[1] == 'find' and assigned_priv.find_task:
+            redflag = False
+        elif argspec.defaults[1] == 'save' and assigned_priv.save_task:
+            redflag = False
+        if redflag:
+            messages.warning(request, f'you are not allowed to access this route')
+            return redirect('gohome')
+        else:
+            return function(request, *args, **kwargs)
+
+    return wrap
+
+
+def DetailPermissions(request, Task_Name):
+    assigned_priv = UserWithTask.objects.get(task__name=Task_Name, user=request.user)
+    return assigned_priv
+
+
+def PermittedSiblingTasks(request, Task_Name):
+    moduleids = Task.objects.filter(name=Task_Name).values('module_id')
+    tasks = Task.objects.filter(module_id__in=moduleids).values('id')
+    uwts = UserWithTask.objects.filter(task_id__in=tasks,user_id=request.user.id).values('id','task_id','task__name','task__task_url')
+
+    return uwts
 
 
 def UserCustomNav(request):

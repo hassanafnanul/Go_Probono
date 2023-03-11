@@ -21,15 +21,15 @@ def randomStringGenerator():
 
 
 def upload_location(instance, filename):
-    extension = filename.split(".")[1]
+    extension = filename.split(".")[-1]
     changed_file_name = randomStringGenerator()
-    return "%s/%s%s" % ("userimg", changed_file_name, extension)
+    return "%s/%s%s" % ("media/userimg", changed_file_name, extension)
 
 
 class UserWithRole(models.Model):
     user = models.OneToOneField(User,on_delete=models.SET_NULL,null=True,blank=True)
     role = models.ForeignKey(Role,on_delete=models.SET_NULL,null=True,blank=True)
-    picture = models.ImageField(upload_to=upload_location, default='userimg/default.png')
+    picture = models.ImageField(upload_to=upload_location, default='media/userimg/default.png')
     mobile = models.CharField(max_length=15,null=True,blank=True)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)

@@ -6,6 +6,8 @@ urlpatterns = [
 
     path('', include('UserAuthentication.urls')),
 
-    
+    path('userauth/', include('UserAuthentication.urls')),
+
+    path('module-task/', include('ModuleManagement.urls')),
 
 ]

@@ -65,18 +65,6 @@
                     <div class="card-header">
                         <strong>Order Flow</strong>
                     </div>
-                    
-                    {% include 'Common/orderflowbuttons.html'%}
-
-                    <div class="card-header">
-                        <strong>Pending Issues</strong>
-                    </div>
-                    <div class="card-body">
-                        <a class="btn btn-sm btn-primary m-1 p-2" href="{%url 'eShopOrderManagement' %}?status=Pending"> Pending Orders <b>({{pendingorders}})</b></a>
-                        <a class="btn btn-sm btn-primary m-1 p-2" href="{%url 'WarrantyManagement' %}?status=Pending"> Pending Warranties <b>({{pendingWarranties}})</b></a>
-                        <a class="btn btn-sm btn-primary m-1 p-2" href="{%url 'RequestItemManagement' %}?status=PENDING" > Pending Requested Items <b>({{pendingRItems}})</b></a>
-                        <a class="btn btn-sm btn-primary m-1 p-2" href="{%url 'BillManagement' %}?status=Pending" > Pending Bills <b>({{pendingBills}})</b></a>
-                    </div>
 
 
                     {% if order_notes %}
