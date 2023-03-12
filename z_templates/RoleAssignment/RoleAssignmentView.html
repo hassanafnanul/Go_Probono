@@ -1,0 +1,92 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>User Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+	.row {
+		padding: 5px 0px;
+	}
+</style>
+{%endblock%}
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'ModuleManagement' %}">Module Management</a> / <span style="color: #000000">Details</span></div>
+        
+
+		{% include 'Common/taskbuttons.html'%}
+
+		{%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+		<div class="card" style="margin: 15px;" >
+			<div class="card-header" style="text-align: center;">
+				<strong>Detailed Information</strong>
+			</div>
+			<div class="card-body" style="display: flex; flex-wrap: wrap-reverse;">
+				<div class="form_container_div">
+					<div class="row">
+						<div class="col-4" style="font-weight: 600;">Name</div>
+						<div class="col-1" style="font-weight: 600;">:</div>
+						<div class="col-6">{{userObj.first_name}}</div>
+					</div>
+					<!--          <div class="row">-->
+					<!--            <div class="col-4" style="font-weight: 600;">Short Name</div>-->
+					<!--            <div class="col-1" style="font-weight: 600;">:</div>-->
+					<!--            <div class="col-6">{{userObj.last_name}}</div>-->
+					<!--          </div>-->
+					<div class="row">
+						<div class="col-4" style="font-weight: 600;">Username</div>
+						<div class="col-1" style="font-weight: 600;">:</div>
+						<div class="col-6">{{userObj.username}}</div>
+					</div>
+					<div class="row">
+						<div class="col-4" style="font-weight: 600;">Mobile No</div>
+						<div class="col-1" style="font-weight: 600;">:</div>
+						<div class="col-6">{{userwithrole.mobile}}</div>
+					</div>
+					<div class="row">
+						<div class="col-4" style="font-weight: 600;">Email</div>
+						<div class="col-1" style="font-weight: 600;">:</div>
+						<div class="col-6">{{userObj.email}}</div>
+					</div>
+					<div class="row">
+						<div class="col-4" style="font-weight: 600;">Role</div>
+						<div class="col-1" style="font-weight: 600;">:</div>
+						<div class="col-6">
+							<!--              {%for role in roles%}-->
+							<!--              <span style="background: #b1e5f1; padding: 3px; margin-right: 5px;">{{role.name}}</span>-->
+							<!--              {%endfor%}-->
+							<span
+								style="background: #b1e5f1; padding: 3px; margin-right: 5px;">{{userwithrole.role.name}}</span>
+						</div>
+					</div>
+					<!--          <div class="row">-->
+					<!--            <div class="col-4" style="font-weight: 600;">Company</div>-->
+					<!--            <div class="col-1" style="font-weight: 600;">:</div>-->
+					<!--            <div class="col-6">{{company}}</div>-->
+					<!--          </div>-->
+				</div>
+				<div class=""><img src="{{userwithrole.ProfilePic.url}}" alt="profile pic" width="200px" height="200px">
+				</div>
+			</div>
+			<div class="card-footer" style="display:flex; ">
+				<button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+					<i class="fa fa-angle-left"></i> Back
+				</button>
+			</div>
+		</div>
+	</main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+{%endblock%}

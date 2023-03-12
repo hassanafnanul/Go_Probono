@@ -10,10 +10,10 @@ body,html{height:100%;overflow-x:hidden;background-color:#eee;}
 #load_screen{position:fixed;top:0;opacity:1;width:100%;height:100vh;z-index:9999;display:flex;justify-content:center;align-items:center;background:#fff}
 .primarybg {background-color: #C47008;}
 .secondarybg {background-color: #0a8e3f}
-.primarytext {color:#6500a5;}
+.primarytext {color:#6F2FA1;}
 .secondarytext {color: #0a8e3f}
 a {color: #C47008;}
-.sidebar {background-color: #056683;}
+.sidebar {background-color: #6F2FA1;}
 .sidebar .nav-link{padding:0;color: white;}
 .nav-link{padding:.5rem 1rem!important}
 .sidebar .nav-link.active {font-weight: bold;background-color: transparent;color: white;}

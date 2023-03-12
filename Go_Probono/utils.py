@@ -59,8 +59,8 @@ def view_permission_required(function):
     return wrap
 
 
-def DetailPermissions(request, Task_Name):
-    assigned_priv = UserWithTask.objects.get(task__name=Task_Name, user=request.user)
+def DetailPermissions(request, Task_url):
+    assigned_priv = UserWithTask.objects.get(task__task_url=Task_url, user=request.user)
     return assigned_priv
 
 

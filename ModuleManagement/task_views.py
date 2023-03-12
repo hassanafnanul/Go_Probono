@@ -8,7 +8,7 @@ from Go_Probono.utils import PermittedSiblingTasks, UserCustomNav, DetailPermiss
 
 @login_required
 @view_permission_required
-def TaskManagement(request, task_name="Task Management", action="main"):
+def TaskManagement(request, task_url="TaskManagement", action="main"):
     all_tasks = Task.objects.select_related('module').all().order_by('order')
     paginator = Paginator(all_tasks, 100)
     page = request.GET.get('page')
@@ -16,15 +16,15 @@ def TaskManagement(request, task_name="Task Management", action="main"):
     context = {
         'Tsks': tasks,
         'cnav': UserCustomNav(request),
-        'privilege': DetailPermissions(request, 'Task Management'),
-        'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
+        'privilege': DetailPermissions(request, task_url),
+        'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
     return render(request, 'ModuleManagement/TaskManagement.html', context)
 
 
 @login_required
 @view_permission_required
-def TaskCreate(request, task_name="Task Management", action="add"):
+def TaskCreate(request, task_url="TaskManagement", action="add"):
     if (request.method == 'POST'):
         r = request.POST
         name = r.get('element_name')
@@ -75,25 +75,25 @@ def TaskCreate(request, task_name="Task Management", action="add"):
         context = {
             'mdls': Module.objects.all(),
             'cnav': UserCustomNav(request),
-            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
+            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
         }
         return render(request, 'ModuleManagement/TaskCreate.html', context)
 
 
 @login_required
 @view_permission_required
-def TaskView(request, id, task_name="Task Management", action="view"):
+def TaskView(request, id, task_url="TaskManagement", action="view"):
     context = {
         'Task': get_object_or_404(Task, id=id),
         'cnav': UserCustomNav(request),
-        'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
+        'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
     return render(request, 'ModuleManagement/TaskView.html', context)
 
 
 @login_required
 @view_permission_required
-def TaskEdit(request, id, task_name="Task Management", action="edit"):
+def TaskEdit(request, id, task_url="TaskManagement", action="edit"):
     if (request.method == 'POST'):
         r = request.POST
         name = r.get('element_name')
@@ -147,6 +147,6 @@ def TaskEdit(request, id, task_name="Task Management", action="edit"):
             'task': task,
             'mdls': Module.objects.all(),
             'cnav': UserCustomNav(request),
-            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
+            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
         }
         return render(request, 'ModuleManagement/TaskEdit.html', context)

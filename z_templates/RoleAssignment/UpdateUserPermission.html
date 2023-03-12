@@ -1,0 +1,199 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>User Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+	.clsp-toggle::after {
+		display: inline-block;
+		margin-left: .255em;
+		vertical-align: .255em;
+		content: "";
+		border-top: .3em solid;
+		border-right: .3em solid transparent;
+		border-bottom: 0;
+		border-left: .3em solid transparent;
+	}
+</style>
+{%endblock%}
+{%block content%}
+{% include 'Common/navbar.html'%}
+<div class="app-body">
+	{% include 'Common/sidebar.html' with data=cnav %}
+	<main class="main">
+		<div class="page_header"><a href="{%url 'RoleManagement'%}">User Management</a><span style="color: black;"> / Permissions update</span></div>
+		
+
+		{% include 'Common/taskbuttons.html'%}
+	
+		{%if messages%}
+		{%for message in messages%}
+		<script type="text/javascript">
+			toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+		</script>
+		{%endfor%}
+		{%endif%}
+		<div class="card">
+			<div class="card-header" style="text-align:center;">
+				<strong>Detailed Information</strong>
+			</div>
+			<form method="post">
+				{%csrf_token%}
+				<div class="card-body" style="display:flex;justify-content:center;">
+					<div class="container">
+						{%for cm in mdls%}
+						<div style="margin-bottom: 10px; ">
+							<button class="btn clsp-toggle" style="width: 100%; text-align: start; background: rgb(51, 51, 111); color: white;  border-radius: 0%;"
+								type="button" data-toggle="collapse" data-target="#collapse{{cm.id}}"
+								aria-expanded="false" aria-controls="collapse{{cm.id}}">
+								Module: {{cm.name}}
+							</button>
+							<div class="collapse" id="collapse{{cm.id}}"
+								style="background: rgb(91, 91, 155);color: white;">
+								{%for cr in task_list%}
+								{%if cr.moduleId == cm.id%}
+								<div class="row"
+									style="margin-left:0; margin-right:0; padding-top:5px; padding-bottom: 5px;">
+									<div class="col-12 col-md-4 col-lg-3 col-xl-3">{{cr.taskName}}</div>
+									<div class="col-12 col-md-8 col-lg-9 col-xl-9">
+										<div class="form-check-inline d-flex flex-wrap">
+											{%if cr.view and cr.view_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="view_checked"
+													name="{{cr.taskName}}_element_task" checked> View
+											</div>
+											{%elif cr.view and not cr.view_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="view_checked"
+													name="{{cr.taskName}}_element_task"> View
+											</div>
+											{%endif%}
+
+											{%if cr.add and cr.add_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="add_checked"
+													name="{{cr.taskName}}_element_task" checked> Add
+											</div>
+											{%elif cr.add and not cr.add_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="add_checked"
+													name="{{cr.taskName}}_element_task"> Add
+											</div>
+											{%endif%}
+
+											{%if cr.save and cr.save_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="save_checked"
+													name="{{cr.taskName}}_element_task" checked> Save
+											</div>
+											{%elif cr.save and not cr.save_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="save_checked"
+													name="{{cr.taskName}}_element_task"> Save
+											</div>
+											{%endif%}
+
+											{%if cr.edit and cr.edit_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="edit_checked"
+													name="{{cr.taskName}}_element_task" checked> Edit
+											</div>
+											{%elif cr.edit and not cr.edit_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="edit_checked"
+													name="{{cr.taskName}}_element_task"> Edit
+											</div>
+											{%endif%}
+
+											{%if cr.delete and cr.delete_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="delete_checked"
+													name="{{cr.taskName}}_element_task" checked> Delete
+											</div>
+											{%elif cr.delete and not cr.delete_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="delete_checked"
+													name="{{cr.taskName}}_element_task"> Delete
+											</div>
+											{%endif%}
+
+											{%if cr.print and cr.print_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="print_checked"
+													name="{{cr.taskName}}_element_task" checked> Print
+											</div>
+											{%elif cr.print and not cr.print_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="print_checked"
+													name="{{cr.taskName}}_element_task"> Print
+											</div>
+											{%endif%}
+
+											{%if cr.cancel and cr.cancel_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="cancel_checked"
+													name="{{cr.taskName}}_element_task" checked> Cancel
+											</div>
+											{%elif cr.cancel and not cr.cancel_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="cancel_checked"
+													name="{{cr.taskName}}_element_task"> Cancel
+											</div>
+											{%endif%}
+
+											{%if cr.reset and cr.reset_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="reset_checked"
+													name="{{cr.taskName}}_element_task" checked> Reset
+											</div>
+											{%elif cr.reset and not cr.reset_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="reset_checked"
+													name="{{cr.taskName}}_element_task"> Reset
+											</div>
+											{%endif%}
+
+											{%if cr.find and cr.find_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="find_checked"
+													name="{{cr.taskName}}_element_task" checked> Find
+											</div>
+											{%elif cr.find and not cr.find_c%}
+											<div class="form-check pr-3">
+												<input class="form-check-input" type="checkbox" value="find_checked"
+													name="{{cr.taskName}}_element_task"> Find
+											</div>
+											{%endif%}
+										</div>
+									</div>
+								</div>
+								{%endif%}
+								{%endfor%}
+							</div>
+						</div>
+						{%endfor%}
+					</div>
+				</div>
+				<div class="card-footer" style="display:flex; justify-content:center">
+					<button type="submit" class="submit btn btn-sm btn-primary">
+						<i class="fa fa-dot-circle-o"></i> Submit
+					</button>
+					<div style="width:10px;"></div>
+					<button type="reset" class="reset btn btn-sm btn-danger">
+						<i class="fa fa-ban"></i> Reset
+					</button>
+					<div style="width:10px;"></div>
+					<button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();">
+						<i class="fa fa-angle-left"></i> Back
+					</button>
+				</div>
+			</form>
+		</div>
+	</main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

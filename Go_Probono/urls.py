@@ -10,4 +10,10 @@ urlpatterns = [
 
     path('module-task/', include('ModuleManagement.urls')),
 
+    path('audit/',include('LogWithAudit.urls')),
+
+    path('rolemanagement/',include('RoleCreation.urls')),
+
+    path('usermanagement/',include('RoleAssignment.urls')),
+
 ]
