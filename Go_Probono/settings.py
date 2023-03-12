@@ -32,7 +32,8 @@ DEVELOPED_APPS = [
     'ModuleManagement',
     'RoleAssignment',
     'RoleCreation',
-    'LogWithAudit'
+    'LogWithAudit',
+    'Customer'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + DEVELOPED_APPS

@@ -70,7 +70,6 @@ def IsPasswordValid(password):
     return True
 
 
-
 @login_required
 def UpdateProfile(request):
     user = request.user

@@ -1,0 +1,76 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Customer Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+{%block content%}
+{% include 'Common/navbar.html'%}
+<div class="app-body">
+  {% include 'Common/sidebar.html' with data=cnav %}
+  <main class="main">
+    <div class="page_header"><a href="{%url 'CustomerManagement'%}">Customer Management</a> / Edit</div>
+    {%if messages%}
+      {%for message in messages%}
+      <script type="text/javascript">
+        toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+      </script>
+      {%endfor%}
+    {%endif%}
+    <form method="post" autocomplete="off">
+      {%csrf_token%}
+      <div class="row">
+        <div class="col-12 col-lg-6 col-xl-6">
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="cusname">Name :</label>
+            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="cus_name" id="cusname" placeholder="Enter customer name" value="{{c.name}}" required>
+          </div>
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="cusnumber">Mobile No :</label>
+            <input type="text" pattern="01[3-9]{1}[0-9]{8}" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="cus_number" id="cusnumber" placeholder="Enter mobile number" value="{{c.mobile}}" readonly required>
+          </div>
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="cusemail">Email :</label>
+            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="cus_email" id="cusemail" placeholder="(optional)" value="{{c.email}}">
+          </div>
+        </div>
+        <div class="col-12 col-lg-6 col-xl-6">
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="apartment">House No :</label>
+            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="apartment" id="apartment" placeholder="(optional)" value="{{c.apartment}}">
+          </div>
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="street">Street Address :</label>
+            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="street" id="street" placeholder="Enter street address" required value="{{c.street_address}}">
+          </div>
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="city">City :</label>
+            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="city" id="city" required placeholder="Enter city name" value="{{c.city}}">
+          </div>
+          <div class="form-group row mx-0">
+            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="country">Country :</label>
+            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="country" id="country" required placeholder="Enter country name" value="{{c.country}}">
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-2">
+        <button type="submit" class="submit btn btn-sm btn-primary">
+          <i class="fa fa-dot-circle-o"></i> Submit
+        </button>
+        <div style="width:10px;"></div>
+        <button type="reset" class="reset btn btn-sm btn-danger">
+          <i class="fa fa-ban"></i> Reset
+        </button>
+        <div style="width:10px;"></div>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();" >
+          <i class="fa fa-angle-left"></i> Back
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock content%}
+
+{%block js%}
+{%endblock js%}
