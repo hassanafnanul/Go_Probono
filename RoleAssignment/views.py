@@ -410,7 +410,15 @@ def UpdateUserPermission(request, id, task_url="UserManagement", action="save"):
             if 'find_checked' in Task_list:
                 find_T = 1
             if view_T or add_T or save_T or edit_T or delete_T or cancel_T or print_T or reset_T or find_T:
-                obj, created = UserWithTask.objects.update_or_create(user_id=userid, task=t, defaults={"view_task": view_T,                                                                              "find_task": find_T})
+                obj, created = UserWithTask.objects.update_or_create(user_id=userid, task=t,
+                                                                     defaults={"view_task": view_T,
+                                                                               "add_task": add_T, "save_task": save_T,
+                                                                               "edit_task": edit_T,
+                                                                               "delete_task": delete_T,
+                                                                               "print_task": print_T,
+                                                                               "cancel_task": cancel_T,
+                                                                               "reset_task": reset_T,
+                                                                               "find_task": find_T})
             else:
                 UserWithTask.objects.filter(user_id=userid, task=t).delete()
         audit_update(request, "Edit", "UserWithTask", "UpdateUserPermission", "updated user permissions", "")

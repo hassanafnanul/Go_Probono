@@ -4,6 +4,8 @@ from django.urls import path, include
 urlpatterns = [
     path('theadmin/', admin.site.urls),
 
+    path('api/',include('API.urls')),
+
     path('', include('UserAuthentication.urls')),
 
     path('userauth/', include('UserAuthentication.urls')),
@@ -15,5 +17,7 @@ urlpatterns = [
     path('rolemanagement/',include('RoleCreation.urls')),
 
     path('usermanagement/',include('RoleAssignment.urls')),
+
+    path('customer/',include('Customer.urls')),
 
 ]

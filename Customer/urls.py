@@ -7,5 +7,5 @@ urlpatterns=[
     path('edit/<int:id>/',views.CustomerEdit,name='CustomerEdit'),
 
 
-    path('send-email/',views.SendEmail,name='SendEmail')
+    # path('send-email/',views.SendEmail,name='SendEmail')
 ]
