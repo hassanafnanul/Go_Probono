@@ -16,7 +16,7 @@ from UserAuthentication.models import Customer, OTP
 
 
 def generate_login_token():
-    name = "L"
+    name = "GP"
     name = name + str(random.randint(10000, 99999))
     letters = string.ascii_uppercase
     name = name + ''.join(random.choice(letters) for i in range(4))
@@ -88,14 +88,15 @@ def TimeExpired(time, limit):  # not implemented
 
 '''This is simple registration API. Used at the time of registration.'''
 
-
+# DONE
 @csrf_exempt
 def Register(request):  # DONE
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
-        mobile = json_data['phone']
+        mobile = json_data['mobile']
         email = json_data['email']
+        gender = json_data['gender']
         password = json_data['password']
 
         if Customer.objects.filter(mobile=mobile).exists():
@@ -104,24 +105,38 @@ def Register(request):  # DONE
                 'message': 'Mobile already exists'
             }
             return JsonResponse(data, safe=True)
-        if not OTP.objects.get(contact=mobile).is_verified:
+
+        if gender not in ['Male', 'Female', 'Other']:
             data = {
                 'success': False,
-                'message': 'OTP not verified'
+                'message': 'Gender data error'
             }
             return JsonResponse(data, safe=True)
+        
 
-        # street_address = json_data['address']
-        # country = 'Bangladesh'#json_data['country']
-        # district = json_data['district']
-        # postcode = json_data['postcode']
+        # ------------- OTP varification ------------
+        # try:
+        #     otp_varified = OTP.objects.get(contact=mobile).is_verified
+        # except:
+        #     otp_varified = False
+
+        # if not otp_varified:
+        #     data = {
+        #         'success': False,
+        #         'message': 'OTP not verified'
+        #     }
+        #     return JsonResponse(data, safe=True)
+        # ------------- OTP varification ------------
+
+
         try:
             customer = Customer(name=name,
                                 mobile=mobile, email=email, password=make_password(password),
-                                cardno=generate_login_token())
+                                gender = gender, cardno=generate_login_token())
             customer.save()
             data = {
-                'success': True
+                'success': True,
+                'message': 'Customer created successfully.'
             }
         except:
             data = {
@@ -177,15 +192,15 @@ def UserExists(request):  # DONE
 
 '''This is mainly login API. Used at the time of login.'''
 
-
+#DONE
 @csrf_exempt
-def UserVerification(request):  # DONE
+def UserVerification(request):
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
-        token = json_data['token']
+        mobile = json_data['mobile']
         password = json_data['password']
-        if Customer.objects.filter(mobile=token).exists():
-            customer = Customer.objects.filter(mobile=token)[0]
+        if Customer.objects.filter(mobile=mobile).exists():
+            customer = Customer.objects.filter(mobile=mobile)[0]
             if check_password(password, customer.password):
                 data = {
                     'success': True,
@@ -196,8 +211,8 @@ def UserVerification(request):  # DONE
                     'success': False,
                     'token': None,
                 }
-        elif Customer.objects.filter(cardno=token).exists():
-            customer = Customer.objects.get(cardno=token)
+        elif Customer.objects.filter(cardno=mobile).exists():
+            customer = Customer.objects.get(cardno=mobile)
             if check_password(password, customer.password):
                 data = {
                     'success': True,
@@ -570,18 +585,33 @@ def MobileOTPResend(request):
         HttpResponseForbidden('Allowed only via POST')
 
 
+#DONE
 @csrf_exempt
 def UpdateProfile(request):
     if request.method == 'POST':
+        token = request.headers['token']
+
         json_data = json.loads(str(request.body, encoding='utf-8'))
-        token = json_data['token']
         name = json_data['name']
-        mobile = json_data['phone']
+        # mobile = json_data['phone']
         email = json_data['email']
-        password = json_data['password']
+        # password = json_data['password']
+        gender = json_data['gender']
+        apartment = json_data['apartment']
         street_address = json_data['street_address']
         city = json_data['city']
+        country = json_data['country']
+        latitude = json_data['latitude']
+        longitude = json_data['longitude']
         # country = 'Bangladesh'#json_data['country']
+
+        if gender not in ['Male', 'Female', 'Other']:
+            data = {
+                'success': False,
+                'message': 'Gender data invalid.'
+            }
+            return JsonResponse(data, safe=True)
+        
         try:
             customer = Customer.objects.get(cardno=token)
             # token = generate_login_token()
@@ -589,27 +619,32 @@ def UpdateProfile(request):
             customer.name = name
             # customer.mobile = mobile
             customer.email = email
+            customer.apartment = apartment
             customer.street_address = street_address
             customer.city = city
-            if password is not None and password != '':
-                customer.password = make_password(password)
+            customer.country = country
+            customer.latitude = latitude
+            customer.longitude = longitude
+            # if password is not None and password != '':
+            #     customer.password = make_password(password)
             customer.save()
             data = {
-                'success': True
+                'success': True,
+                'message': 'Customer details updated successfully.'
                 # 'new_token': token
             }
             return JsonResponse(data, safe=False)
         except Customer.DoesNotExist:
             data = {
-                'success': False
-                # 'new_token': None
+                'success': False,
+                'message': 'Customer details update failed.'
             }
             return JsonResponse(data, safe=True)
     else:
         HttpResponseForbidden('Allowed only via POST')
 
 
-
+#DONE
 class CustomerProfile(APIView):
     def get_object(self, token):
         try:
@@ -618,7 +653,11 @@ class CustomerProfile(APIView):
             raise Http404
 
     def get(self, request, format=None):
-        token = request.headers['token'].split(' ')[1]
+        token = request.headers['token']
         customer = self.get_object(token)
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
+
+
+
+

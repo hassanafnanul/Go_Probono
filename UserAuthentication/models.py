@@ -10,7 +10,10 @@ class Customer(models.Model):
     street_address = models.CharField(max_length=300, default="")
     city = models.CharField(max_length=300, default="")
     country = models.CharField(max_length=300, default="")
+    latitude = models.CharField(max_length=1000, null=True)
+    longitude = models.CharField(max_length=1000, null=True)
     cardno = models.CharField(max_length=250, default="")
+    gender = models.CharField(max_length=15, default="")
     customer_type = models.PositiveSmallIntegerField(default=0)  # 0-ecommerce
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
