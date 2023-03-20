@@ -27,16 +27,23 @@ INITIAL_APPS = [
     'django.contrib.staticfiles',
 ]
 
+THIRD_PARTY_APPS = [
+    'ckeditor',
+    'ckeditor_uploader'
+]
+
 DEVELOPED_APPS = [
     'UserAuthentication',
     'ModuleManagement',
     'RoleAssignment',
     'RoleCreation',
     'LogWithAudit',
-    'Customer'
+    'Customer',
+    'LawManagement',
+    'SliderManagement'
 ]
 
-INSTALLED_APPS = INITIAL_APPS + DEVELOPED_APPS
+INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,6 +113,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 3600
+SESSION_SAVE_EVERY_REQUEST = True
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -120,6 +134,11 @@ USE_L10N = True
 USE_TZ = True
 
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_REQUIRE_STAFF=False
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -127,6 +146,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     Path.joinpath(BASE_DIR, "static"),
 )
+
+
+MEDIA_ROOT=Path.joinpath(BASE_DIR, "media")
+MEDIA_URL='/media/'
+FILES_ROOT=Path.joinpath(BASE_DIR, "files")
+FILES_URL='/files/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

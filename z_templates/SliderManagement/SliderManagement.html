@@ -1,0 +1,159 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Slider Management</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header">Slider Management</div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px ;">
+            <div style="display: flex;">
+                {%if privilege and privilege.add_task%}
+                <a class="btn btn-primary btn-sm" href="{%url 'SliderCreate'%}">
+                    <i class="icon-plus"></i> Add
+                </a>
+                {%endif%}
+                <div style="width: 10px;"></div>
+                <a class="btn btn-success btn-sm" href="{%url 'SliderManagement'%}">
+                    <i class="icon-refresh"></i> Reload
+                </a>
+            </div>
+            <form method="GET" style="display: flex; margin-top: 10px;">
+                <input type="text" name="slider" class="form-control form-control-sm" placeholder="Enter Slider Name"
+                       value="{{request.GET.slider}}">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+
+            <div class="mt-3">Total: <b>{{sliders.paginator.count}}</b> Sliders</div>
+            <div class="table-responsive-sm" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+                <table class="table table-sm bg-white mt-3">
+                    <thead>
+                    <tr>
+                        <th>Slider Name</th>
+                        <th>Slider Type</th>
+                        <th>Order</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Live Now</th>
+                        <th>Enable Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for slider in sliders %}
+                    
+                    {% if slider.isLive %}
+                    <tr style="color: rgb(32, 133, 82);">
+                    {% elif slider.is_archived %}
+                    <tr style="color: gray;">
+                    {% elif slider.is_archived %}
+                    <tr style="color: black;">
+                    {% endif %}
+                        <td>{{slider.name}}</td>
+                        {%if slider.slider_type == 0 %}
+                        <td>Slider Image</td>
+                        {%elif slider.slider_type == 1 %}
+                        <td><i>Slider Slider</i></td>
+                        {%elif slider.slider_type == 2 %}
+                        <td><u>Grid Slider</u></td>
+                        {%else%}
+                        <td><b>&#x2717;</b> <!-- No  --></td>
+                        {%endif%}
+                        <td style="text-align: center;">{{slider.order}}</td>
+                        <td>{{slider.start_date}}</td>
+                        <td>{{slider.end_date}}</td>
+                        <td style="text-align: center;">
+                            {%if slider.isLive%}
+                            <b>&#x2713;</b> <!-- YES -->
+                            {% else %}
+                            <b>&#x2717;</b> <!-- No  -->
+                            {%endif%}
+                        </td>
+                        <td style="text-align: center;">
+                            {%if slider.is_archived%}
+                            <b>&#x2717;</b> <!-- No  -->
+                            {% else %}
+                            <b>&#x2713;</b> <!-- YES -->
+                            {%endif%}
+                        </td>
+                        <td>
+                            {%if privilege and privilege.view_task%}
+                            <a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'SliderView' slider.id %}">
+                                <i class="icon-eye"></i> View
+                            </a>
+                            {%endif%}
+                            {%if privilege and privilege.edit_task%}
+                            <a class="btn btn-sm btn-outline-danger mr-1" href="{%url 'SliderEdit' slider.id %}">
+                                <i class="icon-notebook"></i> Edit
+                            </a>
+                            {%endif%}
+                            <!-- {%if privilege and privilege.edit_task%}
+                            <a class="btn btn-sm btn-outline-success" href="{%url 'SliderItemAdd' slider.id %}">
+                                <i class="icon-notebook"></i> Add Item
+                            </a>
+                            {%endif%} -->
+                            {%if privilege and privilege.edit_task%}
+                            <a class="btn btn-sm btn-outline-success" href="{%url 'SliderItemBulkAdd' slider.id %}">
+                                <i class="fa fa-edit"></i> Slider Item Add
+                            </a>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {%empty%}
+                    <tr class="odd">
+                        <td colspan="6" style="text-align: center;">No data available in table</td>
+                    </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% comment %} {% include 'Common/pagination.html' with data=sliders %} {% endcomment %}
+        <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
+            <span class="step-links">
+                {% if sliders.has_previous %}
+                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">&laquo; first</a>
+                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.previous_page_number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">&lsaquo; previous</a>
+                {% endif %}
+        
+                {%for num in sliders.paginator.page_range%}
+                    {%if num == sliders.number %}
+                      <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ sliders.number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">{{num}}</a>
+                    {%elif num < sliders.number|add:'3' and num > sliders.number|add:'-3' %}
+                      <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">{{num}}</a>
+                    {%endif%}
+                {%endfor%}
+        
+                {% if sliders.has_next %}
+                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.next_page_number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">next &rsaquo;</a>
+                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.paginator.num_pages }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock %}
+
+{%block js%}
+{%endblock%}

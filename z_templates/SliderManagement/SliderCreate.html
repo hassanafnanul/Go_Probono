@@ -1,0 +1,169 @@
+{% extends "Common/base.html" %} 
+{%load static%}
+{%block title%}
+<title>Slider Creation</title>
+{%endblock title%} 
+
+{%block style%}
+<script src="{%static 'js/ckeditor/ckeditor.js'%}"></script>
+{%endblock%}
+
+{%block content%} 
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+	<main class="main p-0">
+		{% include 'Common/navbar.html'%}
+		<div class="page_header"><a href="{%url 'SliderManagement'%}">Slider Management / </a><span style="color: #000000">Create</span></div>
+		
+
+		{% include 'Common/taskbuttons.html'%}
+	
+		{%if messages%} 
+			{%for message in messages%}
+			<script type="text/javascript">
+				toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+			</script>
+			{%endfor%} 
+		{%endif%}
+		<div style="padding: 30px 20px;">
+		<form method="post" enctype="multipart/form-data" autocomplete="off" class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+			{%csrf_token%}
+			<div class="">
+				<div class="form_container_div">
+
+          			<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="title">Title:</label>
+						<input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="title" id="title" placeholder="Enter Slider's Name" required maxlength="99" />
+					</div>
+          			<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="order">Order:</label>
+						<input type="number" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="order" id="order" placeholder="Enter Order" required />
+					</div>
+					<div style="margin: 10px; text-align: center;">
+                        <img id="prevw_img" width="120px">
+                    </div>
+					<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="image">Image:</label>
+						<input type="file" accept="image/*" class="col-12 col-md-9 col-lg-9 col-xl-9" name="image" id="image" placeholder="Enter Slider's Image" required>
+						<p style="color:#2e8fbd;">File size should be less than 100 kB(1920 x 600). Only jpg, png, bmp, tif, svg, jpeg files allowed.</p>
+						<p style="color:#788388;"><strong>WEBP format provides better quality with less size</strong></p>
+					</div>
+					<div style="margin: 10px; text-align: center;">
+                        <img id="prevw_mobile_img" width="120px" >
+                    </div>
+					<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="mobile_image">Mobile Image:</label>
+						<input type="file" accept="image/*" class="col-12 col-md-9 col-lg-9 col-xl-9" name="mobile_image" id="mobile_image" placeholder="Enter Slider's Mobile Image" required>
+						<p style="color:#2e8fbd;">File size should be less than 100 kB(330 x 152). Only jpg, png, bmp, tif, svg, jpeg files allowed.</p>
+						<p style="color:#788388;"><strong>WEBP format provides better quality with less size</strong></p>
+					</div>
+					<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="button_text">Button Text:</label>
+						<input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="button_text" id="button_text" placeholder="Enter Button Text"  maxlength="249"/>
+					</div>
+					<div class="form-group row mx-0">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="button_url">Button URL:</label>
+						<input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="button_url" id="button_url" placeholder="Enter any URL"  maxlength="249"/>
+					</div>
+					<div class="form-group row mx-0">
+						<label for="start_date" class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold">Start Date:</label>
+						<input class="form-control form-control-sm col-sm-12 col-md-9 col-lg-8 col-xl-8 is-invalid" type="datetime-local" name="start_date" id="start_date" required>
+					</div>
+					<div class="form-group row mx-0">
+						<label for="end_date" class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold">End Date :</label>
+						<input class="form-control form-control-sm col-sm-12 col-md-9 col-lg-8 col-xl-8 is-invalid" type="datetime-local" name="end_date" id="end_date" required>
+					</div>
+					<div class="form-group row mx-0 d-flex align-items-center">
+						<label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label required" for="slider_type">Select Slider Type :</label>
+						<select class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" id="slider_type" name="slider_type" required>
+							{%for type in slider_types%}
+							<option value="{{type.0}}">{{type.1}}</option>
+							{%endfor%}
+						</select>
+					</div>
+        		</div>
+      		</div>
+      		<!-- <div>
+				<div class="form-group row mx-0">
+					<label for="description" class="col-12 col-md-12 col-lg-12 col-xl-3 col-form-label font-weight-bold">Description:</label>
+					<textarea style="min-width: 100%;margin-top: 2px;" id="description" name="description"></textarea>
+				</div>
+			</div> -->
+			<div style="display:flex;margin-top: 30px;">
+				<button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();" >
+				  <i class="fa fa-angle-left"></i> Back
+				</button>
+				<div style="width:10px;"></div>
+				<button type="reset" class="reset btn btn-sm btn-danger">
+				  <i class="fa fa-ban"></i> Reset
+				</button>
+				<div style="width:10px;"></div>
+				<button type="submit" class="submit btn btn-sm btn-primary">
+				  <i class="fa fa-dot-circle-o"></i> Submit
+				</button>
+			</div>
+		</form>
+	</div>
+
+	</main>
+</div>
+{% include 'Common/footer.html'%}
+
+{%endblock content%} 
+
+{%block js%}
+<script>
+
+function readURL(input, output) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(output).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#image").change(function () {
+        readURL(this, "#prevw_img");
+    });
+
+	$("#mobile_image").change(function () {
+		readURL(this, "#prevw_mobile_img");
+	});
+
+CKEDITOR.replace('description', {
+		uiColor: 'lightgray',
+		height: "180px"
+});
+var file = document.getElementById('image');
+file.onchange = function(e) {
+//   var ext = this.value.match(/\.([^\.]+)$/)[1];
+//   switch (ext) {
+//     case 'jpg':
+//     case 'bmp':
+//     case 'png':
+//     case 'tif':
+//     case 'svg':
+//     case 'jpeg':
+//     case 'JPG':
+//     case 'BMP':
+//     case 'PNG':
+//     case 'TIF':
+//     case 'SVG':
+//     case 'JPEG':
+//       break;
+//     default:
+//       alert('Only jpg, png, bmp, tif, svg, jpeg files allowed');
+//       this.value = '';
+//   }
+  var f = document.getElementById('image').files[0].size/1024;
+  if (f > 500) {
+    alert('File size exceeds 500 kB');
+    $("#sbmtbtn").attr("disabled", true);
+  } else {
+    $("#sbmtbtn").attr("disabled", false);
+  }
+};
+</script>
+{%endblock js%}

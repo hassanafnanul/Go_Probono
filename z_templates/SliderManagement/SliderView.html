@@ -1,0 +1,131 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Slider View</title>
+{%endblock title%}
+
+{%block style%}
+<style>
+	.row {
+		padding: 5px 0px;
+	}
+</style>
+<script src="{%static 'js/ckeditor/ckeditor.js'%}"></script>
+
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+	<main class="main p-0">
+		{% include 'Common/navbar.html'%}
+		<div class="page_header"><a href="{%url 'SliderManagement'%}">Slider Management</a> / <span
+				style="color:#000000">View</span></div>
+
+
+		{% include 'Common/taskbuttons.html'%}
+
+		{%if messages%}
+		{%for message in messages%}
+		<script type="text/javascript">
+			toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+		</script>
+		{%endfor%}
+		{%endif%}
+		<div style="padding: 30px 20px;">
+			<div class="card">
+				<div class="card-header" style="text-align: center;">
+					<strong>Detailed Information</strong>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-12 col-md-6 cl-lg-6 col-xl-6">
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Short Name</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.short_name}}</div>
+							</div>
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Name</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.name}}</div>
+							</div>
+							
+							{% if slider.image %}
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Image</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<img src="{{slider.image.url}}" style="width:300px">
+							</div>
+							{%endif%}
+							{% if slider.mobile_image %}
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Mobile Image</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<img src="{{slider.mobile_image.url}}" style="width:300px">
+							</div>
+							{%endif%}
+							
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Start Date</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.start_date}}</div>
+							</div>
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">End Date</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.end_date}}</div>
+							</div>
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">One-One restriction</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.one_one_restriction}}</div>
+							</div>
+							<div class="row">
+								<div class="col-3" style="font-weight: 600;">Description</div>
+								<div class="col-1" style="font-weight: 600;">:</div>
+								<div class="col-8">{{slider.description | safe}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="card-header" style="text-align: center;">
+					<strong>Assigned Items</strong>
+				</div>
+				<div class="card-body">
+					{% if sliderItems %}
+					{% for sliderItem in sliderItems %}
+					<div class="row">
+						{%if sliderItem.item.thumbnail %}
+						<div class="col-1" ><img src="{{sliderItem.item.thumbnail.url}} " width="99"></div>
+						{%endif%}
+						<div class="col-11"><a href="{%url 'ItemView' sliderItem.item.id %}">{{sliderItem.item.item_name}}</a>  ({{sliderItem.item.code}})</div>
+					</div>
+					{% endfor %}
+					{% else %}
+					<p style="color: red;">No Item Assigned</p>
+					{% endif %}
+
+				</div>
+
+				<div class="card-footer" style="display:flex; ">
+					<a class="btn btn-sm btn-warning mr-1" href="{%url 'SliderEdit' slider.id%}">
+						<i class="fa fa-edit"></i> Edit
+					</a>
+					<button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+						<i class="fa fa-angle-left"></i> Back
+					</button>
+				</div>
+
+			</div>
+		</div>
+	</main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

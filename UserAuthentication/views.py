@@ -51,7 +51,6 @@ def gohome(request):
     context = {
         'cnav': UserCustomNav(request),
     }
-    print('context-------------', context)
 
     return render(request,'UserAuth/home.html', context)
 

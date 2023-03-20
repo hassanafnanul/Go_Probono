@@ -21,6 +21,8 @@ urlpatterns = [
 
     path('users/',include('API.UserAPI.urls')),
 
+    path('law/',include('API.Law.urls')),
+
     # path('brands/',include('API.BrandAPI.urls')),
 
     # path('request-items/',include('API.RequestItemAPI.urls')),

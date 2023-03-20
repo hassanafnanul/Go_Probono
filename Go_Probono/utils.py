@@ -110,3 +110,27 @@ def UserCustomNav(request):
 
 
 
+
+# Formet a perfect URL
+def formattedUrl(s, useAs='url'):
+    s = s.strip()
+    allowed = ['.']
+    url = ''
+    prev = ''
+    
+    for e in s:
+        if e.isalnum() or e in allowed:
+            url += e.lower()
+        elif prev.isalnum():
+            if useAs == 'url' and e != s[0] and e!=s[-1]:
+                url += '-'
+            else:
+                url += ' '
+        prev = e
+    
+    return url
+
+
+
+
+

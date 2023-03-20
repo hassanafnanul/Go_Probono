@@ -111,8 +111,7 @@ def CustomerEdit(request, id, task_url="CustomerManagement", action='edit'):
         C.city = city
         C.country = country
         C.save()
-        audit_update(request, "Edit", "Customer", "CustomerEdit",
-                     "edited existing customer", c_data)
+        audit_update(request, "Edit", "Customer", "CustomerEdit", "edited existing customer", c_data)
         messages.success(
             request, f'Customer {name} has been edited successfully.')
         return redirect('CustomerManagement')

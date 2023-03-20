@@ -20,4 +20,10 @@ urlpatterns = [
 
     path('customer/',include('Customer.urls')),
 
+    path('law/', include('LawManagement.urls')),
+
+    path('slider/', include('SliderManagement.urls')),
+    
+    path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
+
 ]
