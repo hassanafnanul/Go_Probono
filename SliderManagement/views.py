@@ -109,6 +109,7 @@ def SliderCreate(request, task_url="SliderManagement", action="add"):
         end_date = r.get('end_date')
         button_url = r.get('button_url')
         button_text = r.get('button_text')
+        slider_text = r.get('slider_text')
         slider_type = r.get('slider_type')
         start_date = datetime_local_to_datetime(start_date)
         end_date = datetime_local_to_datetime(end_date)
@@ -142,11 +143,11 @@ def SliderCreate(request, task_url="SliderManagement", action="add"):
             else:
                 img_files.append('/default/default.png')
 
-        slider = Slider(title = title, button_url = button_url, button_text = button_text, start_date = start_date, end_date = end_date, image = img_files[0], mobile_image = img_files[1], order = order, slider_type = slider_type)
+        slider = Slider(title = title, button_url = button_url, button_text = button_text, slider_text = slider_text, start_date = start_date, end_date = end_date, image = img_files[0], mobile_image = img_files[1], order = order, slider_type = slider_type)
         slider.save()
 
         c_data = 'Slider: ' + title
-        audit_update(request, "Create", "Slider", "SliderCreate", "created a new e-commerce slider: "+short_name, c_data)
+        audit_update(request, "Create", "Slider", "SliderCreate", "created a new slider: "+title, c_data)
         messages.success(request, f'Slider added successfully')
         return redirect('SliderManagement')
     else:
@@ -171,6 +172,7 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
         end_date = r.get('end_date')
         button_url = r.get('button_url')
         button_text = r.get('button_text')
+        slider_text = r.get('slider_text')
         slider_type = r.get('slider_type')
         start_date = datetime_local_to_datetime(start_date)
         end_date = datetime_local_to_datetime(end_date)
@@ -205,11 +207,12 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
         slider.end_date = end_date
         slider.button_url = button_url
         slider.button_text = button_text
+        slider.slider_text = slider_text
         slider.slider_type = slider_type
 
-        if Slider.objects.filter(title = title).exclude(id = id).exists(): # To cheeck same URL exists or not
+        if Slider.objects.filter(title = title).exclude(id = id).exists(): # To cheeck same title exists or not
             # slider.slider_URL = slider_url # Opposite Task
-            messages.warning(request, f'Name Must be Unique.')
+            messages.warning(request, f'Title Must be Unique.')
             return redirect('SliderEdit', id = id)
 
         slider.is_archived = is_archived
@@ -242,10 +245,11 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
 
         slider.save()
 
-        audit_update(request, "Edit", "Slider", "SliderEdit", "updated an existing e-commerce slider", c_data)
+        audit_update(request, "Edit", "Slider", "SliderEdit", "updated an existing slider"+title, c_data)
         messages.success(request, f'Slider edited successfully')
         
         return redirect('SliderManagement')
+    
     elif request.method == 'GET':
         slider = get_object_or_404(Slider, id=id)
         slider_participation_types = Slider.SliderParticipationType.choices

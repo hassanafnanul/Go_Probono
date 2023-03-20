@@ -23,6 +23,8 @@ urlpatterns = [
 
     path('law/',include('API.Law.urls')),
 
+    path('home/',include('API.Home.urls')),
+
     # path('brands/',include('API.BrandAPI.urls')),
 
     # path('request-items/',include('API.RequestItemAPI.urls')),

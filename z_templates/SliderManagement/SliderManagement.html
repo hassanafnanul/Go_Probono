@@ -106,16 +106,6 @@
                                 <i class="icon-notebook"></i> Edit
                             </a>
                             {%endif%}
-                            <!-- {%if privilege and privilege.edit_task%}
-                            <a class="btn btn-sm btn-outline-success" href="{%url 'SliderItemAdd' slider.id %}">
-                                <i class="icon-notebook"></i> Add Item
-                            </a>
-                            {%endif%} -->
-                            {%if privilege and privilege.edit_task%}
-                            <a class="btn btn-sm btn-outline-success" href="{%url 'SliderItemBulkAdd' slider.id %}">
-                                <i class="fa fa-edit"></i> Slider Item Add
-                            </a>
-                            {%endif%}
                         </td>
                     </tr>
                     {%empty%}

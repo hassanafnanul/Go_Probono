@@ -14,6 +14,7 @@ class Slider(models.Model):
     end_date = models.DateTimeField(null=True)
     button_url = models.CharField(default='',max_length=250)
     button_text = models.CharField(default='',max_length=250)
+    slider_text = models.CharField(default='',max_length=500)
     order = models.IntegerField(default=0)    
     slider_type = models.CharField(choices=SLIDER_TYPES, max_length=100, default=SLIDER_TYPES[0][1])
     is_archived = models.BooleanField(default=False)
