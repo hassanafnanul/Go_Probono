@@ -41,28 +41,23 @@
 					<div class="row">
 						<div class="col-12 col-md-6 cl-lg-6 col-xl-6">
 							<div class="row">
-								<div class="col-3" style="font-weight: 600;">Short Name</div>
+								<div class="col-3" style="font-weight: 600;">Title</div>
 								<div class="col-1" style="font-weight: 600;">:</div>
-								<div class="col-8">{{slider.short_name}}</div>
-							</div>
-							<div class="row">
-								<div class="col-3" style="font-weight: 600;">Name</div>
-								<div class="col-1" style="font-weight: 600;">:</div>
-								<div class="col-8">{{slider.name}}</div>
+								<div class="col-8">{{slider.title}}</div>
 							</div>
 							
 							{% if slider.image %}
 							<div class="row">
 								<div class="col-3" style="font-weight: 600;">Image</div>
 								<div class="col-1" style="font-weight: 600;">:</div>
-								<img src="{{slider.image.url}}" style="width:300px">
+								<img src="{{slider.image.url}}" style="width:150px">
 							</div>
 							{%endif%}
 							{% if slider.mobile_image %}
 							<div class="row">
 								<div class="col-3" style="font-weight: 600;">Mobile Image</div>
 								<div class="col-1" style="font-weight: 600;">:</div>
-								<img src="{{slider.mobile_image.url}}" style="width:300px">
+								<img src="{{slider.mobile_image.url}}" style="width:150px">
 							</div>
 							{%endif%}
 							
@@ -77,9 +72,14 @@
 								<div class="col-8">{{slider.end_date}}</div>
 							</div>
 							<div class="row">
-								<div class="col-3" style="font-weight: 600;">One-One restriction</div>
+								<div class="col-3" style="font-weight: 600;">Button</div>
 								<div class="col-1" style="font-weight: 600;">:</div>
-								<div class="col-8">{{slider.one_one_restriction}}</div>
+								<div class="col-4">
+									<a class="btn btn-sm btn-warning mr-1" href="{{slider.button_url}}">
+									{{slider.button_text}}
+									</a>
+								</div>
+								<div class="col-4">URL: <a href="{{slider.button_url}}">{{slider.button_url}}</a></div>
 							</div>
 							<div class="row">
 								<div class="col-3" style="font-weight: 600;">Description</div>

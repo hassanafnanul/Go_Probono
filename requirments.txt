@@ -9,3 +9,4 @@ tzdata==2022.7
 Pillow==9.4.0
 requests==2.28.2
 django-ckeditor==6.5.1
+django-debug-toolbar==3.8.1

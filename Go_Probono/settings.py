@@ -40,7 +40,8 @@ DEVELOPED_APPS = [
     'LogWithAudit',
     'Customer',
     'LawManagement',
-    'SliderManagement'
+    'SliderManagement',
+    'HelpCenter'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'Go_Probono.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['z_templates'],
+        'DIRS': [Path.joinpath(BASE_DIR, 'z_templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,13 +140,24 @@ CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_REQUIRE_STAFF=False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+
+
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (
     Path.joinpath(BASE_DIR, "static"),
 )
+
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = (
+#     Path.joinpath(BASE_DIR, "media"),
+# )
+
+# FILES_URL = 'files/'
+# FILES_ROOT = (
+#     Path.joinpath(BASE_DIR, "files"),
+# )
 
 
 MEDIA_ROOT=Path.joinpath(BASE_DIR, "media")
@@ -153,7 +165,10 @@ MEDIA_URL='/media/'
 FILES_ROOT=Path.joinpath(BASE_DIR, "files")
 FILES_URL='/files/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+
+LOGIN_REDIRECT_URL='/userauth/home/'
+LOGIN_URL = 'loginpage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

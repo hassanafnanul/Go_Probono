@@ -48,8 +48,8 @@
                 <table class="table table-sm bg-white mt-3">
                     <thead>
                     <tr>
-                        <th>Slider Name</th>
-                        <th>Slider Type</th>
+                        <th>Image</th>
+                        <th>Title</th>
                         <th>Order</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -68,16 +68,8 @@
                     {% elif slider.is_archived %}
                     <tr style="color: black;">
                     {% endif %}
-                        <td>{{slider.name}}</td>
-                        {%if slider.slider_type == 0 %}
-                        <td>Slider Image</td>
-                        {%elif slider.slider_type == 1 %}
-                        <td><i>Slider Slider</i></td>
-                        {%elif slider.slider_type == 2 %}
-                        <td><u>Grid Slider</u></td>
-                        {%else%}
-                        <td><b>&#x2717;</b> <!-- No  --></td>
-                        {%endif%}
+                        <td><img src="{{slider.image.url}}" style="width:120px"></td>
+                        <td>{{slider.title}}</td>
                         <td style="text-align: center;">{{slider.order}}</td>
                         <td>{{slider.start_date}}</td>
                         <td>{{slider.end_date}}</td>

@@ -1,5 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
+from . import settings
+from django.contrib.staticfiles.urls import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+
 
 urlpatterns = [
     path('theadmin/', admin.site.urls),
@@ -27,3 +32,14 @@ urlpatterns = [
     path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
 
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [
+                    path('debug/', include(debug_toolbar.urls)),
+                  ] + urlpatterns
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
