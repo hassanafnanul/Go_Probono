@@ -1,0 +1,110 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Rules Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'RulesManagement'%}">Rules Management</a> / <span
+                style="color: #000000">Details</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex; justify-content: center;">
+                    <div class="form_container_div">
+
+                        {% if rules.thumbnail %}
+                        <div style="margin: 10px; text-align: center;">
+                            <img id="prevw_img" src="{{rules.thumbnail.url}}" width="150px">
+                        </div>
+                        {% endif %}
+
+                        
+                        <div id="rules_view" style="margin: 10px; text-align: center;">
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Rules name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{rules.rules_name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Available in Home</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            {% if rules.home_rules %}
+                            <div class="col-6" style="color: green;"><b>&check;</b></div>
+                            {% else %}
+                            <div class="col-6" style="color: red;"><b>&cross;</b></div>
+                            {% endif %}
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Logo</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6"><img src="{{rules.logo.url}}" width=150></div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Rules Description</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{rules.description | safe}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+<script>
+    var a = {{rules.rules}}
+    document.getElementById("rules_view").innerHTML = '&lt;p&gt;rules 1&lt;/p&gt;
+
+&lt;p&gt;rules 2&lt;/p&gt;
+
+&lt;p&gt;rules 3&lt;/p&gt;
+
+&lt;p&gt;rules 4&lt;/p&gt;
+
+&lt;p&gt;rules 5&lt;/p&gt;';
+    
+</script>
+
+{%endblock%}
+

@@ -23,7 +23,7 @@ def randomStringGenerator():
 def upload_location(instance, filename):
     extension = filename.split(".")[-1]
     changed_file_name = randomStringGenerator()
-    return "%s/%s%s" % ("media/userimg", changed_file_name, extension)
+    return "%s/%s%s" % ("userimg", changed_file_name, extension)
 
 
 class UserWithRole(models.Model):

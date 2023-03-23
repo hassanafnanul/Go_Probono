@@ -28,6 +28,8 @@ urlpatterns = [
     path('law/', include('LawManagement.urls')),
 
     path('slider/', include('SliderManagement.urls')),
+
+    path('help-center/', include('HelpCenter.urls')),
     
     path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
 

@@ -175,7 +175,7 @@ def NewRoleAssign(request, task_url="UserManagement", action="add"):
         # audit_update(request, "Create", "User, UserWithRole, UserWithTask", "UserCreate",
         #              "created a new user with username: " + u_name, c_data)
         messages.success(request, f'User created successfully')
-        return redirect('RoleAssignment')
+        return redirect('UserManagement')
     else:
         if request.user.is_staff:
             # all_roles = Role.objects.exclude(name__in=['Developer'])
@@ -217,7 +217,7 @@ def Edit(request, id, task_url="UserManagement", action="edit"):
     if not request.user.is_superuser:
         if userwithrole.role.filter(name__iexact='company admin').exists():
             messages.warning(request, 'You can not edit this user')
-            return redirect('RoleAssignment')
+            return redirect('UserManagement')
     if request.method == 'POST':
         r = request.POST
         u_name = r.get('username')
@@ -336,7 +336,7 @@ def Edit(request, id, task_url="UserManagement", action="edit"):
         # audit_update(request, "Edit", "User, UserWithRole, UserWithTask", "UserEdit", "updated user: " + prevusername,
         #              "")
         messages.success(request, f'User edited successfully')
-        return redirect('RoleAssignment')
+        return redirect('UserManagement')
     else:
         if request.user.is_staff:
             all_roles = Role.objects.exclude(name__in=['Developer'])
@@ -364,7 +364,7 @@ def Edit(request, id, task_url="UserManagement", action="edit"):
 @login_required
 @view_permission_required
 def Delete(request, id, task_url="UserManagement", action="delete"):
-    return redirect('RoleAssignment')
+    return redirect('UserManagement')
 
 
 @login_required
