@@ -16,20 +16,11 @@ from .models import HelpCenter
 # from MarketingManagement.models import URLs
 # from .utils import meta_tag_generate
 from HelpCenter.forms import RulesForm
-from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl
+from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
 
 
 # from LogWithAudit.views import audit_update
-
-
-def ChangeFileName(filename):
-    extension = filename.split(".")[-1]
-    changed_file_name = filename.split(".")[0]
-    changed_file_name = changed_file_name.replace(" ", "_")
-    changed_file_name = changed_file_name + "."
-    return "%s%s" % (changed_file_name, extension)
-
 
 @login_required
 @view_permission_required

@@ -25,7 +25,7 @@ urlpatterns = [
 
     path('home/',include('API.Home.urls')),
 
-    # path('brands/',include('API.BrandAPI.urls')),
+    path('help-center/',include('API.HelpCenter.urls')),
 
     # path('request-items/',include('API.RequestItemAPI.urls')),
 

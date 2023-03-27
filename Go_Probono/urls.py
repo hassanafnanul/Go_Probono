@@ -30,6 +30,8 @@ urlpatterns = [
     path('slider/', include('SliderManagement.urls')),
 
     path('help-center/', include('HelpCenter.urls')),
+
+    path('know-your-law/', include('KnowYourLaw.urls')),
     
     path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
 

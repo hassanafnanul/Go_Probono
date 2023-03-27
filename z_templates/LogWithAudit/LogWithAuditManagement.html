@@ -80,36 +80,9 @@
                     {%endif%}
                 </tbody>
             </table>
-            <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
-                <span class="step-links">
-                    {% if audits.has_previous %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;"
-                        href="?page=1{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">&laquo;
-                        first</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;"
-                        href="?page={{ audits.previous_page_number }}{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">&lsaquo;
-                        previous</a>
-                    {% endif %}
+            
+            {% include 'Common/pagination_with_filter.html' with data=audits request=request %}
 
-                    {%for num in audits.paginator.page_range%}
-                    {%if num == audits.number %}
-                      <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ audits.number }}{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">{{num}}</a>
-                    {%elif num < audits.number|add:'3' and num > audits.number|add:'-3' %}
-                      <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">{{num}}</a>
-                    {%endif%}
-                    {%endfor%}
-
-                    {% if audits.has_next %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;"
-                        href="?page={{ audits.next_page_number }}{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">next
-                        &rsaquo;</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;"
-                        href="?page={{ audits.paginator.num_pages }}{% if request.GET.uname %}&uname={{request.GET.uname}}{% endif %}{% if request.GET.action %}&action={{request.GET.action}}{% endif %}{% if request.GET.keyword %}&keyword={{request.GET.keyword}}{% endif %}{% if request.GET.search_date %}&search_date={{request.GET.search_date}}{% endif %}">last
-                        &raquo;</a>
-                    {% endif %}
-                </span>
-
-            </div>
         </div>
     </main>
 </div>

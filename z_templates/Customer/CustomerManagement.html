@@ -96,25 +96,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
-                <span class="step-links">
-                    {% if customers.has_previous %}
-                        <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">&laquo; first</a>
-                        <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ customers.previous_page_number }}{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">&lsaquo; previous</a>
-                    {% endif %}
-                    {%for num in customers.paginator.page_range%}
-                        {%if num == customers.number %}
-                        <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ customers.number }}{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">{{num}}</a>
-                        {%elif num < customers.number|add:'3' and num > customers.number|add:'-3' %}
-                        <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">{{num}}</a>
-                        {%endif%}
-                    {%endfor%}
-                    {% if customers.has_next %}
-                        <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ customers.next_page_number }}{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">next &rsaquo;</a>
-                        <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ customers.paginator.num_pages }}{% if request.GET.name %}&name={{request.GET.name}}{% endif %}{% if request.GET.mobile %}&mobile={{request.GET.mobile}}{% endif %}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+            
+            
+            {% include 'Common/pagination_with_filter.html' with data=customers request=request %}
+
         </div>
     </main>
 </div>

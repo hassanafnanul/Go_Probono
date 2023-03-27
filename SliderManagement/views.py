@@ -13,25 +13,10 @@ import re
 from django.db.models import Case, When, Value, BooleanField
 
 from .models import Slider, SLIDER_TYPES
-from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks
+from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, ChangeFileName
 from LogWithAudit.views import audit_update
 
 
-def randomStringGenerator():
-    name = "I"
-    name = name + str(random.randint(100, 999))
-    letters = string.ascii_uppercase
-    name = name + ''.join(random.choice(letters) for i in range(2))
-    name = name + str(random.randint(10, 99))
-    name = name + ''.join(random.choice(letters) for i in range(2))
-    name = name + str(random.randint(100, 999))
-    name = name + "."
-    return name
-
-def ChangeFileName(filename):
-    extension = filename.split(".")[1]
-    changed_file_name = randomStringGenerator()
-    return "%s%s" % (changed_file_name, extension)
 
 def datetimepicker_to_datetime(mmddyyyyhhmm):
     arr = mmddyyyyhhmm.split('/')

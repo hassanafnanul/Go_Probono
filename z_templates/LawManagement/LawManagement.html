@@ -96,27 +96,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
-            <span class="step-links">
-                {% if laws.has_previous %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">&laquo; first</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ laws.previous_page_number }}{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">&lsaquo; previous</a>
-                {% endif %}
 
-                {%for num in laws.paginator.page_range%}
-                    {%if num == laws.number %}
-                      <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ laws.number }}{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">{{num}}</a>
-                    {%elif num < laws.number|add:'3' and num > laws.number|add:'-3' %}
-                      <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">{{num}}</a>
-                    {%endif%}
-                {%endfor%}
+            {% include 'Common/pagination_with_filter.html' with data=laws request=request %}
 
-                {% if laws.has_next %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ laws.next_page_number }}{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">next &rsaquo;</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ laws.paginator.num_pages }}{% if request.GET.law %}&law={{request.GET.law}}{% endif %}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
         </div>
     </main>
 </div>

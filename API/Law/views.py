@@ -30,7 +30,7 @@ def APItest(request):
 
 class LawAPI(APIView):
     def get(self, request):
-        laws = Law.objects.all().order_by("name").exclude(is_archived = True)
+        laws = Law.objects.all().order_by("order").exclude(is_archived = True)
         serializer = LawSerializer(laws, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)

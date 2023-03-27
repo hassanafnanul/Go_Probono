@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.cache import cache
 from django.db.models import F
 from django.contrib import messages
+import random
+import string
 
 from inspect import getargspec
 
@@ -15,8 +17,6 @@ from RoleAssignment.models import UserWithTask
 # from API.ConfigurationAPI.views import PriceBreakDownAPI
 # from Configuration.models import PriceBreakDown
 
-
-fronendURL = 'http://127.0.0.1:4200'
 
 
 def view_permission_required(function):
@@ -133,4 +133,28 @@ def formattedUrl(s, useAs='url'):
 
 
 
+def randomStringGenerator():
+    name = "GP"
+    name = name + str(random.randint(100, 999))
+    letters = string.ascii_uppercase
+    name = name + ''.join(random.choice(letters) for i in range(2))
+    name = name + str(random.randint(10, 99))
+    name = name + ''.join(random.choice(letters) for i in range(2))
+    name = name + str(random.randint(100, 999))
+    name = name + "."
+    return name
+
+
+def ChangeFileName(filename):
+    extension = filename.split(".")[1]
+    changed_file_name = randomStringGenerator()
+    return "%s%s" % (changed_file_name, extension)
+
+
+# def ChangeFileName(filename):
+#     extension = filename.split(".")[-1]
+#     changed_file_name = filename.split(".")[0]
+#     changed_file_name = changed_file_name.replace(" ", "_")
+#     changed_file_name = changed_file_name + "."
+#     return "%s%s" % (changed_file_name, extension)
 

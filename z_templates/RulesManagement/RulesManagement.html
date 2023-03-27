@@ -79,27 +79,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
-            <span class="step-links">
-                {% if ruless.has_previous %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">&laquo; first</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ ruless.previous_page_number }}{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">&lsaquo; previous</a>
-                {% endif %}
 
-                {%for num in ruless.paginator.page_range%}
-                    {%if num == ruless.number %}
-                      <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ ruless.number }}{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">{{num}}</a>
-                    {%elif num < ruless.number|add:'3' and num > ruless.number|add:'-3' %}
-                      <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">{{num}}</a>
-                    {%endif%}
-                {%endfor%}
+            {% include 'Common/pagination_with_filter.html' with data=rules request=request %}
 
-                {% if ruless.has_next %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ ruless.next_page_number }}{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">next &rsaquo;</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ ruless.paginator.num_pages }}{% if request.GET.rules %}&rules={{request.GET.rules}}{% endif %}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
         </div>
     </main>
 </div>

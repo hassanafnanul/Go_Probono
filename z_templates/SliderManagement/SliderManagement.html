@@ -110,28 +110,8 @@
             </div>
         </div>
 
-        {% comment %} {% include 'Common/pagination.html' with data=sliders %} {% endcomment %}
-        <div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
-            <span class="step-links">
-                {% if sliders.has_previous %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">&laquo; first</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.previous_page_number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">&lsaquo; previous</a>
-                {% endif %}
+        {% include 'Common/pagination_with_filter.html' with data=sliders request=request %}
         
-                {%for num in sliders.paginator.page_range%}
-                    {%if num == sliders.number %}
-                      <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ sliders.number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">{{num}}</a>
-                    {%elif num < sliders.number|add:'3' and num > sliders.number|add:'-3' %}
-                      <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">{{num}}</a>
-                    {%endif%}
-                {%endfor%}
-        
-                {% if sliders.has_next %}
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.next_page_number }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">next &rsaquo;</a>
-                    <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ sliders.paginator.num_pages }}{% if request.GET.slider %}&slider={{request.GET.slider}}{% endif %}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
     </main>
 </div>
 {% include 'Common/footer.html'%}
