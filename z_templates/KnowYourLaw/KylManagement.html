@@ -37,8 +37,8 @@
             </div>
 
             <form method="GET" style="display: flex; margin-top: 10px;">
-                <select name="law" id="status" class="mr-1">
-                    <option value="">Select Law {{request.GET.law}}</option>
+                <select name="law" id="law" class="mr-1">
+                    <option value="">Select Law</option>
                     {%for l in laws %}
                     {% if l.id == request.GET.law %}
                     <option value={{l.id}} selected>{{l.name}}</option>
