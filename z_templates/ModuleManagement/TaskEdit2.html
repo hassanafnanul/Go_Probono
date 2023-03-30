@@ -1,0 +1,166 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Task Management</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/navbar.html'%}
+<div class="app-body">
+  {% include 'Common/sidebar.html' with data=cnav %}
+  <main class="main">
+    <div class="page_header"><a href="{%url 'TaskManagement'%}">Task Management</a> / Edit</div>
+    
+
+    {% include 'Common/taskbuttons.html'%}
+
+    
+    {%if messages%}
+      {%for message in messages%}
+      <script type="text/javascript">
+        toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+      </script>
+      {%endfor%}
+    {%endif%}
+    <div class="card">
+      <div class="card-header" style="text-align:center;">
+        <strong>Please fill up the following information</strong>
+      </div>
+      <form method="POST">
+        {%csrf_token%}
+        <div class="card-body" style="display: flex; justify-content: center;">
+          <div class="form_container_div">
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Task Name :</label>
+              <input id="element_name" type="text" name="element_name" class="is-invalid form-control col-12 col-md-9 col-lg-9 col-xl-9" placeholder="Enter task name" required value="{{Task.taskName}}">
+            </div>
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Task Order :</label>
+              <input id="element_order" type="number" name="element_order" class="is-invalid form-control col-12 col-md-9 col-lg-9 col-xl-9" placeholder="Enter task order" required value="{{Task.order}}">
+            </div>
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="task_url">Task Url :</label>
+              <input type="text"  placeholder="Enter task url" class = "is-invalid form-control col-12 col-md-9 col-lg-9 col-xl-9" name="task_url" id="task_url" required value="{{Task.taskUrl}}">
+            </div>
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Module Parent :</label>
+              <select class="is-invalid form-control col-12 col-md-9 col-lg-9 col-xl-9" name="element_module" required>
+                <option value="{{Task.moduleName.id}}">{{Task.moduleName.name}}</option>
+                {%for m in mdls%}
+                {%if m.name != Task.moduleName.name%}
+                <option value="{{m.id}}">{{m.name}}</option>
+                {%endif%}
+                {%endfor%}
+              </select>
+            </div>
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Task Event :</label>
+              <div class="col-12 col-md-9 col-lg-9 col-xl-9 d-flex" style="flex-wrap: wrap;">
+                <div style="width: 80px;">
+                  {%if Task.view_task%}
+                  <input class="form-check-input" type="checkbox" value="view_checked" id="element_task" name="element_task" checked>View
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="view_checked" id="element_task" name="element_task">View
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.add_task%}
+                  <input class="form-check-input" type="checkbox" value="add_checked" id="element_task" name="element_task" checked>Add
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="add_checked" id="element_task" name="element_task">Add
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.save_task%}
+                  <input class="form-check-input" type="checkbox" value="save_checked" id="element_task" name="element_task" checked>Save
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="save_checked" id="element_task" name="element_task">Save
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.edit_task%}
+                  <input class="form-check-input" type="checkbox" value="edit_checked" id="element_task" name="element_task" checked>Edit
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="edit_checked" id="element_task" name="element_task" >Edit
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.delete_task%}
+                  <input class="form-check-input" type="checkbox" value="delete_checked" id="element_task" name="element_task" checked>Delete
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="delete_checked" id="element_task" name="element_task">Delete
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.print_task%}
+                  <input class="form-check-input" type="checkbox" value="print_checked" id="element_task" name="element_task" checked>Print
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="print_checked" id="element_task" name="element_task">Print
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.cancel_task%}
+                  <input class="form-check-input" type="checkbox" value="cancel_checked" id="element_task" name="element_task" checked>Cancel
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="cancel_checked" id="element_task" name="element_task">Cancel
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.reset_task%}
+                  <input class="form-check-input" type="checkbox" value="reset_checked" id="element_task" name="element_task" checked>Reset
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="reset_checked" id="element_task" name="element_task">Reset
+                  {%endif%}
+                </div>
+                <div style="width: 80px;">
+                  {%if Task.find_task%}
+                  <input class="form-check-input" type="checkbox" value="find_checked" id="element_task" name="element_task" checked>Find
+                  {%else%}
+                  <input class="form-check-input" type="checkbox" value="find_checked" id="element_task" name="element_task">Find
+                  {%endif%}
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" style="margin-left: 0px; margin-right: 0px;">
+              <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Created for :</label>
+              <div style="margin-left: 30px;">
+                {% if Task.for_superuser %}
+                <input type="radio" name="status"  value="a" class="form-check-input" checked>Superuser</input>
+                {%else%}
+                <input type="radio" name="status"  value="a" class="form-check-input">Superuser</input>
+                {%endif%}
+              </div>
+              <div style="margin-left: 30px;">
+                {% if Task.for_superuser %}
+                <input type="radio" name="status"  value="i" class="form-check-input">Reguler User</input>
+                {%else%}
+                <input type="radio" name="status"  value="i" class="form-check-input" checked>Reguler User</input>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer" style="display:flex; justify-content:center">
+          <button type="submit" class="submit btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> Submit
+          </button>
+          <div style="width:10px;"></div>
+          <button type="reset" class="reset btn btn-sm btn-danger">
+            <i class="fa fa-ban"></i> Reset
+          </button>
+          <div style="width:10px;"></div>
+          <button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();" >
+            <i class="fa fa-angle-left"></i> Back
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock content%}
+
+{%block js%}
+{%endblock%}

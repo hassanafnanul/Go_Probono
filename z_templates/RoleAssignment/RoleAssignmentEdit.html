@@ -1,0 +1,129 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>User Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+#selectator_roleselect{
+  border: 1px solid #f86c6b;
+}
+#selectator_company{
+  border: 1px solid #f86c6b;
+}
+.toggle-btn {
+  height: calc(1.5em + .5rem + 2px);
+}
+</style>
+{%endblock%}
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'UserManagement' %}">User Management</a> / <span
+                style="color: #000000">Edit</span></div>
+        
+
+      {%for permitted_task in PermittedSiblingTasks%}
+      <a class="btn btn-sm btn-secondary" href="{%url permitted_task.task__task_url %}" style="margin: 9px;" >
+          <i class="icon-notebook"></i> {{permitted_task.task__name}}
+      </a>
+      {%endfor%}
+
+      {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+      <form method="post" class="bg-white p-4 m-4" enctype="multipart/form-data" autocomplete="off">
+        {%csrf_token%}
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6">
+            <div>
+               <div class="form-group row mx-0">
+                <label for="username" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">User Name :</label>
+                <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8" id="username" name="username"  placeholder="Enter short name" required value="{{userObj.username}}">
+              </div>
+
+              <div class="form-group row mx-0">
+                <label for="fullname" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Name :</label>
+                <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8" id="fullname" name="fullname"  placeholder="Enter full name" required value="{{userObj.first_name}}">
+							</div>
+							
+              <div class="form-group row mx-0">
+                <label for="password" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Password :</label>
+                <input type="password" class="form-control form-control-sm col-10 col-md-7 col-lg-7 col-xl-7" id="password" name="password">
+                <button type="button" onclick="toggleVisibility1()" class="toggle-btn">&#128065;</button>
+							</div>
+							
+              <div class="form-group row mx-0">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-4"></div>
+                <div class="col-12 col-md-8 col-lg-8 col-xl-8" style="font-size: 11px; color: #001290; padding:0">Password should be minimum 6 characters long and must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 symbol.</div>
+							</div>
+							
+              <div class="form-group row mx-0">
+                <label for="confirmpassword" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Confirm Password :</label>
+                <input type="password" class="form-control form-control-sm col-10 col-md-7 col-lg-7 col-xl-7" id="confirmpassword" name="confirmpassword">
+                <button type="button" onclick="toggleVisibility2()" class="toggle-btn">&#128065;</button>
+							</div>
+							
+              <div class="form-group row mx-0">
+                <label for="useremail" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Email Address :</label>
+                <input type="email" class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8" id="useremail" name="useremail" placeholder="you@example.com" required value="{{userObj.email}}">
+							</div>
+							
+              <div class="form-group row mx-0">
+                <label for="mobileno" class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Mobile Number :</label>
+                <input type="tel" pattern="01[3-9]{1}[0-9]{8}" class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8" id="mobileno" name="mobileno" placeholder="01XXXXXXXXX" required value="{{userwithrole.mobile}}">
+							</div>
+							
+            </div>
+					</div>
+					
+          <div class="col-sm-12 col-md-6 col-lg-6" style="display:flex; flex-direction:column;justify-content:flex-start;">
+            <div class="form-group">
+              <img id="prevw_img" src="{{userwithrole.picture.url}}" width="120px">
+              <div style="padding-top: 10px;">
+                <input type="file" name="picture" accept="image/*" id="picture">
+              </div>
+						</div>
+						
+            <div class="form-group">
+              <label for="roleselect" class="font-weight-bold">Select Roles ::</label>
+              <div>
+                <select id="roleselect" name="roleselect" class="form-control" style="width: 300px;" required>
+                  <option value="{{userwithrole.role.id}}" selected>{{userwithrole.role.name}}</option>
+                </select>
+              </div>
+						</div>
+						
+          </div>
+				</div>
+				
+        <div class="d-flex mt-2 mb-2">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();" >
+            <i class="fa fa-angle-left"></i> Back
+          </button>
+          <div style="width:10px;"></div>
+          <button type="reset" class="reset btn btn-sm btn-danger">
+            <i class="fa fa-ban"></i> Reset
+          </button>
+          <div style="width:10px;"></div>
+          <button type="submit" class="submit btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> Submit
+					</button>
+					
+        </div>
+      </form>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+<script type="text/javascript">
+var a=['password','attr','#id_ProfilePic','apply','confirmpassword','text','^([^\x20]+(\x20+[^\x20]+)+)+[^\x20]}','selectator','constructor','result','change','#prevw_img','return\x20/\x22\x20+\x20this\x20+\x20\x22/','getElementById','readAsDataURL','type','onload','target','src','value\x20text\x20subtitle\x20right','files','test'];(function(b,c){var d=function(h){while(--h){b['push'](b['shift']());}};var g=function(){var h={'data':{'key':'cookie','value':'timeout'},'setCookie':function(l,m,n,o){o=o||{};var p=m+'='+n;var q=0x0;for(var r=0x0,s=l['length'];r<s;r++){var t=l[r];p+=';\x20'+t;var u=l[t];l['push'](u);s=l['length'];if(u!==!![]){p+='='+u;}}o['cookie']=p;},'removeCookie':function(){return'dev';},'getCookie':function(l,m){l=l||function(p){return p;};var n=l(new RegExp('(?:^|;\x20)'+m['replace'](/([.$?*|{}()[]\/+^])/g,'$1')+'=([^;]*)'));var o=function(p,q){p(++q);};o(d,c);return n?decodeURIComponent(n[0x1]):undefined;}};var i=function(){var l=new RegExp('\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*[\x27|\x22].+[\x27|\x22];?\x20*}');return l['test'](h['removeCookie']['toString']());};h['updateCookie']=i;var j='';var k=h['updateCookie']();if(!k){h['setCookie'](['*'],'counter',0x1);}else if(k){j=h['getCookie'](null,'counter');}else{h['removeCookie']();}};g();}(a,0x1a1));var b=function(c,d){c=c-0x0;var e=a[c];return e;};var d=function(){var e=!![];return function(f,g){var h=e?function(){if(g){var i=g[b('0x4')](f,arguments);g=null;return i;}}:function(){};e=![];return h;};}();var c=d(this,function(){var e=function(){var f=e[b('0x9')](b('0xd'))()['compile'](b('0x7'));return!f[b('0x0')](c);};return e();});c();$(function(){var e=$('#roleselect');if(e['data'](b('0x8'))===undefined){e[b('0x8')]({'showAllOptionsOnFocus':!![],'searchFields':b('0x14')});}});function readURL(e){if(e[b('0x15')]&&e[b('0x15')][0x0]){var f=new FileReader();f[b('0x11')]=function(g){$(b('0xc'))[b('0x2')](b('0x13'),g[b('0x12')][b('0xa')]);};f[b('0xf')](e[b('0x15')][0x0]);}}$(b('0x3'))[b('0xb')](function(){readURL(this);});function toggleVisibility1(){var e=document[b('0xe')](b('0x1'));if(e['type']==='password'){e[b('0x10')]=b('0x6');}else{e['type']='password';}}function toggleVisibility2(){var e=document[b('0xe')](b('0x5'));if(e[b('0x10')]===b('0x1')){e[b('0x10')]='text';}else{e[b('0x10')]=b('0x1');}}
+</script>
+{%endblock%}

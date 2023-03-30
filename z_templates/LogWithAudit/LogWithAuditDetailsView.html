@@ -1,0 +1,102 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Audit</title>
+{%endblock title%}
+
+{%block style%}
+<style>
+.row {
+  padding: 5px 0px;
+}
+</style>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body">
+  <main class="main">
+    {% include 'Common/navbar.html'%}
+    <div class="page_header"><a href="{%url 'LogWithAuditManagement' %}">Audit</a> / Details</div>
+    
+
+    {% include 'Common/taskbuttons.html'%}
+
+    {%if messages%}
+      {%for message in messages%}
+      <script type="text/javascript">
+        toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+      </script>
+      {%endfor%}
+    {%endif%}
+    <div class="card">
+      <div class="card-header" style="text-align: center;">
+        <strong>Detailed Information</strong>
+      </div>
+      <div class="card-body" style="display: flex; justify-content: center;">
+        <div class="form_container_div">
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">User Name</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.user}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">Ip adress</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.user_ip}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">Action</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.action_name}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">Table Name</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.table_name}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">Task Name</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.task_name}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">Action Details</div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.action_details}}</div>
+          </div>
+          <div class="row">
+            <div class="col-5" style="font-weight: 600;">
+              {%if audit.action_name == 'Create' %}
+              Created Data
+              {%elif audit.action_name == 'Edit' %}
+              Prevoius Data
+              {%elif audit.action_name == 'Approve' %}
+              Approved Data
+              {%elif audit.action_name == 'Delete' %}
+              Deleted Data
+              {%elif audit.action_name == 'Print' %}
+              Printed Data
+              {%else %}
+              Data
+              {%endif%}
+            </div>
+            <div class="col-1" style="font-weight: 600;">:</div>
+            <div class="col-6">{{audit.data}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer" style="display:flex; justify-content:center">
+        <button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();" >
+          <i class="fa fa-angle-left"></i> Back
+        </button> 
+      </div>
+    </div>
+  </main>
+</div>
+
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

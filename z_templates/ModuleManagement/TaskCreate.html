@@ -1,0 +1,125 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Task Management</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+  <main class="main p-0">
+    {% include 'Common/navbar.html'%}
+    <div class="page_header"><a href="{%url 'TaskManagement'%}">Task Management</a> / <span style="color: #000000">Create</span></div>
+    
+
+    {% include 'Common/taskbuttons.html'%}
+
+    
+    {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+    {%endif%}
+    <div style="padding: 30px 20px;">
+        <form method="POST" class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+            {%csrf_token%}
+            <div>
+                <div class="form_container_div">
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label required" for="text-input">Task
+                            Name :</label>
+                        <input id="element_name" type="text" name="element_name"
+                               class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" required>
+                    </div>
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label required" for="text-input">Task
+                            Order :</label>
+                        <input id="element_order" type="number" name="element_order"
+                               class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" required>
+                    </div>
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label required" for="task_url">Task Url
+                            :</label>
+                        <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9"
+                               name="task_url" id="task_url" required>
+                    </div>
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label required" for="text-input">Module
+                            Parent :</label>
+                        <select class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9"
+                                name="element_module" required>
+                            <option value="">----------</option>
+                            {%for m in mdls%}
+                            <option value="{{m.id}}">{{m.name}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label" for="text-input">Task Event :</label>
+                        <div class="col-12 col-md-9 col-lg-9 col-xl-9 d-flex" style="flex-wrap: wrap;">
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="view_checked" id="is-task-view"
+                                       class="form-check-input">View</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="add_checked" id="is-task-view"
+                                       class="form-check-input">Add</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="save_checked" id="is-task-view"
+                                       class="form-check-input">Save</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="edit_checked" id="is-task-view"
+                                       class="form-check-input">Edit</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="delete_checked" id="is-task-view"
+                                       class="form-check-input">Delete</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" value="print_checked" id="is-task-view"
+                                       class="form-check-input">Print</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" id="is-task-view" value="cancel_checked"
+                                       class="form-check-input">Cancel</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" id="is-task-view" value="reset_checked"
+                                       class="form-check-input">Reset</input>
+                            </div>
+                            <div style="width: 80px;">
+                                <input type="checkbox" name="element_event" id="is-task-view" value="find_checked"
+                                       class="form-check-input">Find</input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;margin-top: 30px;">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                    <i class="fa fa-angle-left"></i> Back
+                </button>
+                <div style="width:10px;"></div>
+                <button type="reset" class="reset btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+                <div style="width:10px;"></div>
+                <button type="submit" class="submit btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+            </div>
+        </form>
+    </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock content%}
+
+{%block js%}
+{%endblock%}

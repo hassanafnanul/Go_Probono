@@ -1,0 +1,45 @@
+{%spaceless%}
+{%load static%}
+<div class="sidebar">
+  <nav class="sidebar-nav">
+    <ul class="nav">
+      <!-- <div style="text-align: center; font-size: 25px; padding: 10px 0px;">X<span style="color: gold;">mart</span></div> -->
+      <div style="text-align: center; font-size: 15px; padding: 10px 0px;">
+        <a href="{%url 'gohome'%}" ><span style="color: white;" ><b>Dashboard</b></span></a>
+      </div>
+      
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="{%url 'gohome'%}">Dashboard</a>
+      </li> -->
+
+      {%for key, value in data.modules.items%}
+        {% if value.items|length == 1 %}
+        {%for tsk,tskurl in value.items %}
+        <li class="nav-item">
+          <a class="nav-link" href="{%url tskurl%}" style="font-size: 13px;">{{tsk}}</a>
+        </li>
+        {%endfor%}
+        {%else%}
+        <li class="nav-item nav-dropdown">
+
+          <a class="nav-link nav-dropdown-toggle" href="#" style="font-size: 13px;">{{key}}<span style="font-size: 13px; color: #84C240;"><b> ></b></span></a>
+
+          <ul class="nav-dropdown-items">
+            {%for tsk,tskurl in value.items %}
+            <li class="nav-item">
+              <a class="nav-link" href="{%url tskurl%}" style="padding-left: 24px;">
+                <i class="fab fa-audible" style="color: #00ff4e;">
+                  <span style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;{{tsk}}</span>
+                </i>
+              </a>
+            </li>
+            {%endfor%}
+          </ul>
+        </li>
+        {%endif%}
+      {%endfor%}
+    </ul>
+    <div style="height: 100px;"></div>
+  </nav>
+</div>
+{%endspaceless%}

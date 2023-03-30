@@ -1,0 +1,150 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Role Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+	.clsp-toggle::after {
+		display: inline-block;
+		margin-left: .255em;
+		vertical-align: .255em;
+		content: "";
+		border-top: .3em solid;
+		border-right: .3em solid transparent;
+		border-bottom: 0;
+		border-left: .3em solid transparent;
+	}
+</style>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+	<main class="main p-0">
+		{% include 'Common/navbar.html'%}
+		<div class="page_header"><a href="{%url 'RoleManagement'%}">Role Management</a> / <span
+				style="color: #000000">Details</span></div>
+		
+
+		{% include 'Common/taskbuttons.html'%}
+	
+		{%if messages%}
+		{%for message in messages%}
+		<script type="text/javascript">
+			toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+		</script>
+		{%endfor%}
+		{%endif%}
+		<div class="card" style="margin: 25px;">
+			<div class="card-header" style="text-align:center;">
+				<strong>Detailed Information</strong>
+			</div>
+			<div class="card-body" style="display:flex;">
+				<div class="container">
+					<div class="form-group row"
+						style="margin:0; margin-bottom:10px; ">
+						<label class="col-sm-12 col-md-3 col-lg-3 col-xl-3 col-form-label" form="text-input">Role
+							Name</label>
+						<input type="text" class="form-control col-sm-12 col-md-9 col-lg-9 col-xl-9"
+							value="{{rolename}}" readonly="readonly">
+					</div>
+					{%for cm in role_modules%}
+					<div style="margin-bottom: 10px; border: 1px solid grey">
+						<button class="btn clsp-toggle" style="width: 100%; text-align: start; color: white; background-color: #001C45; border-radius: 0%;"
+							data-toggle="collapse" data-target="#collapse{{cm.id}}" aria-expanded="false"
+							aria-controls="collapse{{cm.id}}">
+							Module: {{cm.name}}
+						</button>
+						<div class="collapse" id="collapse{{cm.id}}" style="background: #001C4588; color: black;">
+							{%for cr in role_tasks%}
+							{%if cr.task.module.name == cm.name%}
+							<div class="row"
+								style="margin-left:0; margin-right:0; padding-top:5px; padding-bottom: 5px;">
+								<div class="col-12 col-md-4 col-lg-3 col-xl-3">{{cr.task.name}}</div>
+								<div class="col-12 col-md-8 col-lg-9 col-xl-9">
+									<div class="form-check-inline d-flex flex-wrap">
+										{%if cr.view_task %}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> View
+										</div>
+										{%endif%}
+
+										{%if cr.add_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Add
+										</div>
+										{%endif%}
+
+										{%if cr.save_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Save
+										</div>
+										{%endif%}
+
+										{%if cr.edit_task %}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Edit
+										</div>
+										{%endif%}
+
+										{%if cr.delete_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Delete
+										</div>
+										{%endif%}
+
+										{%if cr.print_task %}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Print
+										</div>
+										{%endif%}
+
+										{%if cr.cancel_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Cancel
+										</div>
+										{%endif%}
+
+										{%if cr.reset_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Reset
+										</div>
+										{%endif%}
+
+										{%if cr.find_task%}
+										<div class="form-check pr-3">
+											<input class="form-check-input" type="checkbox" id="element_task" checked
+												disabled> Find
+										</div>
+										{%endif%}
+									</div>
+								</div>
+							</div>
+							{%endif%}
+							{%endfor%}
+						</div>
+					</div>
+					{%endfor%}
+				</div>
+			</div>
+			<div class="card-footer" style="display:flex; ">
+				<button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();">
+					<i class="fa fa-angle-left"></i> Back
+				</button>
+			</div>
+	</main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

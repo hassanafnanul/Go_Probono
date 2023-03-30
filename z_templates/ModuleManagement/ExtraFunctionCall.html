@@ -1,0 +1,232 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Extra Function Call</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+  <main class="main p-0">
+    {% include 'Common/navbar.html'%}
+    <div class="page_header"><span style="color: #000000">Extra Function Call</span></div>
+
+    {% include 'Common/taskbuttons.html'%}
+    
+    {%if messages%}
+    {%for message in messages%}
+    <script type="text/javascript">
+      toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+    </script>
+    {%endfor%}
+    {%endif%}
+
+    {% if msg %}
+    <div style="padding: 30px 20px;">
+      <div class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+        {% for m in msg %}
+        {{m}}<br>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div style="padding: 30px 20px;">
+      <div class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+        
+        <div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Voucher those are created without child will be deleted. (Not Important)</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'ChildlessVoucherDelete'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Makes full stock Empty. Closing stock - cr and GRNB - dr / SP - dr</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'EmptyFullStock'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >If there is any minus stock, Make it Physical Stock</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'MinusStockResolve'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9">Format URL of all Items in a same formatted way.</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'FormatAllUrls' %}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9">Make Vertual Stock Match Variation Text</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'MakeVertualStockMatchVariation' %}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Set Thumbnail As Item Image</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'SetThumbnailAsStockImage'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Format all urls in same ways</div> 
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'DeleteItemwithID'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Final values of 2021 vouchers will be calculated</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'CloasingBalanceCalculation'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Create all supplier account (One Click Must)</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'CreateAllSupplierAccount'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Warranty Name Redesign</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'WarrantyNameRedesign'%}">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Show Cache List</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'DeleteAllCacheData'%}?task=list">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+          
+
+          <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Delete Cache List</div>
+            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+              <a href="{%url 'DeleteAllCacheData'%}?task=delete_all">
+                <button type="button" class="btn btn-sm btn-secondary">
+                  <i class="fa fa-circle"></i> Call Function
+                </button>
+              </a>
+            </div>
+          </div>
+
+
+          <form method='POST'>
+            {% csrf_token %} 
+            <div class="form-group row mx-0 p-3" style="border-bottom: 1px solid #000000;" >
+              <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >Delete Specific Cache</div>
+              <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >
+                <input type=text name="cache_name">
+              </div>
+              <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                <a href="{%url 'DeleteAllCacheData'%}?task=delete">
+                  <button type="submit" class="btn btn-sm btn-secondary">
+                    <i class="fa fa-circle"></i> Call Function
+                  </button>
+                </a>
+              </div>
+            </div>
+          </form>
+
+          {% if before_cache %}
+          
+          <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >All cache variables</div>
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <p>{{before_cache|safe}}</p>
+          </div>
+          <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9" >After Deleting Cache List</div>
+          <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            {{after_cache|safe}}
+          </div>
+          {% endif %}
+        </div>
+
+        <div style="display:flex;margin-top: 30px;">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+            <i class="fa fa-angle-left"></i> Back
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

@@ -1,0 +1,106 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Task Management</title>
+{%endblock title%}
+
+{%block style%}
+<style>
+    .row {
+        padding: 5px 0px;
+    }
+</style>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'TaskManagement' %}">Task Management</a> / <span style="color: #000000">Details</span> </div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div class="card">
+            <div class="card-header" style="text-align: center;">
+                <strong>Detailed Information</strong>
+            </div>
+            <div class="card-body" style="display: flex; justify-content: center;">
+                <div class="form_container_div">
+                    <div class="row">
+                        <div class="col-5" style="font-weight: 600;">Task Name</div>
+                        <div class="col-1" style="font-weight: 600;">:</div>
+                        <div class="col-6">{{Task.name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="font-weight: 600;">Module Name</div>
+                        <div class="col-1" style="font-weight: 600;">:</div>
+                        <div class="col-6">{{Task.module.name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="font-weight: 600;">Order</div>
+                        <div class="col-1" style="font-weight: 600;">:</div>
+                        <div class="col-6">{{Task.order}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="font-weight: 600;">Task Url</div>
+                        <div class="col-1" style="font-weight: 600;">:</div>
+                        <div class="col-6">{{Task.task_url}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5" style="font-weight: 600;">Task Event</div>
+                        <div class="col-1" style="font-weight: 600;">:</div>
+                        <div class="col-6">
+                            {%if Task.view_task%}
+                            <div>View</div>
+                            {%endif%}
+                            {%if Task.add_task%}
+                            <div>Add</div>
+                            {%endif%}
+                            {%if Task.save_task%}
+                            <div>Save</div>
+                            {%endif%}
+                            {%if Task.edit_task%}
+                            <div>Edit</div>
+                            {%endif%}
+                            {%if Task.delete_task%}
+                            <div>Delete</div>
+                            {%endif%}
+                            {%if Task.print_task%}
+                            <div>Print</div>
+                            {%endif%}
+                            {%if Task.cancel_task%}
+                            <div>Cancel</div>
+                            {%endif%}
+                            {%if Task.reset_task%}
+                            <div>Reset</div>
+                            {%endif%}
+                            {%if Task.find_task%}
+                            <div>Find</div>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" style="display:flex; justify-content:center">
+                <button type="button" class="btn btn-sm btn-primary" onclick="javascript:window.history.back();">
+                    <i class="fa fa-angle-left"></i> Back
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+{%endblock%}
+    

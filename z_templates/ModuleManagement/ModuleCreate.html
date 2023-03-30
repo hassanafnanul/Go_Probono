@@ -1,0 +1,67 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Module Management</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+  <main class="main p-0">
+    {% include 'Common/navbar.html'%}
+    <div class="page_header"><a href="{%url 'ModuleManagement'%}">Module Management</a> / <span style="color: #000000">Create</span></div>
+
+    {% include 'Common/taskbuttons.html'%}
+    
+    {%if messages%}
+    {%for message in messages%}
+    <script type="text/javascript">
+      toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+    </script>
+    {%endfor%}
+    {%endif%}
+    <div style="padding: 30px 20px;">
+      <form method="post" class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+        {%csrf_token%}
+        <div>
+          <div class="form_container_div">
+            <div class="form-group row mx-0">
+              <label for="moduleName" class="col-sm-12 col-md-3 col-lg-3 col-xl-3 col-form-label required">Module
+                Name:</label>
+              <input type="text" class="form-control form-control-sm col-sm-12 col-md-9 col-lg-9 col-xl-9"
+                id="moduleName" name="element_name" required>
+            </div>
+            <div class="form-group row mx-0">
+              <label for="moduleOrder" class="col-sm-12 col-md-3 col-lg-3 col-xl-3 col-form-label required">Module
+                Order:</label>
+              <input type="number" min="1" class="form-control form-control-sm col-sm-12 col-md-9 col-lg-9 col-xl-9"
+                id="moduleOrder" name="element_order" required>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;margin-top: 30px;">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+            <i class="fa fa-angle-left"></i> Back
+          </button>
+          <div style="width:10px;"></div>
+          <button type="reset" class="reset btn btn-sm btn-danger">
+            <i class="fa fa-ban"></i> Reset
+          </button>
+          <div style="width:10px;"></div>
+          <button type="submit" class="submit btn btn-sm btn-primary">
+            <i class="fa fa-dot-circle-o"></i> Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}

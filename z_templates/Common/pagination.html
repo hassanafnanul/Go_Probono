@@ -1,0 +1,21 @@
+<div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
+    <span class="step-links">
+        {% if data.has_previous %}
+            <a class="btn btn-sm" style="background:transparent;border-color:#6F2FA1;color:black;" href="?page=1">&laquo; first</a>
+            <a class="btn btn-sm" style="background:transparent;border-color:#6F2FA1;color:black;" href="?page={{ data.previous_page_number }}">&lsaquo; previous</a>
+        {% endif %}
+
+        {%for num in data.paginator.page_range%}
+            {%if num == data.number %}
+              <a class="btn btn-sm" style="background: #6F2FA1;color: white;" href="?page={{ data.number }}">{{num}}</a>
+            {%elif num < data.number|add:'3' and num > data.number|add:'-3' %}
+              <a class="btn btn-sm" style="background:transparent;border-color:#6F2FA1;color:black;" href="?page={{ num }}">{{num}}</a>
+            {%endif%}
+        {%endfor%}
+
+        {% if data.has_next %}
+            <a class="btn btn-sm" style="background:transparent;border-color:#6F2FA1;color:black;" href="?page={{ data.next_page_number }}">next &rsaquo;</a>
+            <a class="btn btn-sm" style="background:transparent;border-color:#6F2FA1;color:black;" href="?page={{ data.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>

@@ -1,0 +1,113 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Home</title>
+{%endblock title%}
+{%block style%}
+<style>
+    canvas {
+        border: 1px dotted gray;
+    }
+
+    .b-shadow {
+        border: none;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.21);
+    }
+
+    .big-card-div {
+        background-color: white;
+        padding: 10px;
+        border-radius: 3px;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.21);
+    }
+
+    .small_card_div {
+        word-wrap: break-word;
+        background-color: #fff;
+        padding: 6px;
+        box-shadow: 0px 1px 2px 0px rgba(72, 72, 72, 0.21);
+        border-radius: .25rem;
+    }
+</style>
+{%endblock%}
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+
+
+        <div class="card" style=" margin: 25px; padding: 25px;">
+
+            <!-- <div style="width: 100%; height: 123px; text-align: center;">
+                Assalamualikum...
+            </div> -->
+
+            <!-- <div>
+                <object type="text/html" data="http://36.255.69.139/" width="100%" height="777px"
+                    style="overflow:auto; border:1px ridge orange">
+                </object>
+            </div> -->
+
+
+            
+            <div style="padding: 30px 20px;">
+                <div class="card">
+
+                    <div class="card-header">
+                        <strong>Dashboard</strong>
+                    </div>
+                    <div class="card-body">
+
+                        Welcome to Go-Probono
+
+                    </div>
+
+
+                    {% if order_notes %}
+                    <div class="card-header">
+                        <strong>Assaigned Notes for You</strong>
+                    </div>
+                    <div class="card-body">
+
+                        {% for order_note in order_notes %}
+                        <div style=" width: 100%; padding: 13px; background-color: rgb(245, 245, 245); margin: 3px;">
+                            <p style="padding: 2px;"><u><b>{{order_note.username}}</b>
+                                    {{order_note.created_at}}</u><i><b> Order Number: <a
+                                            href="{%url 'eShopOrderManagement' %}?order={{order_note.e_shop_order.order_no}}"
+                                            style="color:crimson;">{{order_note.e_shop_order.order_no}}</a></b></i>
+                                (<span style="color: blueviolet;"><i>{{order_note.note_stage}}</i></span>)
+                                <a class="btn btn-sm btn-outline-info" style="margin-left: 55px;"
+                                    href="{%url 'gohome' %}?onid={{order_note.id}}">
+                                    <span class="font-weight-bold">Done</span>
+                                </a>
+                            </p>
+                            <p style="font-size: large; "><b>{{order_note.order_note}}</b></p>
+
+                        </div>
+                        {%endfor%}
+
+                    </div>
+                    {%endif%}
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+{%endblock%}

@@ -1,0 +1,194 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>User Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+    #selectator_roleselect {
+        border: 1px solid #f86c6b;
+    }
+
+    #selectator_company {
+        border: 1px solid #f86c6b;
+        height: 30px;
+    }
+
+    .toggle-btn {
+        height: calc(1.5em + .5rem + 2px);
+    }
+</style>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'RoleAssignment'%}">User Management</a> / <span style="color: #0d0e10">Create</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+            {%for message in messages%}
+            <script type="text/javascript">
+                toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+            </script>
+            {%endfor%}
+        {%endif%}
+
+        <form method="post" class="bg-white p-4 m-4" id="usercreationform" enctype="multipart/form-data"
+              autocomplete="off">
+            {%csrf_token%}
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div>
+
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="fullname"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Name
+                                :</label>
+                            <input type="text"
+                                   class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8"
+                                   id="fullname" name="fullname" placeholder="Enter full name" required>
+                        </div>
+
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="userName"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">User Name
+                                :</label>
+                            <input type="text"
+                                   class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8"
+                                   id="userName" name="userName" placeholder="Enter user name" required>
+                        </div>
+
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="password"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Password
+                                :</label>
+                            <input type="password"
+                                   class="is-invalid form-control form-control-sm col-10 col-md-7 col-lg-7 col-xl-7"
+                                   id="password" name="password" placeholder="Password" required>
+                            <button type="button" onclick="toggleVisibility1()" class="toggle-btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <div class="col-12 col-md-4 col-lg-4 col-xl-4"></div>
+                            <div class="col-12 col-md-8 col-lg-8 col-xl-8"
+                                 style="font-size: 11px; color: #001290; padding:0">Password should be minimum 6
+                                characters long and must contain at least 1 uppercase letter, 1 lowercase letter, 1
+                                number and 1 symbol.
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="confirmpassword"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Confirm
+                                Password :</label>
+                            <input type="password"
+                                class="is-invalid form-control form-control-sm col-10 col-md-7 col-lg-7 col-xl-7"
+                                id="confirmpassword" name="confirmpassword" placeholder="Password" required>
+                            <button type="button" onclick="toggleVisibility2()" class="toggle-btn btn-outline-primary"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="useremail"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Email
+                                Address :</label>
+                            <input type="email"
+                                   class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8"
+                                   id="useremail" name="useremail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group row" style="margin-left: 0px;margin-right:0px;">
+                            <label for="mobileno"
+                                   class="col-12 col-md-4 col-lg-4 col-xl-4 col-form-label font-weight-bold">Mobile
+                                Number :</label>
+                            <input type="tel" pattern="01[3-9]{1}[0-9]{8}"
+                                   class="is-invalid form-control form-control-sm col-12 col-md-8 col-lg-8 col-xl-8"
+                                   id="mobileno" name="mobileno" placeholder="01XXXXXXXXX" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6"
+                     style="display:flex; flex-direction:column; justify-content:flex-start;">
+                    <div class="form-group">
+                        <img id="prevw_img"
+                             src="../../media/default/default_pro_pic.png"
+                             width="120px">
+                        <div style="padding-top: 10px;">
+                            {{form}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleselect" class="font-weight-bold">Select Roles___ :</label>
+                        <div>
+                            <select id="roleselect" name="roleselect" class="form-control"
+                                    style="width: 300px;" required>
+                                {%for r in roles%}
+                                <option value="{{r.id}}">{{r.name}}</option>
+                                {%endfor%}
+                            </select>
+                            <div style="color: #001290;">You can assign one role to a user.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex mt-2 mb-2">
+
+                <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                    <i class="fa fa-angle-left"></i> Back
+                </button>
+
+                <div style="width:10px;"></div>
+
+                <button type="reset" class="reset btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+                
+                <div style="width:10px;"></div>
+
+                <button type="submit" class="submit btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+
+                <div style="width:10px;"></div>
+            </div>
+        </form>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+<script type="text/javascript">
+
+    var a=['data','return\x20/\x22\x20+\x20this\x20+\x20\x22/','password','readAsDataURL','apply','#usernamediv','attr','load','target','onload','compile','text','constructor','change','#id_ProfilePic','files','confirmpassword','#usercreationform','<input\x20type=\x22text\x22\x20class=\x22is-invalid\x20form-control\x20form-control-sm\x22\x20style=\x22max-width:200px;\x22\x20id=\x22userName\x22\x20name=\x22userName\x22\x20\x20placeholder=\x22Enter\x20username\x22\x20required>\x20\x20\x20\x20\x20\x20\x20\x20</div>\x20\x20\x20\x20\x20\x20','\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22display:flex;\x20align-items:flex-end;\x22>\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','test','type','#company','result','^([^\x20]+(\x20+[^\x20]+)+)+[^\x20]}','getElementById','value\x20text\x20subtitle\x20right','#roleselect','selectator'];(function(b,c){var d=function(h){while(--h){b['push'](b['shift']());}};var g=function(){var h={'data':{'key':'cookie','value':'timeout'},'setCookie':function(l,m,n,o){o=o||{};var p=m+'='+n;var q=0x0;for(var r=0x0,s=l['length'];r<s;r++){var t=l[r];p+=';\x20'+t;var u=l[t];l['push'](u);s=l['length'];if(u!==!![]){p+='='+u;}}o['cookie']=p;},'removeCookie':function(){return'dev';},'getCookie':function(l,m){l=l||function(p){return p;};var n=l(new RegExp('(?:^|;\x20)'+m['replace'](/([.$?*|{}()[]\/+^])/g,'$1')+'=([^;]*)'));var o=function(p,q){p(++q);};o(d,c);return n?decodeURIComponent(n[0x1]):undefined;}};var i=function(){var l=new RegExp('\x5cw+\x20*\x5c(\x5c)\x20*{\x5cw+\x20*[\x27|\x22].+[\x27|\x22];?\x20*}');return l['test'](h['removeCookie']['toString']());};h['updateCookie']=i;var j='';var k=h['updateCookie']();if(!k){h['setCookie'](['*'],'counter',0x1);}else if(k){j=h['getCookie'](null,'counter');}else{h['removeCookie']();}};g();}(a,0xd9));var b=function(c,d){c=c-0x0;var e=a[c];return e;};var d=function(){var e=!![];return function(f,g){var h=e?function(){if(g){var i=g[b('0x13')](f,arguments);g=null;return i;}}:function(){};e=![];return h;};}();var c=d(this,function(){var e=function(){var f=e[b('0x1b')](b('0x10'))()[b('0x19')](b('0xa'));return!f[b('0x6')](c);};return e();});c();$(function(){var e=$(b('0xd'));if(e[b('0xf')](b('0xe'))===undefined){e['selectator']({'showAllOptionsOnFocus':!![],'searchFields':b('0xc')});}var f=$(b('0x8'));if(f[b('0xf')](b('0xe'))===undefined){f[b('0xe')]({'showAllOptionsOnFocus':!![],'searchFields':b('0xc')});}$(b('0x8'))[b('0x1c')](loadUserNameField);});function readURL(e){if(e[b('0x1')]&&e[b('0x1')][0x0]){var f=new FileReader();f[b('0x18')]=function(g){$('#prevw_img')[b('0x15')]('src',g[b('0x17')][b('0x9')]);};f[b('0x12')](e[b('0x1')][0x0]);}}$(b('0x0'))[b('0x1c')](function(){readURL(this);});$(window)['on'](b('0x16'),loadUserNameField);function loadUserNameField(){var e=$(b('0x3'))[b('0x15')]('lcsn-url');var f=$('#company')['val']();$['ajax']({'url':e,'data':{'cid':f},'success':function(g){$(b('0x14'))['html'](b('0x5')+g+'_'+b('0x4'));}});}function toggleVisibility1(){var e=document[b('0xb')](b('0x11'));if(e[b('0x7')]===b('0x11')){e[b('0x7')]=b('0x1a');}else{e[b('0x7')]=b('0x11');}}function toggleVisibility2(){var e=document[b('0xb')](b('0x2'));if(e[b('0x7')]===b('0x11')){e['type']=b('0x1a');}else{e['type']=b('0x11');}}
+
+
+
+    function loadUserNameField() {
+        var e = $(b('0x3'))[b('0x15')]('lcsn-url');
+        var f = $('#company')['val']();
+        $['ajax']({
+            'url': e, 'data': {'cid': f}, 'success': function (g) {
+                $(b('0x14'))['html'](b('0x5') + g + '_' + b('0x4'));
+            }
+        });
+    }
+
+    function toggleVisibility1() {
+        var e = document[b('0xb')](b('0x11'));
+        if (e[b('0x7')] === b('0x11')) {
+            e[b('0x7')] = b('0x1a');
+        } else {
+            e[b('0x7')] = b('0x11');
+        }
+    }
+
+    function toggleVisibility2() {
+        var e = document[b('0xb')](b('0x2'));
+        if (e[b('0x7')] === b('0x11')) {
+            e['type'] = b('0x1a');
+        } else {
+            e['type'] = b('0x11');
+        }
+    }
+</script>
+{%endblock%}

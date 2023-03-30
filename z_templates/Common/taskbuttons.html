@@ -1,0 +1,13 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<body>
+
+    {%for permitted_task in PermittedSiblingTasks%}
+        <a class="btn btn-sm btn-choice" href="{%url permitted_task.task__task_url %}" style="margin: 13px;" >
+            <i class="icon-notebook"></i> <b>  {{permitted_task.task__name}}</b>
+        </a>
+    {%endfor%}
+
+</body>
+</html>

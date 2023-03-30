@@ -1,0 +1,20 @@
+<div class="pagination" style="justify-content: center;align-items: center;height: 55px;">
+    <span class="step-links">
+        {% if data.has_previous %}
+            <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page=1{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">&laquo; first</a>
+            <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ data.previous_page_number }}{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">&lsaquo; previous</a>
+        {% endif %}
+        {%for num in data.paginator.page_range%}
+            {%if num == data.number %}
+              <a class="btn btn-sm" style="background: #20a8d8;color: white;" href="?page={{ data.number }}{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">{{num}}</a>
+            {%elif num < data.number|add:'3' and num > data.number|add:'-3' %}
+              <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ num }}{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">{{num}}</a>
+            {%endif%}
+        {%endfor%}
+
+        {% if data.has_next %}
+            <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ data.next_page_number }}{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">next &rsaquo;</a>
+            <a class="btn btn-sm" style="background:transparent;border-color:#20a8d8;color:black;" href="?page={{ data.paginator.num_pages }}{% for i in request.GET.items %}{% if i.0 != 'page' %}&{{ i.0 }}={{i.1}}{% endif %}{% endfor %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
