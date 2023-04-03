@@ -83,15 +83,14 @@ WSGI_APPLICATION = 'Go_Probono.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  
+        # 'ENGINE': 'django.db.backends.mysql',   # MySQL
+        'ENGINE': 'django.db.backends.postgresql',   # PostGRE
         'NAME': 'go_probono',  
-        'USER': 'root',  
+        'USER': 'root',
         'PASSWORD': 'root',  
         'HOST': '127.0.0.1',  
-        'PORT': '3306',  
-        'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-        }
+        # 'PORT': '3306',   # MySQL
+        'PORT': '5432',   # PostGRE
     }
 }
 

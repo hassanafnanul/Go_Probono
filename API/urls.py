@@ -23,6 +23,8 @@ urlpatterns = [
 
     path('law/',include('API.Law.urls')),
 
+    path('kyl/',include('API.KnowYourLaw.urls')),
+
     path('home/',include('API.Home.urls')),
 
     path('help-center/',include('API.HelpCenter.urls')),
