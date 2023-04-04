@@ -75,11 +75,11 @@
 								<div class="col-3" style="font-weight: 600;">Button</div>
 								<div class="col-1" style="font-weight: 600;">:</div>
 								<div class="col-4">
-									<a class="btn btn-sm btn-warning mr-1" href="{{slider.button_url}}">
+									<a class="btn btn-sm btn-primary mr-1" href="{{slider.button_url}}" target="_blank">
 									{{slider.button_text}}
 									</a>
 								</div>
-								<div class="col-4">URL: <a href="{{slider.button_url}}">{{slider.button_url}}</a></div>
+								<div class="col-4">URL: <a href="{{slider.button_url}}" target="_blank">{{slider.button_url}}</a></div>
 							</div>
 							<div class="row">
 								<div class="col-3" style="font-weight: 600;">Description</div>
@@ -88,26 +88,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
-
-				
-				<div class="card-header" style="text-align: center;">
-					<strong>Assigned Items</strong>
-				</div>
-				<div class="card-body">
-					{% if sliderItems %}
-					{% for sliderItem in sliderItems %}
-					<div class="row">
-						{%if sliderItem.item.thumbnail %}
-						<div class="col-1" ><img src="{{sliderItem.item.thumbnail.url}} " width="99"></div>
-						{%endif%}
-						<div class="col-11"><a href="{%url 'ItemView' sliderItem.item.id %}">{{sliderItem.item.item_name}}</a>  ({{sliderItem.item.code}})</div>
-					</div>
-					{% endfor %}
-					{% else %}
-					<p style="color: red;">No Item Assigned</p>
-					{% endif %}
-
 				</div>
 
 				<div class="card-footer" style="display:flex; ">
