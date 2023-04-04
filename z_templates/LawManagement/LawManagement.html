@@ -50,8 +50,8 @@
                 <table class="table table-sm bg-white mt-3">
                     <thead>
                     <tr>
+                        <th>Thumbnail</th>
                         <th>Law Name</th>
-                        <th>Available In Home</th>
                         <th>Active</th>
                         <th>Actions</th>
                     </tr>
@@ -59,15 +59,11 @@
                     <tbody>
                     {% for law in laws %}
                     <tr>
+                        <td><img src="{{law.thumbnail.url}}" style="width:120px"></td>
                         {% if law.is_archived %}
                         <td style="color: red;">{{law.name}}</td>
                         {% else %}
-                        <td>{{law.law_name}}</td>
-                        {% endif %}
-                        {% if law.home_law %}
-                        <td style="color: green;"><b>&check;</b></td>
-                        {% else %}
-                        <td style="color: red;"><b>&cross;</b></td>
+                        <td>{{law.name}}</td>
                         {% endif %}
                         {% if law.is_archived %}
                         <td style="color: red;"><b>&cross;</b></td>

@@ -1,6 +1,6 @@
 {% extends "Common/base.html" %}
 {%block title%}
-<title>Law Management</title>
+<title>Know Your Law Management</title>
 {%endblock title%}
 {%block style%}
 {%endblock%}
@@ -10,10 +10,8 @@
 <div class="app-body mt-0">
     <main class="main p-0">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><a href="{%url 'LawManagement'%}">Law Management</a> / <span
-                style="color: #000000">Details</span></div>
+        <div class="page_header"><a href="{%url 'KylManagement'%}">Know Your Law Management</a> / <span style="color: #000000">Details</span></div>
         
-
         {% include 'Common/taskbuttons.html'%}
 
         {%if messages%}
@@ -23,6 +21,7 @@
         </script>
         {%endfor%}
         {%endif%}
+
         <div style="padding: 30px 20px;">
             <div class="card">
                 <div class="card-header" style="text-align: center;">
@@ -31,40 +30,52 @@
                 <div class="card-body" style="display: flex; justify-content: center;">
                     <div class="form_container_div">
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Law name</div>
+                            <div class="col-5" style="font-weight: 600;">Law</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{law.law_name}}</div>
+                            <div class="col-6"><a  href="{%url 'LawView' kyl.law.id %}" >{{kyl.law.name}}</a></div>
                             <br>
                             <br>
                         </div>
 
+
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Available in Home</div>
+                            <div class="col-5" style="font-weight: 600;">Question</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            {% if law.home_law %}
-                            <div class="col-6" style="color: green;"><b>&check;</b></div>
-                            {% else %}
-                            <div class="col-6" style="color: red;"><b>&cross;</b></div>
-                            {% endif %}
-                            <br>
+                            <div class="col-6">{{kyl.question}}</div>
                             <br>
                         </div>
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Logo</div>
+                            <div class="col-5" style="font-weight: 600;">English Answer</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6"><img src="{{law.logo.url}}" width=150></div>
-                            <br>
+                            <div class="col-6">{{kyl.eng_answer}}</div>
                             <br>
                         </div>
-                        
+
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Law Description</div>
+                            <div class="col-5" style="font-weight: 600;">Bangla Answer</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{law.description | safe}}</div>
-                            <br>
+                            <div class="col-6">{{kyl.ban_answer}}</div>
                             <br>
                         </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Tags</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{kyl.tags}}</div>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Ratings</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{kyl.rating}}</div>
+                            <br>
+                        </div>
+
+
+
+
                     </div>
                 </div>
                 <div class="card-footer" style="display:flex;">

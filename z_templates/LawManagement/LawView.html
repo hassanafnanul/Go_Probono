@@ -25,35 +25,40 @@
         {%endif%}
         <div style="padding: 30px 20px;">
             <div class="card">
-                <div class="card-header" style="text-align: center;">
+                <div class="card-header">
                     <strong>Detailed Information</strong>
                 </div>
-                <div class="card-body" style="display: flex; justify-content: center;">
+                <div class="card-body" style="display: flex;">
                     <div class="form_container_div">
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Law name</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{law.law_name}}</div>
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Available in Home</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            {% if law.home_law %}
-                            <div class="col-6" style="color: green;"><b>&check;</b></div>
-                            {% else %}
-                            <div class="col-6" style="color: red;"><b>&cross;</b></div>
-                            {% endif %}
-                            <br>
-                            <br>
-                        </div>
 
                         <div class="row">
                             <div class="col-5" style="font-weight: 600;">Logo</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6"><img src="{{law.logo.url}}" width=150></div>
+                            <div class="col-6"><img src="{{law.thumbnail.url}}" width=150></div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Law name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{law.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Order</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="color: green;">{{law.order}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Headline</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{law.headline}}</div>
                             <br>
                             <br>
                         </div>
