@@ -1,80 +1,104 @@
-{%extends "Common/base.html"%} 
-{%load static%} 
-{%block content%}
+{%extends "Common/base.html"%} {%load static%} {%block content%}
 <style>
-  .outermain {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
-    background: rgba(111,42,161,1);
-    /* background: linear-gradient(225deg, rgba(111,42,161,1) 0%, rgba(16,110,255,1) 100%); */
+  .login-logo {
+    width: 511px;
+    height: 158px;
   }
-  .m-form-outer {
-    box-shadow: 0 0 0 1px #5f5f5f;
-    padding: 15px;
-    display: block;
-    width: 328px;
-    background-color: white;
-    border-radius: 4px;
+  .login-container-top {
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-top: 25px;
+    padding: 35px 55px 65px 55px;
+  }
+  .login-container-top p {
+    color: #6f2fa1;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 35px;
+  }
+  .input-field{
+    position: relative;
   }
   .m-form-control {
-    width: 300px;
-    border: 1px solid #dfdfdf;
-    border-radius: 15px;
-    margin-top: 25px;
-    height: 34px;
-    background: #e8e8e8;
-    padding-left: 15px;
-  }
-  @media (max-width: 575.98px) {
-    .login-form-div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
-    }
+    width: 100%;
+    margin-top: 35px;
+    font-size: 16px;
+    border: 1px solid #6F2FA1;
+    border-radius: 7px;
+    padding: 21px;
   }
   .toggle-btn {
     all: unset;
     width: 24px;
     position: absolute;
-    top: 96px;
-    left: 272px;
+    top: 55px;
+    right: 19px;
+  }
+  .btn-login {
+    background: #6F2FA1;
+    color: white;
+    width: 100%;
+    font-size: 24px;
+    border-radius: 16px;
+    margin: 44px 0 23px 0;
+    padding: 16px;
+  }
+  .login-container-top h6{
+    color: #6F2FA1;
+    font-size: 18px;
+    text-align: center;
+  }
+  .login-container-bottom {
+    font-size: 20px;
+    color: #000;
+    margin-top: 182px;
+    text-align: center;
   }
 </style>
-<div class="outermain">
+<div>
   <div>
-    {%if messages%} 
-    {%for message in messages%}
+    {%if messages%} {%for message in messages%}
     <script type="text/javascript">
       toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
     </script>
-    {%endfor%} 
-    {%endif%}
-    <form method="post" class="m-form-outer">
-      <div style="display: grid; place-items: center;background-color: #171346; padding: 5px;">
-        <img src="{%static 'images/gp_logo.png' %}" width="120">
+    {%endfor%} {%endif%}
+    <form method="post" class="row">
+      <div class="col-6 d-flex justify-content-center align-items-center" style="background: #6f2fa1">
+        <img src="{%static 'images/auth-img.png' %}" />
       </div>
-      <div style="display: flex; flex-direction: column; position: relative;">
+      <div class="col-6 bg-white" style="padding: 143px 72px 36px 72px;">
         {%csrf_token%}
-        <input type="text" name="username" required="" id="id_username" class="m-form-control" placeholder="Username"/>
-        <input type="password" name="password" required="" id="id_password" class="m-form-control" placeholder="Password"/>
-        <button type="button" onclick="toggleVisibility()" class="toggle-btn">
-          <i class="fas fa-eye"></i>
-        </button>
-        <input type="hidden" value="{{next}}" name="rurl">
-        <div style="height: 25px;"></div>
-        <button type="submit" class="btn" style="background-color: #6F2AA1; color: white; border-radius: 15px;">
-          <i class="fa fa-dot-circle-o"></i> Login
-        </button>
+        <div class="">
+          <img src="{%static 'images/auth-logo.png' %}" class="login-logo" />
+          <div class="login-container-top">
+            <p>Login to Go probono</p>
+            <div>
+              <div class="input-field">
+                <input type="text" name="username" required="" id="id_username" class="m-form-control"
+                placeholder="Enter your email or Phone number " />
+                <span class="toggle-btn">@</span>
+              </div>
+              <div class="input-field">
+                <input type="password" name="password" required="" id="id_password" class="m-form-control"
+                placeholder="Enter your Password" />
+              <button type="button" onclick="toggleVisibility()" class="toggle-btn">
+                <i class="fas fa-eye"></i>
+              </button>
+              </div>
+              <input type="hidden" value="{{next}}" name="rurl" />
+              <button type="submit" class="btn-login">
+                Login
+              </button>
+            </div>
+            <h6>Forgotten Account ? </h6>
+          </div>
+          <p class="login-container-bottom">Don’t have an account ? <span style="color: #6F2FA1;">Sign Up</span></p>
+        </div>       
       </div>
     </form>
   </div>
 </div>
-{%endblock content%} 
-{%block js%}
+{%endblock content%} {%block js%}
 <script>
   function toggleVisibility() {
     var x = document.getElementById("id_password");
