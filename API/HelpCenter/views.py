@@ -13,8 +13,8 @@ from rest_framework.decorators import api_view
 
 class RulesAPI(APIView):
     def get(self, request):
-        rules = HelpCenter.objects.all().exclude(is_archived = True)
-        serializer = RulesSerializer(rules, many=True)
+        rules = HelpCenter.objects.all().exclude(is_archived = True).last()
+        serializer = RulesSerializer(rules)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 

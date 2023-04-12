@@ -16,7 +16,7 @@
 <div class="app-body">
   <main class="main">
     {% include 'Common/navbar.html'%}
-    <div class="page_header"><a href="{%url 'LogWithAuditManagement' %}">Audit</a> / Details</div>
+    <div class="page_header"><a href="{%url 'LogWithAuditManagement' %}">Audit</a><span style="color: black;"> / Details</span></div>
     
 
     {% include 'Common/taskbuttons.html'%}
@@ -29,10 +29,10 @@
       {%endfor%}
     {%endif%}
     <div class="card">
-      <div class="card-header" style="text-align: center;">
+      <div class="card-header"">
         <strong>Detailed Information</strong>
       </div>
-      <div class="card-body" style="display: flex; justify-content: center;">
+      <div class="card-body" style="display: flex;">
         <div class="form_container_div">
           <div class="row">
             <div class="col-5" style="font-weight: 600;">User Name</div>

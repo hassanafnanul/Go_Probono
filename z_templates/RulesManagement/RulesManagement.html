@@ -25,11 +25,7 @@
         {%endif%}
         <div class="main_wrapper">
             <div style="display: flex;">
-                {%if privilege and privilege.add_task%}
-                <a class="btn btn-primary btn-sm" href="{%url 'RulesCreate'%}">
-                    <i class="icon-plus"></i> Add Rules
-                </a>
-                {%endif%}
+
                 <div style="width: 10px;"></div>
                 <a class="btn btn-success btn-sm" href="{%url 'RulesManagement'%}">
                     <i class="icon-refresh"></i> Reload

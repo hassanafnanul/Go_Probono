@@ -148,8 +148,6 @@ def SliderCreate(request, task_url="SliderManagement", action="add"):
 @view_permission_required
 def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
     if request.method == 'POST':
-
-
         r = request.POST
         title = r.get('title')
         order = r.get('order')
@@ -161,9 +159,10 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
         slider_type = r.get('slider_type')
         start_date = datetime_local_to_datetime(start_date)
         end_date = datetime_local_to_datetime(end_date)
+        is_archived = r.get('show')
 
 
-        if Slider.objects.filter(title = title).exists(): # To cheeck same title exists or not
+        if Slider.objects.filter(title = title).exclude(id = id).exists(): # To cheeck same title exists or not
             messages.warning(request, f'Title Must be Unique.')
             return redirect('SliderEdit', id = id)
         
@@ -183,7 +182,7 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
 
         
         slider = Slider.objects.get(id=id)
-        c_data = slider.short_name
+        c_data = slider.title
         
         
         slider.title = title
@@ -194,33 +193,24 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
         slider.button_text = button_text
         slider.slider_text = slider_text
         slider.slider_type = slider_type
-
-        if Slider.objects.filter(title = title).exclude(id = id).exists(): # To cheeck same title exists or not
-            # slider.slider_URL = slider_url # Opposite Task
-            messages.warning(request, f'Title Must be Unique.')
-            return redirect('SliderEdit', id = id)
-
         slider.is_archived = is_archived
 
         image = ''
         
-        img_files = ['', '']
-        comname = 'C_' + str(request.session.get('com'))
+        img_files = []
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
-            f_name = filename
             fs = FileSystemStorage(
-                location = str(settings.MEDIA_ROOT) + '/' +comname + '/slider/',
-                base_url = comname + '/slider/'
+                location = str(settings.MEDIA_ROOT) + '/slider/',
+                base_url = '/slider/'
             )
             myfile.name = ChangeFileName(myfile.name)
             filename=fs.save(myfile.name, file)
-            image = fs.url(filename)
-
-            if f_name == 'image':
-                img_files[0] = image
+            if filename:
+                image = fs.url(filename)
+                img_files.append(image)
             else:
-                img_files[1] = image
+                img_files.append('/default/default.png')
 
         if img_files[0] != '':
             slider.image = img_files[0]
@@ -237,7 +227,6 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
     
     elif request.method == 'GET':
         slider = get_object_or_404(Slider, id=id)
-        slider_participation_types = Slider.SliderParticipationType.choices
         try:
             upcomingBannerDate = datetime_to_datetime_local(slider.upcoming_banner_date)
         except:
@@ -245,7 +234,7 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
         context = {
             'cnav': UserCustomNav(request),
             'slider': slider,
-            'slider_participation_types':slider_participation_types,
+            'slider_types':SLIDER_TYPES,
             'upcoming_start': upcomingBannerDate,
             'start': datetime_to_datetime_local(slider.start_date),
             'end': datetime_to_datetime_local(slider.end_date),

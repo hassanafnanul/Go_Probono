@@ -14,7 +14,7 @@
 <div class="app-body mt-0">
     <main class="main p-0">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><a href="{%url 'ModuleManagement' %}">Module Management</a> / <span style="color: #000000">Details</span></div>
+        <div class="page_header"><a href="{%url 'UserManagement' %}">User Management</a> / <span style="color: #000000">Details</span></div>
         
 
 		{% include 'Common/taskbuttons.html'%}
@@ -74,7 +74,7 @@
 					<!--            <div class="col-6">{{company}}</div>-->
 					<!--          </div>-->
 				</div>
-				<div class=""><img src="{{userwithrole.ProfilePic.url}}" alt="profile pic" width="200px" height="200px">
+				<div class=""><img src="{{userwithrole.picture.url}}" alt="profile pic" width="200px" height="200px">
 				</div>
 			</div>
 			<div class="card-footer" style="display:flex; ">
