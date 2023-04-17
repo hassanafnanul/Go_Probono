@@ -5,5 +5,7 @@ vscode
 Pipfile.lock
 Pipfile
 .idea/
+
+env
 env_goprobono
 media
