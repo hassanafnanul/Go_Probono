@@ -35,3 +35,26 @@ class LawAPI(APIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+
+
+class LawDetailsAPI(APIView):
+    def get(self, request, id):
+        print(id, type(id))
+        try: 
+            law = Law.objects.get(id = id, is_archived = False)
+            serializer = LawSerializer(law)
+        
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            errorJson = {
+                'success': False,
+                'msg': 'ID is not valid'
+            }
+            return Response(errorJson, status=status.HTTP_404_NOT_FOUND)
+        
+        
+
+
+

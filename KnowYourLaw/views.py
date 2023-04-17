@@ -155,3 +155,34 @@ def KylView(request, id, task_url="KylManagement", action="view"):
 
 
 
+@login_required
+@view_permission_required
+def KylBulkUpdate(request, task_url="KylManagement", action="add"):
+
+    # permittedCSV = [[7, 'str'], [8, 'num'], [9, 'num'], [10, 'num'], [11, 'num']]
+    # permittedCSV = [(7, 'str'), (8, 'num'), (9, 'num'), (10, 'num'), (11, 'num')]
+    permittedCSV = [
+        {'row':1, 'type':'num', 'editable':'F', 'width':3, 'title':'SL', 'short_name': 'sl'},
+        {'row':2, 'type':'text', 'editable':'T', 'width':59, 'title':'Question', 'short_name': 'qsn'},
+        {'row':3, 'type':'text', 'editable':'T', 'width':0, 'title':'Answer English', 'short_name': 'ans_eng'},
+        {'row':4, 'type':'text', 'editable':'T', 'width':0, 'title':'Answer Bangla', 'short_name': 'ans_ban'},
+    ]
+    # textarea
+
+    # theUrl = {'url': '/item/ajax/upload-product/'}
+
+    context = {
+        'key': 'Item Stock',
+        'theUrl': '/item/ajax/upload-product/',
+        'starting_row': 3,
+        'starting_column': 4,
+        'permittedCSV': permittedCSV,
+
+        'cnav': UserCustomNav(request),
+        'privilege': DetailPermissions(request, task_url),
+        'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
+    }
+    return render(request, 'CSVedit/CSVedit.html', context)
+
+
+
