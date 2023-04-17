@@ -1,0 +1,450 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Bulk Update</title>
+{%endblock title%}
+
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><span style="color: #000000">Bulk Update</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+            {%for message in messages%}
+            <script type="text/javascript">
+                toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+            </script>
+            {%endfor%}
+        {%endif%}
+
+
+        <div style="padding: 30px 20px; background-color: white;">
+
+            <button id="update_bulk" class="btn btn-sm btn-outline-primary mr-5" type="button">
+                <i class="fa fa-plus-square"></i> Update Bulk {{key}}
+            </button>
+
+            {% comment %}
+            <a class="btn btn-sm btn-outline-secondary mr-1"
+                href="{%url 'SampleFileDownload' key %}">
+                <i class="fas fa-arrow-circle-down"></i> Sample File Download
+            </a>
+            {% endcomment %}
+
+            <div id="bulk_update_div" class="m-2"></div>
+
+        </div>
+
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+ 
+{%block js%}
+<script>
+
+    var theUrl = '{{theUrl|safe}}'
+    var starting_row = {{starting_row}}
+    var starting_column = {{starting_column}}
+    var permittedCSV = {{permittedCSV|safe}}
+    var permittedCSV_length = permittedCSV.length
+        
+
+
+    $(document).ready(function(){
+
+        $("#update_bulk").click(function (e) {
+            if (document.getElementById('bulk_update_div').innerHTML == "")
+            {
+                $("#bulk_update_div").html('<input type="file" id="dealCsv" accept=".csv"/>')
+            }
+            else
+            {
+                $("#bulk_update_div").html('')
+            }
+
+            function uploadDealcsv () {}; 
+
+            /*------ Method for read uploded csv file ------*/
+            uploadDealcsv.prototype.getCsv = function(e) {
+                
+                let input = document.getElementById('dealCsv');
+                input.addEventListener('change', function() {
+                    if (input.files && input.files[0]) {
+
+                        var myFile = input.files[0];
+                        var reader = new FileReader();
+
+                        
+                        reader.addEventListener('load', function (e) {
+                            let csvdata = e.target.result; 
+                            parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data 
+                        });
+                        
+                        reader.readAsBinaryString(myFile);
+
+                        
+                        console.log('reader-----', reader)
+                    }
+                });
+            }
+
+            /*------- Method for parse csv data and display --------------*/
+            uploadDealcsv.prototype.getParsecsvdata = function(data) {
+
+                let parsedata = [];
+                let issubmitable = true;
+                let newLinebrk = data.split("\n");
+
+                
+
+                console.log('permittedCSV_length------'+permittedCSV_length)
+                console.log('starting_row------'+starting_row)
+                                
+                for(let i = 0; i < newLinebrk.length; i++)
+                {
+                    temp_row = newLinebrk[i].split(",")
+                    temp_row_length = temp_row.length
+                    // if(temp_row_length>12)
+                    // {
+                    //     t11 = temp_row[temp_row_length-1]
+                    //     t10 = temp_row[temp_row_length-2]
+                    //     t9 = temp_row[temp_row_length-3]
+                    //     t8 = temp_row[temp_row_length-4]
+                    //     t7 = temp_row[temp_row_length-5]
+                    //     t6 = temp_row[temp_row_length-6]
+                        
+                    //     temp_row[11] = t11
+                    //     temp_row[10] = t10
+                    //     temp_row[9] = t9
+                    //     temp_row[8] = t8
+                    //     temp_row[7] = t7
+                    //     temp_row[6] = t6
+
+                    //     console.log('temp_row-2--- '+temp_row)
+                    // }
+                    // parsedata.push(temp_row)
+
+                    if(temp_row_length>12)
+                    {
+                        for(j=0; j<temp_row_length; j++)
+                        {
+
+                        }
+
+                    }
+                    parsedata.push(newLinebrk[i].split(","))
+                }
+                
+
+
+                console.log('FINAL--issubmitable-----1-----'+ issubmitable)
+
+                a = createJson(parsedata)
+
+
+                item_count = a.length;
+                
+                if (item_count>0) // CSV confirmed
+                {
+                    if(issubmitable) // Valid CSV
+                    {
+                        $("#bulk_update_div").html('\
+                            <button type = "button" id="uploadBulkUpdate" class="submit btn btn-sm btn-outline-primary">\
+                                <i class="fa fa-dot-circle-o"></i> Upload\
+                            </button>\
+                        ')
+                    }
+                    else // Not Valid CSV
+                    {
+                        
+                        $("#bulk_update_div").html('\
+                            <div class="m-2" style="color: red">\
+                                <b>Please remove comma(,) from mislined rows</b>\
+                            </div>\
+                        \
+                        ')
+                    }
+
+                    // Table Creation with a
+                    makeTable(a)
+
+                        
+
+                }
+                else // Not CSV
+                {
+                    $("#bulk_update_div").html('\
+                        <div class="m-2" style="color: red">\
+                            <b>No updateable data (Check File is .CSV or not)</b>\
+                        </div>\
+                    ')
+                }
+
+
+
+                let inputbtn = document.getElementById('uploadBulkUpdate');
+                inputbtn.addEventListener('click', function() {
+                    inputbtn.disabled = true;
+                    inputbtn.innerHTML = "Please Wait";
+                    
+                    console.log('-----a-------')
+                    console.log(a)
+                    console.log(typeof(a))
+
+                    b = validateAndCreateFinalData(parsedata)
+
+                    console.log('-----b-------')
+                    console.log(b)
+                    console.log(typeof(b))
+
+
+                    for(let i = 0; i < newLinebrk.length; i++)
+                    {
+                        temp_row = newLinebrk[i].split(",")
+                        temp_row_length = temp_row.length
+                        a = starting_column+permittedCSV_length
+                        if(temp_row_length > a)
+                        {
+                        //     t11 = temp_row[temp_row_length-1]
+                        //     t10 = temp_row[temp_row_length-2]
+                        //     t9 = temp_row[temp_row_length-3]
+                        //     t8 = temp_row[temp_row_length-4]
+                        //     t7 = temp_row[temp_row_length-5]
+                        //     t6 = temp_row[temp_row_length-6]
+                            
+                        //     temp_row[11] = t11
+                        //     temp_row[10] = t10
+                        //     temp_row[9] = t9
+                        //     temp_row[8] = t8
+                        //     temp_row[7] = t7
+                        //     temp_row[6] = t6
+
+                        //     console.log('temp_row-2--- '+temp_row)
+                            issubmitable = false
+                            break
+                        }
+                        // parsedata.push(temp_row)
+
+                        if(temp_row_length>12)
+                        {
+                            for(j=0; j<temp_row_length; j++)
+                            {
+
+                            }
+
+                        }
+                        parsedata.push(newLinebrk[i].split(","))
+                    }
+                    
+
+
+                    console.log('FINAL--issubmitable-----2-----'+ issubmitable)
+
+                    if(issubmitable)
+                    {
+                        // $("#bulk_update_div").html('\
+                        //     <button type = "button" id="uploadBulkUpdate" class="submit btn btn-sm btn-outline-primary">\
+                        //         <i class="fa fa-dot-circle-o"></i> Upload\
+                        //     </button>\
+                        // ')
+
+                        console.log(theUrl)
+
+                        $.ajax({
+                            url: theUrl,
+                            method: 'POST',
+                            headers: 'application/json',
+                            data: JSON.stringify({
+                                'data': b
+                            }),
+                            success: function(data) {
+                                $("#bulk_update_div").html('\
+                                    <div class="m-2" style="color: green">\
+                                        <b>Succefully Uploaded.</b>\
+                                    </div>\
+                                \
+                                ')
+                            },
+                            error: function(err) {
+                                $("#bulk_update_div").html('\
+                                    <div class="m-2" style="color: red">\
+                                        <b>Something went wrong. Please try again.</b>\
+                                    </div>\
+                                \
+                                ')
+                            }
+                        });
+                    }
+                    else
+                    {
+                        
+                        $("#bulk_update_div").html('\
+                            <div class="m-2" style="color: red">\
+                                <b>Please remove comma(,) from mislined rows</b>\
+                            </div>\
+                        \
+                        ')
+                    }
+
+
+                    
+                    
+                });
+                
+
+                
+
+
+
+                // var xhr = new XMLHttpRequest();
+                // xhr.open("POST",'', true);
+                // xhr.setRequestHeader('Content-Type', 'application/json');
+                // // xhr.setRequestBody(data);
+                // // xhr.send(JSON.stringify({'data':'ALLAH'}));
+                // xhr.send(JSON.stringify(data));
+                // xhr.send();
+
+                
+            }
+
+            var parseCsv = new uploadDealcsv();
+            parseCsv.getCsv();
+
+
+        })
+
+    })
+
+
+    function createJson(parsedata)
+    {
+        l1 = parsedata.length
+
+        theFinalData = []
+        
+        for (i=starting_row; i<l1  && parsedata[i]!=""; i++)
+        {
+            a = {}
+            for(j=0; j < permittedCSV_length; j++)
+            {
+                if(permittedCSV[j].type == 'text')
+                {
+                    a[permittedCSV[j].short_name] = parsedata[i][permittedCSV[j].row]
+                }
+                else if(permittedCSV[j].type == 'num')
+                {
+                    a[permittedCSV[j].short_name] = Number(parsedata[i][permittedCSV[j].row])
+                }
+                
+            }
+            
+            theFinalData.push(a)
+        }
+
+        return theFinalData
+
+    }
+
+
+
+    
+    function validateAndCreateFinalData(parsedata)
+    {
+        l1 = parsedata.length
+
+        theFinalData = []
+        supplierName = ""
+        
+        for (i=starting_row; i<l1  && parsedata[i]!=""; i++)
+        {
+            b = {}
+            for(j=0; j < permittedCSV_length ; j++)
+            {
+                sn = permittedCSV[j].short_name
+                pos = i-starting_row
+                field_id = "data_"+pos+"_"+sn
+
+
+                if(permittedCSV[j].editable == 'T')
+                {
+                    field_value = $("#"+field_id).val();
+
+                    if(permittedCSV[j].type == 'text')
+                    {
+                        b[sn] = field_value
+                    }
+                    else if(permittedCSV[j].type == 'num')
+                    {
+                        b[sn] = Number(field_value)
+                    }
+                }
+                else
+                {
+                    if(permittedCSV[j].type == 'text')
+                    {
+                        b[permittedCSV[j].short_name] = parsedata[i][permittedCSV[j].row]
+                    }
+                    else if(permittedCSV[j].type == 'num')
+                    {
+                        b[permittedCSV[j].short_name] = Number(parsedata[i][permittedCSV[j].row])
+                    }
+                }
+
+            }
+            
+            theFinalData.push(b)
+        }
+
+        return theFinalData
+
+
+    }
+
+    function makeTable(a)
+    {
+
+        // Table Header
+        $("#bulk_update_div").append('\
+            <div class="row p-2 mt-2" style="background:#12345678;color:white">\
+                {% for pcsv in permittedCSV %}\
+                <div style="width:{{pcsv.width}}%;"><b>{{pcsv.title}}</b></div>\
+                {% endfor %}\
+            </div>\
+        ')
+
+        // Table value
+        for (i=0; i<item_count; i++)
+        {
+            $("#bulk_update_div").append('\
+            <div class="row p-1" style="background:#12345611;border-bottom: 1px solid gray">\
+                {% for pcsv in permittedCSV %}\
+                    {% if pcsv.editable == "T" %}\
+                        {% if pcsv.type == "num" %}\
+                            <input style="width:{{pcsv.width}}%;" id="data_'+i+'_{{pcsv.short_name}}" type="number" value="'+a[i].{{pcsv.short_name}}+'" />\
+                        {% else %}\
+                            <input style="width:{{pcsv.width}}%;" id="data_'+i+'_{{pcsv.short_name}}" type="text" value="'+a[i].{{pcsv.short_name}}+'" />\
+                        {% endif %}\
+                    {% else %}\
+                        <div style="width:{{pcsv.width}}%;">'+a[i].{{pcsv.short_name}}+'</div>\
+                    {% endif %}\
+                {% endfor %}\
+            </div>\
+            ')
+        }
+
+    }
+
+
+
+
+
+</script>
+{%endblock%}

@@ -25,15 +25,24 @@
         {%endif%}
         <div class="main_wrapper">
             <div style="display: flex;">
-                {%if privilege and privilege.add_task%}
+                {% if privilege and privilege.add_task %}
                 <a class="btn btn-primary btn-sm" href="{%url 'KylCreate'%}">
                     <i class="icon-plus"></i> Add Kyl
                 </a>
-                {%endif%}
+                {% endif %}
                 <div style="width: 10px;"></div>
                 <a class="btn btn-success btn-sm" href="{%url 'KylManagement'%}">
                     <i class="icon-refresh"></i> Reload
                 </a>
+
+                {% if privilege and privilege.add_task %}
+                <div style="width: 10px;"></div>
+                <a class="btn btn-sm btn-outline-primary" href="{%url 'KylBulkUpdate' %}">
+                    <i class="fa fa-plus-square"></i> Create or update with csv
+                </a>
+                {%endif%}
+
+
             </div>
 
             <form method="GET" style="display: flex; margin-top: 10px;">
