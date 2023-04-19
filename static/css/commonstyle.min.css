@@ -1,5 +1,5 @@
 body,html{height:100%;overflow-x:hidden;background-color:#eee;}
-.app-header {background-color: transparent !important; border: none;}
+.app-header {background-color: #fff !important; border: none; padding: 15px; height: 110px;}
 .form-control{border:1px solid #888888;max-width:300px}
 .form-control:focus{border:1px solid black;box-shadow: 0 0 0 0.2rem lightgray;}
 .form-control:disabled{cursor:not-allowed}
