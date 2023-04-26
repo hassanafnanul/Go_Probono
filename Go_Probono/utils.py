@@ -109,8 +109,6 @@ def UserCustomNav(request):
     }
 
 
-
-
 # Formet a perfect URL
 def formattedUrl(s, useAs='url'):
     s = s.strip()

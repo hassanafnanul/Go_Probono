@@ -7,11 +7,9 @@ from LawManagement.models import Law
 class LawSerializer(serializers.ModelSerializer):
     class Meta:
         model = Law
-        fields = ['id', 'name', 'thumbnail', 'image_text', 'url', 'headline']
+        fields = ['slug', 'name', 'thumbnail', 'image_text', 'headline']
 
-
-# class HomeCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = ['id', 'category_name', 'thumbnail_cat']
-        
+class LawDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Law
+        fields = ['slug', 'name', 'thumbnail', 'image_text', 'headline', 'description']
