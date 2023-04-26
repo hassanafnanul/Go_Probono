@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import LawSerializer, Law
+from .serializers import LawSerializer, LawDetailsSerializer, Law
 import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
@@ -37,14 +37,11 @@ class LawAPI(APIView):
 
 
 
-
-
 class LawDetailsAPI(APIView):
-    def get(self, request, id):
-        print(id, type(id))
+    def get(self, request, slug):
         try: 
-            law = Law.objects.get(id = id, is_archived = False)
-            serializer = LawSerializer(law)
+            law = Law.objects.get(slug = slug, is_archived = False)
+            serializer = LawDetailsSerializer(law)
         
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:

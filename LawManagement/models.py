@@ -5,7 +5,7 @@ class Law(models.Model):
     thumbnail = models.ImageField(null=True, blank=True, upload_to='law_thumbnail/')
     image_text = models.CharField(default='', max_length=101)
     order = models.IntegerField(default=0)
-    url = models.CharField(default='', max_length=101)
+    slug = models.CharField(default='', max_length=101)
     description = models.TextField(default='')
     headline = models.CharField(default='', max_length=543)
     home_law = models.BooleanField(default=False)
