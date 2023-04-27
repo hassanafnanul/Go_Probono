@@ -9,30 +9,28 @@ from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
 
 
+# class KylAPI(APIView):
+#     def get(self, request):
+#         kyls = KnowYourLaw.objects.all().order_by("rating").exclude(is_archived = True)
+#         serializer = KylSerializer(kyls, many=True)
+        
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class KylAPI(APIView):
-    def get(self, request):
-        kyls = KnowYourLaw.objects.all().order_by("rating").exclude(is_archived = True)[:10]
-        serializer = KylSerializer(kyls, many=True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class SearchKylAPI(APIView):
     # def get(self, request, search):
     def get(self, request):
-        print('---------------')
-        law_id = request.GET.get('id')
+        law_slug = request.GET.get('slug')
         search_txt = request.GET.get('text')
-
         
-        if law_id:
-            kyls = KnowYourLaw.objects.filter(law_id = law_id).order_by("rating").exclude(is_archived = True)
-        elif search_txt:
-            kyls = KnowYourLaw.objects.filter(question__icontains = search_txt).order_by("rating").exclude(is_archived = True)
+        if law_slug and not search_txt:
+            kyls = KnowYourLaw.objects.filter(law__slug = law_slug).order_by("rating").exclude(is_archived = True)
+        elif search_txt and not law_slug:
+            kyls = KnowYourLaw.objects.filter(question__icontains = search_txt, tags__icontains = search_txt).order_by("rating").exclude(is_archived = True)
+        elif search_txt and law_slug:
+            kyls = KnowYourLaw.objects.filter(law__slug = law_slug, question__icontains = search_txt, tags__icontains = search_txt).order_by("rating").exclude(is_archived = True)
         else:
-            kyls = KnowYourLaw.objects.filter(law_id = law_id, question__icontains = search_txt).order_by("rating").exclude(is_archived = True)
+            kyls = KnowYourLaw.objects.filter(is_archived = False).order_by("rating")[:10]
 
         serializer = KylSerializer(kyls, many=True)
         

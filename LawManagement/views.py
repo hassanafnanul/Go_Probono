@@ -9,10 +9,6 @@ import string, random
 from pathlib import Path
 
 from .models import Law
-# from Item.models import Item
-# from Category.models import Category
-# from MarketingManagement.models import URLs
-# from .utils import meta_tag_generate
 from LawManagement.forms import LawForm
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
@@ -26,9 +22,9 @@ from LogWithAudit.views import audit_update
 def LawManagement(request, task_url="LawManagement", action="main"):
     lawq = request.GET.get('law')
     if lawq:
-        laws = Law.objects.filter(name__icontains=lawq).order_by('is_archived', 'name')
+        laws = Law.objects.filter(name__icontains=lawq).order_by('order', 'name')
     else:
-        laws = Law.objects.all().order_by('is_archived', 'name')
+        laws = Law.objects.all().order_by('order', 'name')
         
     paginator = Paginator(laws, 20)
     page = request.GET.get('page')
@@ -47,18 +43,18 @@ def LawManagement(request, task_url="LawManagement", action="main"):
 def LawCreate(request, task_url="LawManagement", action="add"):
     if request.method == 'POST':
         r = request.POST
-        name = r.get('name')
+        name = string.capwords(r.get('name'))
         order = r.get('order')
         headline = r.get('headline')
         description = r.get('description') if r.get('description') else ''
+        slug = formattedUrl(name)
 
 
 
-        if Law.objects.filter(name=string.capwords(name)).exists():
+        if Law.objects.filter(name=name, slug = slug).exists():
             messages.warning(request, f'Law {name} exists.')
             return redirect('LawCreate')
-        
-        # url = formattedUrl(name)
+
 
         fs = FileSystemStorage(
             location=Path.joinpath(settings.MEDIA_ROOT, "law_thumbnail"),
@@ -79,7 +75,7 @@ def LawCreate(request, task_url="LawManagement", action="add"):
                 thumbnail = fs.url(filename)
 
 
-        law = Law(name=name, image_text=name, thumbnail=thumbnail, order = order, url = formattedUrl(name), headline = headline, home_law = True, description=description)
+        law = Law(name=name, image_text=name, thumbnail=thumbnail, order = order, slug = slug, headline = headline, home_law = True, description=description)
         law.save()
         
         # URLs(url = url, item = None, law = law, category = None).save()
