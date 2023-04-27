@@ -7,18 +7,6 @@ from RoleCreation.models import Role
 from ModuleManagement.models import Task
 
 
-
-# def upload_location(instance, filename):
-#     extension = filename.split(".")[-1]
-#     changed_file_name = randomStringGenerator()
-#     return "%s/%s%s" % ("userimg", changed_file_name, extension)
-
-
-
-    # picture = models.ImageField(upload_to=upload_location, default='media/userimg/default.png')
-
-
-
 class UserWithRole(models.Model):
     user = models.OneToOneField(User,on_delete=models.SET_NULL,null=True,blank=True)
     role = models.ForeignKey(Role,on_delete=models.SET_NULL,null=True,blank=True)

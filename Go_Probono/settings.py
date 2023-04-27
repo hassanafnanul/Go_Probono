@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-x=js4414xd7&eg=716%4_=5ytrm-vh%p2uel+iv=-2p91gc*1e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['www.goprobono.org', 'goprobono.org', '36.255.71.251', '127.0.0.1']
 
 
 # Application definition
@@ -43,7 +43,10 @@ DEVELOPED_APPS = [
     'LawManagement',
     'SliderManagement',
     'HelpCenter',
-    'KnowYourLaw'
+    'KnowYourLaw',
+    'EventManagement',
+    'TeamManagement',
+    'LawyerManagement'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS

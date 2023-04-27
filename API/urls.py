@@ -9,16 +9,6 @@ from API import views
 
 urlpatterns = [
 
-    # path('categories/',include('API.CategoryAPI.urls')),
-
-    # path('items/',include('API.ItemAPI.urls')),
-
-    # path('offers/',include('API.OfferAPI.urls')),
-
-    # path('orders/',include('API.OrderAPI.urls')),
-
-    # path('stores/', include('API.StoreAPI.urls')),
-
     path('users/',include('API.UserAPI.urls')),
 
     path('law/',include('API.Law.urls')),
@@ -29,29 +19,13 @@ urlpatterns = [
 
     path('help-center/',include('API.HelpCenter.urls')),
 
-    # path('request-items/',include('API.RequestItemAPI.urls')),
+    path('event/',include('API.Event.urls')),
+    
+    path('team/',include('API.TeamMember.urls')),
 
-    # path('search/',include('API.SmartSearchAPI.urls')),
+    path('lawyer/',include('API.Lawyer.urls')),
 
-    # path('warranty-claim/',include('API.WarrantyClaimAPI.urls')),
-    
-    # path('configuration/',include('API.ConfigurationAPI.urls')),
-    
-    # path('home/',include('API.HomeConfigure.urls')),
-
-    # path('eshop-items/',include('API.EshopItemsApi.urls')),
-
-    # path('eshop-order/',include('API.EshopOrderAPI.urls')),
-
-    # path('eshop-zone/',include('API.EshopDeliveryZoneAPI.urls')),
-    
-    # path('eshop-offers/',include('API.EshopOfferAPI.urls')),
-    
-    # path('external-code/',include('API.ExternalCode.urls')),
-    
-    # path('voucher/', views.check_voucher_exists.as_view(), name='check_voucher_exists'),
-    
-    # path('url-type/<str:url>/', views.findUrlType, name='findUrlType'),
+    path('global-search/',include('API.GlobalSearch.urls')),
 
 ]
 

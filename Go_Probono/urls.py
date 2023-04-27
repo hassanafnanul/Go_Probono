@@ -32,6 +32,12 @@ urlpatterns = [
     path('help-center/', include('HelpCenter.urls')),
 
     path('know-your-law/', include('KnowYourLaw.urls')),
+
+    path('event/', include('EventManagement.urls')),
+
+    path('team-member/', include('TeamManagement.urls')),
+
+    path('lawyer/', include('LawyerManagement.urls')),
     
     path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
 
