@@ -47,7 +47,7 @@ class LawDetailsAPI(APIView):
         except:
             errorJson = {
                 'success': False,
-                'msg': 'ID is not valid'
+                'msg': 'Law not found'
             }
             return Response(errorJson, status=status.HTTP_404_NOT_FOUND)
         

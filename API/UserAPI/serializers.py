@@ -12,6 +12,7 @@ from UserAuthentication.models import Customer
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        exclude = ['id', 'password', 'is_archived', 'cardno']
+        exclude = ['id', 'customer_pic', 'image_text', 'password', 'is_archived', 'cardno']
 
-        # Rickshaw: 01917470574 Mohammad Ali
+
+
