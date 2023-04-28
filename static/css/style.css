@@ -53,6 +53,48 @@
     background: #5A3775;
 }
 
+.addBtn{
+    background: #6F2FA1;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 12px;
+    padding: 7px 15px;
+}
+
+.profileSettings{
+    font-size: 20px;
+    color: #000;
+}
+
 .nav-dropdown-items > .nav-item>a.nav-link {
     padding-left: 30px !important;
+}
+
+.navbarRight,
+.profile-Menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbarRight{
+    gap: 16px;
+}
+.profile-Menu{
+    gap: 11px;
+    margin-right: 20px;
+    color: #000;
+}
+.profile-Menu:hover{
+    text-decoration: none;
+}
+
+.profile-Menu .img-avatar{
+    border-radius: 100px;
+}
+
+.profile-Menu .userName{
+    font-size: 14px;
+    line-height: 16px;
 }
