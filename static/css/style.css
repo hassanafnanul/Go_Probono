@@ -92,6 +92,8 @@
 
 .profile-Menu .img-avatar{
     border-radius: 100px;
+    height: 40px;
+    width: 40px;
 }
 
 .profile-Menu .userName{
