@@ -9,23 +9,23 @@
   </button>
   <img style="height: 50px; text-align: center;" src="{% static 'images/gp_logo.png' %}">
   <ul class="nav navbar-nav ml-auto navbarRight">
-    <li>
+    <!-- <li>
       <button class="addBtn">Add Lawyer</button>
     </li>
     <li>
       <a href="#" class="profileSettings">
         <i class="fas fa-cog"></i>
       </a>
-    </li>
+    </li> -->
     <li>
       <a class="profile-Menu" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         <img class="img-avatar" src="{{request.user.userwithrole.picture.url}}" alt="profilepic">
         <!-- <img class="img-avatar" src="../../static/images/table-profile.png" alt="profilepic"> -->
-        <span class="userName">Johan Shumit</span>
+        <span class="userName">{{request.user.first_name}} {{request.user.last_name}}</span>
         <i class="fas fa-chevron-down"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <div style="font-variant-caps: small-caps; text-align: center;background-color: #e9ecef;">{{request.user.first_name}} {{request.user.last_name}}</div>
+        <!-- <div style="font-variant-caps: small-caps; text-align: center;background-color: #e9ecef;">{{request.user.first_name}} {{request.user.last_name}}</div> -->
         <a class="dropdown-item" href="{%url 'userprofile'%}">
           <i class="fa fa-user"></i> Profile</a>
         <a class="dropdown-item" href="{%url 'logout'%}">
