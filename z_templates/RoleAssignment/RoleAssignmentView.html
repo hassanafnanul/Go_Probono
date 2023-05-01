@@ -26,58 +26,45 @@
         </script>
         {%endfor%}
         {%endif%}
-		<div class="card" style="margin: 15px;" >
-			<div class="card-header" style="text-align: center;">
-				<strong>Detailed Information</strong>
-			</div>
-			<div class="card-body" style="display: flex; flex-wrap: wrap-reverse;">
-				<div class="form_container_div">
-					<div class="row">
-						<div class="col-4" style="font-weight: 600;">Name</div>
-						<div class="col-1" style="font-weight: 600;">:</div>
-						<div class="col-6">{{userObj.first_name}}</div>
+		<div class="card border-0" style="margin: 15px;" >
+			<div class="card profile-card mb-3">
+				<div class="card-header profile-card-header position-relative min-vh-25 mb-7">
+					<div class="bg-holder rounded-3 rounded-bottom-0"></div>
+					<div class="avatar avatar-5xl avatar-profile">
+						<img src="{{userwithrole.picture.url}}" alt="profile" class="rounded-circle img-thumbnail shadow-sm" />
 					</div>
-					<!--          <div class="row">-->
-					<!--            <div class="col-4" style="font-weight: 600;">Short Name</div>-->
-					<!--            <div class="col-1" style="font-weight: 600;">:</div>-->
-					<!--            <div class="col-6">{{userObj.last_name}}</div>-->
-					<!--          </div>-->
+				</div>
+				<div class="card-body profile-card-body">
 					<div class="row">
-						<div class="col-4" style="font-weight: 600;">Username</div>
-						<div class="col-1" style="font-weight: 600;">:</div>
-						<div class="col-6">{{userObj.username}}</div>
-					</div>
-					<div class="row">
-						<div class="col-4" style="font-weight: 600;">Mobile No</div>
-						<div class="col-1" style="font-weight: 600;">:</div>
-						<div class="col-6">{{userwithrole.mobile}}</div>
-					</div>
-					<div class="row">
-						<div class="col-4" style="font-weight: 600;">Email</div>
-						<div class="col-1" style="font-weight: 600;">:</div>
-						<div class="col-6">{{userObj.email}}</div>
-					</div>
-					<div class="row">
-						<div class="col-4" style="font-weight: 600;">Role</div>
-						<div class="col-1" style="font-weight: 600;">:</div>
-						<div class="col-6">
-							<!--              {%for role in roles%}-->
-							<!--              <span style="background: #b1e5f1; padding: 3px; margin-right: 5px;">{{role.name}}</span>-->
-							<!--              {%endfor%}-->
-							<span
-								style="background: #b1e5f1; padding: 3px; margin-right: 5px;">{{userwithrole.role.name}}</span>
+						<div class="col-lg-8">
+							<h4 class="mb-1">{{userObj.first_name}}</h4>
+							<h5 class="fw-normal">{{userwithrole.role.name}}</h5>
+							<div class="border-dashed-bottom my-4 d-lg-none"></div>
+						</div>
+						<div class="col ps-2 ps-lg-3">
+							<a class="d-flex align-items-center user-info mb-2" href="#">
+								<i class="fas fa-user"></i>
+								<div class="flex-1 ml-2">
+									<h6 class="mb-0">{{userObj.username}}</h6>
+								</div>
+							</a>
+							<a class="d-flex align-items-center user-info mb-2" href="tel:{{userwithrole.mobile}}">
+								<i class="fas fa-phone"></i>
+								<div class="flex-1 ml-2">
+									<h6 class="mb-0">{{userwithrole.mobile}}</h6>
+								</div>
+							</a>
+							<a class="d-flex align-items-center user-info mb-2" href="mailto:{{userObj.email}}">
+								<i class="fas fa-envelope"></i>
+								<div class="flex-1 ml-2">
+									<h6 class="mb-0">{{userObj.email}}</h6>
+								</div>
+							</a>
 						</div>
 					</div>
-					<!--          <div class="row">-->
-					<!--            <div class="col-4" style="font-weight: 600;">Company</div>-->
-					<!--            <div class="col-1" style="font-weight: 600;">:</div>-->
-					<!--            <div class="col-6">{{company}}</div>-->
-					<!--          </div>-->
-				</div>
-				<div class=""><img src="{{userwithrole.picture.url}}" alt="profile pic" width="200px" height="200px">
 				</div>
 			</div>
-			<div class="card-footer" style="display:flex; ">
+			<div class="card-footer border-0">
 				<button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
 					<i class="fa fa-angle-left"></i> Back
 				</button>
