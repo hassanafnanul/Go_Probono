@@ -48,6 +48,7 @@ def RoleAssignment(request, task_url="UserManagement", action="main"):
     for u in user_list:
         llist.append({
             'id': u.id,
+            'propic': u.picture.url,
             'username': u.user.username,
             'fullname': u.user.first_name,
             'shortname': u.user.last_name,
