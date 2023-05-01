@@ -16,12 +16,13 @@ a {color: #C47008;}
 .sidebar {background-color: #6F2FA1;}
 .sidebar .nav-link{padding:0;color: white;}
 .nav-link{padding:.5rem 1rem!important}
-.sidebar .nav-link.active {font-weight: bold;background-color: transparent;color: white;}
+.sidebar .nav-link.active {font-weight: bold;background-color: #5A3775; color: white;}
 .sidebar .nav-link:hover {color:white;}
-.sidebar .nav-dropdown.open {background: transparent;}
-.sidebar .nav-dropdown.open .nav-link {color: white;}
-.sidebar .nav-dropdown.open .nav-link.active {font-weight: bold;background-color: transparent;color: white;}
+.sidebar .nav-dropdown.open .nav-key{background: #5A3775 !important;}
+.sidebar .nav-dropdown.open .nav-link {color: white; background: #6f2fa1;}
+.sidebar .nav-dropdown.open .nav-link.active {font-weight: bold; background: #7a48a0; color: white;}
 .sidebar .nav-dropdown.open .nav-link:hover{color:white;}
+.sidebar .nav-dropdown.open .fa-chevron-down{transform:rotate(-90deg);}
 .sidebar .nav-dropdown-toggle::before {display: none;}
 /* ::-webkit-scrollbar {width: 5px;} */
 .app-footer {background:white;}
