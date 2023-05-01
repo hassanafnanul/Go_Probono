@@ -22,16 +22,16 @@
         <li class="nav-item">
           <a class="nav-link" href="{%url tskurl%}" style="font-size: 13px;">
             <i class="fas fa-calendar-minus"></i>
-            <span>{{tsk}}</span>
+            {{tsk}}
           </a>
         </li>
         {%endfor%}
         {%else%}
         <li class="nav-item nav-dropdown">
 
-          <a class="nav-link nav-dropdown-toggle" href="#" style="font-size: 13px;">
+          <a class="nav-link nav-dropdown-toggle nav-key" href="#" style="font-size: 13px;">
             <i class="fas fa-calendar-minus"></i>
-            <span>{{key}}</span>
+            {{key}}
             <i class="fas fa-chevron-down"></i>
           </a>
 
@@ -40,7 +40,7 @@
             <li class="nav-item">
               <a class="nav-link" href="{%url tskurl%}" style="padding-left: 24px;">
                 <i class="fas fa-calendar-minus"></i>
-                <span style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;{{tsk}}</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;{{tsk}}
               </a>
             </li>
             {%endfor%}
