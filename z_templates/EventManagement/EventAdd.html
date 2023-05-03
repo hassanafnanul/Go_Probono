@@ -1,7 +1,7 @@
 {% extends "Common/base.html" %}
 {%load static%}
 {%block title%}
-<title>Law Management</title>
+<title>Event Management</title>
 {%endblock title%}
 
 {%block style%}
@@ -14,8 +14,8 @@
 <div class="app-body mt-0">
     <main class="main p-0">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><a href="{%url 'LawManagement'%}">Law Management</a> / <span style="color: #000000">Add</span></div>
-        
+        <div class="page_header"><a href="{%url 'EventManagement'%}">Event Management</a> / <span style="color: #000000">Add</span></div>
+
     {% include 'Common/taskbuttons.html'%}
 
     {%if messages%}
@@ -31,10 +31,9 @@
                 <div class="d-flex ">
                     <div class="form_container_div">
                         <div class="form-group row mx-0">
-                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="name">Law Name:</label>
-                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="name" id="name" placeholder="Enter Law Name" required maxlength="99"/>
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="title">Event Title:</label>
+                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="title" id="title" placeholder="Enter Event Title" required maxlength="99"/>
                         </div>
-
 
                         <div style="margin: 10px; text-align: center;">
                             <img id="prevw_img" src="\media\default\default.png" width="120px">
@@ -49,13 +48,31 @@
                         
                         <div class="form-group row mx-0">
                             <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="order">Order:</label>
-                            <input type="number" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="order" id="order" placeholder="Enter Order" required/>
+                            <input type="number" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9 is-invalid" name="order" id="order" placeholder="Enter Order" required/>
                         </div>
                         
                         <div class="form-group row mx-0">
-                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="headline">Headline:</label>
-                            <!-- <input type="textarea" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="headline" id="headline" placeholder="Headline on card" required/> -->
-                            <textarea style="min-width: 100%" id="headline" name="headline"></textarea>
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="location">Location:</label>
+                            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="location" id="location" placeholder="Enter Location"/>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="organizer">Organizer:</label>
+                            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="organizer" id="organizer" placeholder="Enter Organizer"/>
+                        </div>
+
+                        <div class="form-group row mx-0">
+                            <label for="start_date" class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold">Start Date:</label>
+                            <input class="form-control form-control-sm col-sm-12 col-md-9 col-lg-8 col-xl-8 is-invalid" type="date" name="start_date" id="start_date" required>
+                        </div>
+                        <div class="form-group row mx-0">
+                            <label for="end_date" class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold">End Date :</label>
+                            <input class="form-control form-control-sm col-sm-12 col-md-9 col-lg-8 col-xl-8 is-invalid" type="date" name="end_date" id="end_date" required>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="brief_description">Sub-title:</label>
+                            <textarea style="min-width: 100%" id="brief_description" name="brief_description"></textarea>
                         </div>
 
                     </div>
