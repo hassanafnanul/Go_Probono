@@ -58,7 +58,7 @@ class Lawyer(models.Model):
     longitude = models.CharField(max_length=1000, null=True)
     cardno = models.CharField(max_length=250, default="")
     gender = models.CharField(max_length=15, default="")
-    lawyer_type = models.PositiveSmallIntegerField(default=0)  # 0-default
+    lawyer_type = models.PositiveSmallIntegerField(default=0)  # 0-regular
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)

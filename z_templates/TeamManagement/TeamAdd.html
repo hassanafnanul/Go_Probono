@@ -1,7 +1,7 @@
 {% extends "Common/base.html" %}
 {%load static%}
 {%block title%}
-<title>Law Management</title>
+<title>Team Management</title>
 {%endblock title%}
 
 {%block style%}
@@ -14,7 +14,7 @@
 <div class="app-body mt-0">
     <main class="main p-0">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><a href="{%url 'LawManagement'%}">Law Management</a> / <span style="color: #000000">Add</span></div>
+        <div class="page_header"><a href="{%url 'TeamManagement'%}">Team Management</a> / <span style="color: #000000">Add</span></div>
         
     {% include 'Common/taskbuttons.html'%}
 
@@ -31,8 +31,8 @@
                 <div class="d-flex ">
                     <div class="form_container_div">
                         <div class="form-group row mx-0">
-                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="name">Law Name:</label>
-                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="name" id="name" placeholder="Enter Law Name" required maxlength="99"/>
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="name">Team Member Name:</label>
+                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="name" id="name" placeholder="Enter Member Name" required maxlength="99"/>
                         </div>
 
 
@@ -53,9 +53,14 @@
                         </div>
                         
                         <div class="form-group row mx-0">
-                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="headline">Headline:</label>
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="designation">Designation:</label>
                             <!-- <input type="textarea" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="headline" id="headline" placeholder="Headline on card" required/> -->
-                            <textarea style="min-width: 100%" id="headline" name="headline"></textarea>
+                            <textarea style="min-width: 100%" id="designation" name="designation"></textarea>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="portfolio_url">Portfolio URL:</label>
+                            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="portfolio_url" id="portfolio_url" placeholder="Enter Portfolio URL" required/>
                         </div>
 
                     </div>
