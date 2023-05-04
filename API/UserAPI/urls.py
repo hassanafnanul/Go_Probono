@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
 
     #REGISTRATION
-    path('register/', views.Register, name='Register'),
+    path('register/user/', views.RegisterUser, name='RegisterUser'),
+    path('register/<str:lawyerType>/', views.RegisterLawyer, name='RegisterLawyer'),
     # path('exist/', views.UserExists),
 
     # #LOGIN

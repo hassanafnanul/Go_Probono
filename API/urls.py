@@ -9,7 +9,7 @@ from API import views
 
 urlpatterns = [
 
-    path('users/',include('API.UserAPI.urls')),
+    path('auth/',include('API.UserAPI.urls')),
 
     path('law/',include('API.Law.urls')),
 
@@ -28,6 +28,8 @@ urlpatterns = [
     path('global-search/',include('API.GlobalSearch.urls')),
 
     path('address/',include('API.Address.urls')),
+    
+    path('appointment/',include('API.Appointment.urls')),
 
 ]
 
