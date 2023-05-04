@@ -13,6 +13,7 @@ from datetime import datetime,timezone
 from Go_Probono import settings
 from .serializers import CustomerSerializer
 from UserAuthentication.models import Customer, OTP
+from Address.utils import CreateAddress
 
 
 def generate_login_token():
@@ -97,7 +98,7 @@ def Register(request):  # DONE
         mobile = json_data['mobile']
         email = json_data['email']
         gender = json_data['gender']
-        password = json_data['password']
+        password = make_password(json_data['password'])
 
         if Customer.objects.filter(mobile=mobile).exists():
             data = {
@@ -130,10 +131,9 @@ def Register(request):  # DONE
 
 
         try:
-            customer = Customer(name=name,
-                                mobile=mobile, email=email, password=make_password(password),
-                                gender = gender, cardno=generate_login_token())
+            customer = Customer(name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
             customer.save()
+
             data = {
                 'success': True,
                 'message': 'Customer created successfully.'
@@ -593,17 +593,14 @@ def UpdateProfile(request):
 
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
-        # mobile = json_data['phone']
         email = json_data['email']
-        # password = json_data['password']
         gender = json_data['gender']
+
         apartment = json_data['apartment']
         street_address = json_data['street_address']
-        city = json_data['city']
-        country = json_data['country']
+        area_slug = json_data['area_slug']
         latitude = json_data['latitude']
         longitude = json_data['longitude']
-        # country = 'Bangladesh'#json_data['country']
 
         if gender not in ['Male', 'Female', 'Other']:
             data = {
@@ -612,28 +609,37 @@ def UpdateProfile(request):
             }
             return JsonResponse(data, safe=True)
         
+        if gender not in ['Male', 'Female', 'Other']:
+            data = {
+                'success': False,
+                'message': 'Gender data invalid.'
+            }
+            return JsonResponse(data, safe=True)
+        
+        address = CreateAddress(area_slug = area_slug, note='Customer: '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
+        
+        if not address:
+            data = {
+                'success': False,
+                'message': 'Area data invalid.'
+            }
+            return JsonResponse(data, safe=True)
+
         try:
             customer = Customer.objects.get(cardno=token)
-            # token = generate_login_token()
-            # customer.cardno = token # store
+
             customer.name = name
-            # customer.mobile = mobile
             customer.email = email
-            customer.apartment = apartment
-            customer.street_address = street_address
-            customer.city = city
-            customer.country = country
-            customer.latitude = latitude
-            customer.longitude = longitude
-            # if password is not None and password != '':
-            #     customer.password = make_password(password)
+            customer.gender = gender
+            customer.address = address
             customer.save()
+
             data = {
                 'success': True,
                 'message': 'Customer details updated successfully.'
-                # 'new_token': token
             }
             return JsonResponse(data, safe=False)
+        
         except Customer.DoesNotExist:
             data = {
                 'success': False,
@@ -658,6 +664,7 @@ class CustomerProfile(APIView):
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
 
-
+# GP38525MBYE114FPRV39341
+# GP19535QJRJ143ZHAU48615
 
 

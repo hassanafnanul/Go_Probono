@@ -27,5 +27,7 @@ urlpatterns = [
 
     path('global-search/',include('API.GlobalSearch.urls')),
 
+    path('address/',include('API.Address.urls')),
+
 ]
 

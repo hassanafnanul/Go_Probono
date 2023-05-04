@@ -1,4 +1,12 @@
 from django.db import models
+from LawyerManagement.models import LawyerCategory
+from Address.models import Address
+
+
+class GenderType(models.TextChoices):
+    MALE = 'Male'
+    FEMALE = 'Female'
+    OTHER = 'Other'
 
 
 class Customer(models.Model):
@@ -8,14 +16,9 @@ class Customer(models.Model):
     mobile = models.CharField(max_length=15, null=True)
     email = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=1000, null=True)
-    apartment = models.CharField(max_length=300, default="")
-    street_address = models.CharField(max_length=300, default="")
-    city = models.CharField(max_length=300, default="")
-    country = models.CharField(max_length=300, default="")
-    latitude = models.CharField(max_length=1000, null=True)
-    longitude = models.CharField(max_length=1000, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
     cardno = models.CharField(max_length=250, default="")
-    gender = models.CharField(max_length=15, default="") # Male, Female
+    gender = models.CharField(choices=GenderType.choices,default='', blank = True, max_length=9)
     customer_type = models.PositiveSmallIntegerField(default=0)  # 0-default
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
@@ -44,21 +47,22 @@ class OTP(models.Model):
 
 
 class Lawyer(models.Model):
+    class LawyerType(models.TextChoices):
+        LAWYER = 'lawyer'
+        LAWFARM = 'lawfarm'
+
     name = models.CharField(max_length=100, null=True)
     lawyer_pic = models.ImageField(null=True, blank=True, upload_to='lawyer_pic/')
     image_text = models.CharField(default='', max_length=101)
     mobile = models.CharField(max_length=15, null=True)
     email = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=1000, null=True)
-    apartment = models.CharField(max_length=300, default="")
-    street_address = models.CharField(max_length=300, default="")
-    city = models.CharField(max_length=300, default="")
-    country = models.CharField(max_length=300, default="")
-    latitude = models.CharField(max_length=1000, null=True)
-    longitude = models.CharField(max_length=1000, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
     cardno = models.CharField(max_length=250, default="")
-    gender = models.CharField(max_length=15, default="")
-    lawyer_type = models.PositiveSmallIntegerField(default=0)  # 0-regular
+    gender = models.CharField(choices=GenderType.choices,default='', blank = True, max_length=9)
+    lawyer_category = models.ManyToManyField(LawyerCategory)
+    lawyer_type=models.CharField(choices=LawyerType.choices,default=LawyerType.LAWYER, blank = True, max_length=9) #dr,cr
+
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
