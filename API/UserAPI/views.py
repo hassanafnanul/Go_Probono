@@ -12,9 +12,10 @@ from datetime import date
 from datetime import datetime,timezone
 from Go_Probono import settings
 from .serializers import CustomerSerializer
+from API.Lawyer.serializers import LawyerDetailsSerializer
 from UserAuthentication.models import Customer, OTP, Lawyer, GenderType
 from Address.utils import CreateAddress
-from Appoinment.models import PaymentPlan
+from LawyerManagement.models import PaymentPlan
 from LawyerManagement.models import LawyerCategory
 
 
@@ -107,14 +108,14 @@ def RegisterUser(request):
                 'success': False,
                 'message': 'Mobile already exists'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
 
         if gender not in ['Male', 'Female', 'Other']:
             data = {
                 'success': False,
                 'message': 'Gender data error'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
 
         # ------------- OTP varification ------------
@@ -128,7 +129,7 @@ def RegisterUser(request):
         #         'success': False,
         #         'message': 'OTP not verified'
         #     }
-        #     return JsonResponse(data, safe=True)
+        #     return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         # ------------- OTP varification ------------
 
 
@@ -145,12 +146,9 @@ def RegisterUser(request):
                 'success': False,
                 'message': 'Could not create customer'
             }
-        return JsonResponse(data, safe=True)
+        return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
     else:
         HttpResponseForbidden('Allowed only via POST')
-
-
-
 
 
 # DONE
@@ -192,7 +190,7 @@ def RegisterLawyer(request, lawyerType):
                 'success': False,
                 'message': 'URL mismatch'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
 
         if not PaymentPlan.objects.filter(id = payment_plan).exists():
@@ -200,21 +198,21 @@ def RegisterLawyer(request, lawyerType):
                 'success': False,
                 'message': 'Invalid Payment Plan'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
 
         if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
             data = {
                 'success': False,
                 'message': 'Mobile already exists'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
 
         if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
             data = {
                 'success': False,
                 'message': 'Gender data error'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
 
         # ------------- OTP varification ------------
@@ -228,7 +226,7 @@ def RegisterLawyer(request, lawyerType):
         #         'success': False,
         #         'message': 'OTP not verified'
         #     }
-        #     return JsonResponse(data, safe=True)
+        #     return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         # ------------- OTP varification ------------
 
 
@@ -248,7 +246,7 @@ def RegisterLawyer(request, lawyerType):
                 'success': False,
                 'message': 'Could not create '+lawyer_type
             }
-        return JsonResponse(data, safe=True)
+        return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -307,7 +305,7 @@ def UserVerification(request):
         mobile = json_data['mobile']
         password = json_data['password']
         if Customer.objects.filter(mobile=mobile).exists():
-            customer = Customer.objects.filter(mobile=mobile)[0]
+            customer = Customer.objects.get(mobile=mobile)
             if check_password(password, customer.password):
                 data = {
                     'success': True,
@@ -320,12 +318,13 @@ def UserVerification(request):
                     'token': None,
                     'type': None
                 }
-        elif Customer.objects.filter(cardno=mobile).exists():
-            customer = Customer.objects.get(cardno=mobile)
-            if check_password(password, customer.password):
+        elif Lawyer.objects.filter(mobile=mobile).exists():
+            lawyer = Lawyer.objects.get(mobile=mobile)
+            print('lawyer----', lawyer)
+            if check_password(password, lawyer.password):
                 data = {
                     'success': True,
-                    'token': customer.cardno,
+                    'token': lawyer.cardno,
                     'type': 'Lawyer'
                 }
             else:
@@ -720,14 +719,14 @@ def UpdateProfile(request):
                 'success': False,
                 'message': 'Gender data invalid.'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
         if gender not in ['Male', 'Female', 'Other']:
             data = {
                 'success': False,
                 'message': 'Gender data invalid.'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
         address = CreateAddress(area_slug = area_slug, note='Customer: '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
         
@@ -736,7 +735,7 @@ def UpdateProfile(request):
                 'success': False,
                 'message': 'Area data invalid.'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             customer = Customer.objects.get(cardno=token)
@@ -759,7 +758,7 @@ def UpdateProfile(request):
                 'success': False,
                 'message': 'Customer details update failed.'
             }
-            return JsonResponse(data, safe=True)
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -774,11 +773,30 @@ class CustomerProfile(APIView):
 
     def get(self, request, format=None):
         token = request.headers['token']
-        customer = self.get_object(token)
-        serializer = CustomerSerializer(customer)
-        return Response(serializer.data)
+        try:
+            customer = Customer.objects.get(cardno=token)
+        except:
+            customer = None
 
-# GP38525MBYE114FPRV39341
-# GP19535QJRJ143ZHAU48615
+        try:
+            lawyer = Lawyer.objects.get(cardno=token)
+        except:
+            lawyer = None
 
+
+        if customer and lawyer:
+            raise Http404
+        elif customer:
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif lawyer:
+            serializer = LawyerDetailsSerializer(lawyer)
+            return Response(serializer.data)
+        else:
+            raise Http404
+        
+
+
+# user: GP19535QJRJ143ZHAU48615
+# lawyer: GP24249DFLS467VBNP68121
 

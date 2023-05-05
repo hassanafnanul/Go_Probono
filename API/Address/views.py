@@ -9,14 +9,6 @@ from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
 
 
-# class ZoneAPI(APIView):
-#     def get(self, request):
-#         zones = Zone.objects.all().order_by("order").exclude(is_archived = True)
-#         serializer = ZoneSerializer(zones, many=True)
-        
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 
 class ZoneListAPI(APIView):
     def get(self, request, slug = None):

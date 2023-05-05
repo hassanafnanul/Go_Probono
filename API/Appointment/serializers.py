@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.response import Response
 from Address.models import Zone
-from Appoinment.models import PaymentPlan
+from LawyerManagement.models import PaymentPlan
+from Appoinment.models import Appointment
 
 
 class PaymentPlanSerializer(serializers.ModelSerializer):

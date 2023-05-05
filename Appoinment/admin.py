@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import PaymentPlan
+from .models import Appointment, AppointmentComments
 
 
-admin.site.register(PaymentPlan)
+admin.site.register(Appointment)
+admin.site.register(AppointmentComments)
