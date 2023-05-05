@@ -1,4 +1,13 @@
 from django.db import models
+from LawyerManagement.models import LawyerCategory
+from Address.models import Address
+from LawyerManagement.models import PaymentPlan
+
+
+class GenderType(models.TextChoices):
+    MALE = 'Male'
+    FEMALE = 'Female'
+    OTHER = 'Other'
 
 
 class Customer(models.Model):
@@ -8,14 +17,10 @@ class Customer(models.Model):
     mobile = models.CharField(max_length=15, null=True)
     email = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=1000, null=True)
-    apartment = models.CharField(max_length=300, default="")
-    street_address = models.CharField(max_length=300, default="")
-    city = models.CharField(max_length=300, default="")
-    country = models.CharField(max_length=300, default="")
-    latitude = models.CharField(max_length=1000, null=True)
-    longitude = models.CharField(max_length=1000, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
+    nid = models.CharField(max_length=23, null=True)
     cardno = models.CharField(max_length=250, default="")
-    gender = models.CharField(max_length=15, default="") # Male, Female
+    gender = models.CharField(choices=GenderType.choices,default='', blank = True, max_length=9)
     customer_type = models.PositiveSmallIntegerField(default=0)  # 0-default
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
@@ -44,21 +49,33 @@ class OTP(models.Model):
 
 
 class Lawyer(models.Model):
+    class LawyerType(models.TextChoices):
+        LAWYER = 'lawyer'
+        LAWFIRM = 'lawfirm'
+    
+    class StatusList(models.TextChoices):
+        PENDING = 'pending'
+        HOLD = 'hold' # Approved but not made the payment
+        ACTIVE = 'active'
+        DEACTIVATED = 'deactivated'
+        DELETED = 'deleted'
+
     name = models.CharField(max_length=100, null=True)
-    lawyer_pic = models.ImageField(null=True, blank=True, upload_to='lawyer_pic/')
+    image = models.ImageField(null=True, blank=True, upload_to='lawyer_pic/')
     image_text = models.CharField(default='', max_length=101)
     mobile = models.CharField(max_length=15, null=True)
     email = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=1000, null=True)
-    apartment = models.CharField(max_length=300, default="")
-    street_address = models.CharField(max_length=300, default="")
-    city = models.CharField(max_length=300, default="")
-    country = models.CharField(max_length=300, default="")
-    latitude = models.CharField(max_length=1000, null=True)
-    longitude = models.CharField(max_length=1000, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
+    payment_plan = models.ForeignKey(PaymentPlan, on_delete=models.SET_NULL, null=True)
     cardno = models.CharField(max_length=250, default="")
-    gender = models.CharField(max_length=15, default="")
-    lawyer_type = models.PositiveSmallIntegerField(default=0)  # 0-regular
+    gender = models.CharField(choices=GenderType.choices,default='', blank = True, max_length=9)
+    lawyer_category = models.ManyToManyField(LawyerCategory)
+    bar_council_number = models.CharField(max_length=33, null=True)
+    nid = models.CharField(max_length=23, null=True)
+    tradelicense = models.CharField(max_length=23, null=True)
+    lawyer_type=models.CharField(choices=LawyerType.choices,default=LawyerType.LAWYER, blank = True, max_length=9) #dr,cr
+    status=models.CharField(choices=StatusList.choices,default=StatusList.PENDING, blank = True, max_length=15) #dr,cr
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -67,3 +84,4 @@ class Lawyer(models.Model):
         return self.name
 
 
+# name, image, image_text, mobile, email, password, address, payment_plan, cardno, gender, lawyer_category, bar_council_number, nid, tradelicense, lawyer_type, status, balance, is_archived, created_at

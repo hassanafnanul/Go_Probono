@@ -7,6 +7,7 @@ from .serializers import LawyerSerializer, LawyerDetailsSerializer, Lawyer
 import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
+from LawyerManagement.models import PaymentPlan
 
 
 
@@ -35,6 +36,3 @@ class LawyerDetailsAPI(APIView):
             return Response(errorJson, status=status.HTTP_404_NOT_FOUND)
         
         
-
-
-

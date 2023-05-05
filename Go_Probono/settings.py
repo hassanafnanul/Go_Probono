@@ -41,7 +41,9 @@ DEVELOPED_APPS = [
     'KnowYourLaw',
     'EventManagement',
     'TeamManagement',
-    'LawyerManagement'
+    'LawyerManagement',
+    'Appoinment',
+    'Address'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS
