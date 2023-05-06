@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.LawyerAPI.as_view(), name='LawyerAPI'),
-    path('<str:id>/', views.LawyerDetailsAPI.as_view(), name='LawyerDetailsAPI'),
+    path('<int:id>/', views.LawyerDetailsAPI.as_view(), name='LawyerDetailsAPI'),
+    path('categories/', views.LawyerCategoriesAPI.as_view(), name='LawyerCategoriesAPI'),
 ]

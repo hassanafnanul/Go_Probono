@@ -7,12 +7,22 @@ from .serializers import RulesSerializer, HelpCenter, CallHistorySerializer, Cal
 import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
+from UserAuthentication.models import Customer
 
 
 
 
 class RulesAPI(APIView):
     def get(self, request):
+        token = request.headers['token']
+
+        if not Customer.objects.filter(cardno = token).exists():
+            data = {
+                'success': False,
+                'message': 'Customer Not Found'
+            }
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+
         rules = HelpCenter.objects.all().exclude(is_archived = True).last()
         serializer = RulesSerializer(rules)
         
