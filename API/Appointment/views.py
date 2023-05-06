@@ -6,7 +6,7 @@ import json, random, string, requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PaymentPlanSerializer, PaymentPlan, Appointment
+from .serializers import PaymentPlanSerializer, PaymentPlan, Appointment, AppointmentSerializer
 from UserAuthentication.models import Customer, Lawyer
 import datetime
 from API.Lawyer.serializers import LawyerSerializer
@@ -17,7 +17,6 @@ def AddAppointment(request):
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
         token = request.headers['token']
-        
 
         customer = None
         lawyer = json_data['lawyer']
@@ -84,10 +83,23 @@ def AddAppointment(request):
 
 class FilterLawyer(APIView):
     def get(self, request):
-        area_id = request.GET.get('area_id')
-        expertise = request.GET.get('expertise').split(',')
+        area_slug = request.GET.get('area_slug')
+        expertise = request.GET.get('expertise')
 
-        lawyers = Lawyer.objects.filter(address__area__id = area_id).order_by("created_at").exclude(is_archived = True)
+        if not expertise.replace(',','').isdigit():
+            data = {
+                'success': False,
+                'message': 'expertise data invalid'
+            }
+            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+        
+        expertise = expertise.split(',')
+
+        a = request.GET.get('expertise')
+        print('---------', a, '--------', type(a))
+
+        lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise).order_by("created_at").exclude(is_archived = True).distinct()
+        # lawyers = Lawyer.objects.filter(address__area__slug = area_slug ).order_by("created_at").exclude(is_archived = True)
         serializer = LawyerSerializer(lawyers, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -103,6 +115,18 @@ class PaymentPlanList(APIView):
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+
+
+class UserAppointments(APIView):
+    def get(self, request):
+        token = request.headers['token']
+
+        appointments = Appointment.objects.prefetch_related('customer').filter(customer__cardno = token)
+        serializer = AppointmentSerializer(appointments, many = True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

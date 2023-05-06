@@ -304,40 +304,68 @@ def UserVerification(request):
         json_data = json.loads(str(request.body, encoding='utf-8'))
         mobile = json_data['mobile']
         password = json_data['password']
-        if Customer.objects.filter(mobile=mobile).exists():
+
+        if Customer.objects.filter(mobile=mobile).exists(): # Customer logging In
             customer = Customer.objects.get(mobile=mobile)
             if check_password(password, customer.password):
                 data = {
                     'success': True,
                     'token': customer.cardno,
-                    'type': 'User'
+                    'type': 'User',
+                    'msg': 'Login Successful'
                 }
             else:
                 data = {
                     'success': False,
                     'token': None,
-                    'type': None
+                    'type': None,
+                    'msg': 'Password Incorrect'
                 }
         elif Lawyer.objects.filter(mobile=mobile).exists():
             lawyer = Lawyer.objects.get(mobile=mobile)
-            print('lawyer----', lawyer)
+            
             if check_password(password, lawyer.password):
                 data = {
                     'success': True,
                     'token': lawyer.cardno,
-                    'type': 'Lawyer'
+                    'type': 'Lawyer',
+                    'msg': 'Login Successful'
                 }
             else:
                 data = {
                     'success': False,
                     'token': None,
-                    'type': None
+                    'type': None,
+                    'msg': 'Password Incorrect'
+                }
+            
+            if lawyer.status == Lawyer.StatusList.ACTIVE:
+                data = {
+                    'success': True,
+                    'token': lawyer.cardno,
+                    'type': 'Lawyer',
+                    'msg': 'Login Successful'
+                }
+            elif lawyer.status == Lawyer.StatusList.HOLD:
+                data = {
+                    'success': True,
+                    'token': lawyer.cardno,
+                    'type': 'Lawyer',
+                    'msg': 'Payment is required'
+                }
+            else:
+                data = {
+                    'success': False,
+                    'token': None,
+                    'type': None,
+                    'msg': 'Account Not Active'
                 }
         else:
             data = {
                 'success': False,
                 'token': None,
-                'type': None
+                'type': None,
+                'msg': 'Password Incorrect'
             }
         return JsonResponse(data, safe=True)
     else:
@@ -765,11 +793,6 @@ def UpdateProfile(request):
 
 #DONE
 class CustomerProfile(APIView):
-    def get_object(self, token):
-        try:
-            return Customer.objects.get(cardno=token)
-        except Customer.DoesNotExist:
-            raise Http404
 
     def get(self, request, format=None):
         token = request.headers['token']
