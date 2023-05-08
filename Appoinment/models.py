@@ -19,6 +19,7 @@ class Appointment(models.Model):
     message = models.CharField(default='', max_length=543)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    chosen_date = models.DateField(null=True, blank=True)
 
     status=models.CharField(choices=StatusList.choices,default=StatusList.PENDING, blank = True, max_length=15) #dr,cr
     status_changed_by = models.CharField(default='', max_length=100)
