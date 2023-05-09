@@ -3,8 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.cache import cache
 from django.db.models import F
 from django.contrib import messages
+from django.http import Http404, JsonResponse, HttpResponseForbidden
+
 import random
 import string
+from rest_framework import status
 
 from inspect import getargspec
 
@@ -147,6 +150,18 @@ def ChangeFileName(filename):
     extension = filename.split(".")[1]
     changed_file_name = randomStringGenerator()
     return "%s%s" % (changed_file_name, extension)
+
+
+def SimpleApiResponse(message, success = False):
+    if success:
+        sts = status.HTTP_200_OK
+    else:
+        sts = status.HTTP_400_BAD_REQUEST
+    data = {
+        'success': success,
+        'message': message
+    }
+    return JsonResponse(data, safe=True, status=sts)
 
 
 # def ChangeFileName(filename):
