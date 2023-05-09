@@ -15,3 +15,11 @@ class CustomerSerializer(serializers.ModelSerializer):
 # name, customer_pic, image_text, mobile, email, password, address, nid, cardno, gender, customer_type, balance, is_archived, created_at
 
 
+
+class CustomerShortSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Customer
+        fields = ['id', 'name', 'customer_pic', 'image_text', 'mobile', 'email']
+
+

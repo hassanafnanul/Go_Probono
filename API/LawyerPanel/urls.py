@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.LawyerAPI.as_view(), name='LawyerAPI'),
-    path('<int:id>/', views.LawyerDetailsAPI.as_view(), name='LawyerDetailsAPI'),
-    path('categories/', views.LawyerCategoriesAPI.as_view(), name='LawyerCategoriesAPI'),
+    path('appointments/', views.StatusWiseAppointments.as_view(), name='StatusWiseAppointments'),    
+    path('appointments/<int:id>/', views.AppointmentsDetails.as_view(), name='AppointmentsDetails'),    
+    path('appointment-status-change/', views.AppointmentStatusChange, name='AppointmentStatusChange'),
 ]
