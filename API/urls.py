@@ -32,6 +32,8 @@ urlpatterns = [
     path('address/',include('API.Address.urls')),
     
     path('appointment/',include('API.Appointment.urls')),
+    
+    path('payment/',include('API.Payment.urls')),
 
 ]
 

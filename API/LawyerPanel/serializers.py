@@ -3,6 +3,6 @@ from rest_framework.response import Response
 from UserAuthentication.models import Lawyer
 from LawyerManagement.models import LawyerCategory
 from API.Address.serializers import AddressSerializer
-from API.Appointment.serializers import PaymentPlanSerializer
+from Payment.models import PaymentHistory
 
 

@@ -6,12 +6,6 @@ from Appoinment.models import Appointment
 from API.UserAPI.serializers import CustomerShortSerializer
 
 
-class PaymentPlanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentPlan
-        fields = ['id', 'name', 'thumbnail', 'image_text', 'balance', 'duration', 'duration_type', 'note']
-
-
 
 class AppointmentSerializer(serializers.ModelSerializer):
     lawyer = serializers.CharField(source='lawyer.name')

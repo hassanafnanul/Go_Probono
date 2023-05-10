@@ -6,7 +6,7 @@ import json, random, string, requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PaymentPlanSerializer, PaymentPlan, Appointment, AppointmentSerializer
+from .serializers import Appointment, AppointmentSerializer
 from UserAuthentication.models import Customer, Lawyer
 import datetime
 from API.Lawyer.serializers import LawyerSerializer
@@ -101,17 +101,6 @@ class FilterLawyer(APIView):
         lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise).order_by("created_at").exclude(is_archived = True).distinct()
         # lawyers = Lawyer.objects.filter(address__area__slug = area_slug ).order_by("created_at").exclude(is_archived = True)
         serializer = LawyerSerializer(lawyers, many=True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-
-
-class PaymentPlanList(APIView):
-    def get(self, request):
-        PaymentPlans = PaymentPlan.objects.all().order_by("order").exclude(is_archived = True)
-        serializer = PaymentPlanSerializer(PaymentPlans, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 
