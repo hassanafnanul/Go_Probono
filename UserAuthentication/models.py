@@ -77,11 +77,15 @@ class Lawyer(models.Model):
     lawyer_type=models.CharField(choices=LawyerType.choices,default=LawyerType.LAWYER, blank = True, max_length=9) #dr,cr
     status=models.CharField(choices=StatusList.choices,default=StatusList.PENDING, blank = True, max_length=15) #dr,cr
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
+    
+    expiary_date = models.DateField(null=True, blank=True)
+    warning_day = models.IntegerField(default=5, null=True, blank=True)
+
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.name+ "->"+ self.status
 
 
 # name, image, image_text, mobile, email, password, address, payment_plan, cardno, gender, lawyer_category, bar_council_number, nid, tradelicense, lawyer_type, status, balance, is_archived, created_at

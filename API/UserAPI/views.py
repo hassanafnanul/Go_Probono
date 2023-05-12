@@ -15,8 +15,8 @@ from .serializers import CustomerSerializer
 from API.Lawyer.serializers import LawyerDetailsSerializer
 from UserAuthentication.models import Customer, OTP, Lawyer, GenderType
 from Address.utils import CreateAddress
-from LawyerManagement.models import PaymentPlan
-from LawyerManagement.models import LawyerCategory
+from LawyerManagement.models import PaymentPlan, LawyerCategory
+from LawyerManagement.utils import isPaymentRequired
 
 
 def generate_login_token():
@@ -314,6 +314,7 @@ def UserVerification(request):
                     'type': 'User',
                     'msg': 'Login Successful'
                 }
+                sts = status.HTTP_200_OK
             else:
                 data = {
                     'success': False,
@@ -321,16 +322,53 @@ def UserVerification(request):
                     'type': None,
                     'msg': 'Password Incorrect'
                 }
+                sts = status.HTTP_401_UNAUTHORIZED
         elif Lawyer.objects.filter(mobile=mobile).exists():
             lawyer = Lawyer.objects.get(mobile=mobile)
             
             if check_password(password, lawyer.password):
-                data = {
-                    'success': True,
-                    'token': lawyer.cardno,
-                    'type': 'Lawyer',
-                    'msg': 'Login Successful'
-                }
+                            
+                if isPaymentRequired(lawyer):
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Payment is required'
+                    }
+                    sts = status.HTTP_200_OK
+                elif lawyer.status == Lawyer.StatusList.ACTIVE:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Login Successful'
+                    }
+                    sts = status.HTTP_200_OK
+                elif lawyer.status == Lawyer.StatusList.DEACTIVATED:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Account is Deactivated.'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+                elif lawyer.status == Lawyer.StatusList.DELETED or lawyer.is_archived:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Account is Deleted.'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+                else:
+                    data = {
+                        'success': False,
+                        'token': None,
+                        'type': None,
+                        'msg': 'Account Not Active'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+
             else:
                 data = {
                     'success': False,
@@ -338,36 +376,18 @@ def UserVerification(request):
                     'type': None,
                     'msg': 'Password Incorrect'
                 }
-            
-            if lawyer.status == Lawyer.StatusList.ACTIVE:
-                data = {
-                    'success': True,
-                    'token': lawyer.cardno,
-                    'type': 'Lawyer',
-                    'msg': 'Login Successful'
-                }
-            elif lawyer.status == Lawyer.StatusList.HOLD:
-                data = {
-                    'success': True,
-                    'token': lawyer.cardno,
-                    'type': 'Lawyer',
-                    'msg': 'Payment is required'
-                }
-            else:
-                data = {
-                    'success': False,
-                    'token': None,
-                    'type': None,
-                    'msg': 'Account Not Active'
-                }
+                sts = status.HTTP_401_UNAUTHORIZED
+
         else:
             data = {
                 'success': False,
                 'token': None,
                 'type': None,
-                'msg': 'Password Incorrect'
+                'msg': 'User Not Found'
             }
-        return JsonResponse(data, safe=True)
+            sts = status.HTTP_401_UNAUTHORIZED
+
+        return JsonResponse(data, safe=True, status=sts)
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -792,7 +812,7 @@ def UpdateProfile(request):
 
 
 #DONE
-class CustomerProfile(APIView):
+class ProfileDetails(APIView):
 
     def get(self, request, format=None):
         token = request.headers['token']

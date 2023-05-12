@@ -3,11 +3,12 @@ from django.shortcuts import render
 from django.http import Http404, JsonResponse, HttpResponseForbidden, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json, random, string, requests
+import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PaymentPlanSerializer, PaymentPlan, PaymentMethod, PaymentMethodSerializer
-from Payment.models import PaymentHistory
+from .serializers import PaymentPlanSerializer, PaymentPlan, PaymentMethod, PaymentMethodSerializer, PaymentHistorySerializer, PaymentHistory
+# from Payment.models import PaymentHistory
 from API.LawyerPanel.views import GetLawyerFromToken
 from Go_Probono.utils import SimpleApiResponse
 
@@ -67,6 +68,49 @@ def AddPayments(request):
             return SimpleApiResponse("Failed")
     else:
         HttpResponseForbidden('Allowed only via POST')
+
+
+
+class PaymentsList(APIView):
+    def get(self, request):
+        lawyer = GetLawyerFromToken(request)
+
+        if not lawyer:
+            return SimpleApiResponse("Lawyer not found.")
+        
+        payments = PaymentHistory.objects.prefetch_related('lawyer').filter(lawyer__cardno = lawyer.cardno, is_archived = False).order_by('-created_at')     
+        
+        serializer = PaymentHistorySerializer(payments, many = True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+class PaymentSummary(APIView):
+    def get(self, request):
+        lawyer = GetLawyerFromToken(request)
+        if not lawyer:
+            return SimpleApiResponse("Lawyer not found.")
+        
+        today = datetime.date.today()
+        payments = PaymentHistory.objects.prefetch_related('lawyer').filter(lawyer__cardno = lawyer.cardno, is_archived = False).order_by('created_at').last()
+        days_left = (lawyer.expiary_date - today).days
+        print('------1--------------', today)
+        print('------2--------------', lawyer.expiary_date)
+        print('------3--------------', days_left)
+        print('------4--------------', lawyer.warning_day)
+        
+        context = {
+            'current_payment_plan' : lawyer.payment_plan.name,
+            'package_expiry_date' : lawyer.expiary_date,
+            'days_left' : days_left,
+            'current_due' : lawyer.payment_plan.balance if days_left <= lawyer.warning_day else 0,
+            'last_payment_history' : PaymentHistorySerializer(payments).data
+        }
+        
+        return Response(context, status=status.HTTP_200_OK)
+
 
 
 

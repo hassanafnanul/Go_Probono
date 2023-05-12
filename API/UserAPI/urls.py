@@ -24,8 +24,8 @@ urlpatterns = [
     # path('email/OTP-resend/', views.EmailOTPResend),
 
     # #PROFILE
-    # # path('profile/<str:token>/', views.CustomerProfile.as_view()),
-    path('profile/', views.CustomerProfile.as_view()),
+    # # path('profile/<str:token>/', views.ProfileDetails.as_view()),
+    path('profile/', views.ProfileDetails.as_view()),
 
     # #RESET PASSWORD
     # path('update/password/', views.UpdatePassword),

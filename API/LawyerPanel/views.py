@@ -139,18 +139,3 @@ def AppointmentStatusChange(request):
         HttpResponseForbidden('Allowed only via POST')
 
 
-
-class PaymentsList(APIView):
-    def get(self, request):
-        lawyer = GetLawyerFromToken(request)
-
-        if not lawyer:
-            return SimpleApiResponse("Lawyer not found.")
-        
-        payments = Appointment.objects.prefetch_related('lawyer').filter(lawyer__cardno = lawyer.cardno, is_archived = False).order_by('-start_date')     
-        
-        serializer = AppointmentSerializer(appointments, many = True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
