@@ -49,8 +49,6 @@ def LawCreate(request, task_url="LawManagement", action="add"):
         description = r.get('description') if r.get('description') else ''
         slug = formattedUrl(name)
 
-
-
         if Law.objects.filter(name=name, slug = slug).exists():
             messages.warning(request, f'Law {name} exists.')
             return redirect('LawCreate')
@@ -104,6 +102,13 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
         is_archived = r.get('isarchived')
         description = r.get('description') if r.get('description') else ''
 
+
+        r = request.POST
+        name = string.capwords(r.get('name'))
+        order = r.get('order')
+        headline = r.get('headline')
+        description = r.get('description') if r.get('description') else ''
+
         if show == 'show':
             show = True
         else:
@@ -115,7 +120,7 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
         else:
             is_archived = False
 
-        if Law.objects.filter(law_name=string.capwords(name)).exclude(id=id).exists():
+        if Law.objects.filter(law_name=name).exclude(id=id).exists():
             messages.warning(request, f'Law name {name} already exists.')
             return redirect('LawEdit', id=id)
 
