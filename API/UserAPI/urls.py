@@ -31,5 +31,6 @@ urlpatterns = [
     # path('update/password/', views.UpdatePassword),
 
     # #UPDATE PROFILE
-    path('update/profile/', views.UpdateProfile)
+    path('update/profile/', views.UpdateProfile),
+    path('update/profile/<str:lawyerType>/', views.UpdateLawyerProfile)
 ]
