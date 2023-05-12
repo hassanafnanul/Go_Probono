@@ -48,7 +48,6 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Address</th>
-                            <th>City</th>
                             <th>Mobile No</th>
                             <th>Actions</th>
                         </tr>
@@ -58,25 +57,7 @@
                         <tr>
                             <td>{{customer.id}}</td>
                             <td>{{customer.name}}</td>
-                            <td>
-                                {%if customer.apartment and customer.apartment != '' %}
-                                {{customer.apartment}}
-                                {%endif%}
-                                {%if customer.street_address and customer.street_address != '' %}
-                                {{customer.street_address}}
-                                {%endif%}
-                                {%if customer.city and customer.city != '' %}
-                                {{customer.city}}
-                                {%endif%}
-                                {%if customer.country and customer.country != '' %}
-                                {{customer.country}}
-                                {%endif%}
-                            </td>
-                            <td>
-                                {%if customer.city and customer.city != '' %}
-                                {{customer.city}}
-                                {%endif%}
-                            </td>
+                            <td>{{customer.address.street_address}}</td>
                             <td>
                                 {%if customer.mobile %}
                                 {{customer.mobile}}
