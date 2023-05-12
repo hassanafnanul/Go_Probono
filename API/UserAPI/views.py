@@ -218,7 +218,7 @@ def RegisterLawyer(request, lawyerType):
             lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
             lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
 
-            return SimpleApiResponse(lawyer_type+' created successfully.')
+            return SimpleApiResponse(lawyer_type+' created successfully.', success=True)
         
         except:
             return SimpleApiResponse('Could not create '+lawyer_type)
