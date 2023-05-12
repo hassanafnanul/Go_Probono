@@ -218,16 +218,11 @@ def RegisterLawyer(request, lawyerType):
             lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
             lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
 
-            data = {
-                'success': True,
-                'message': lawyer_type+' created successfully.'
-            }
+            return SimpleApiResponse(lawyer_type+' created successfully.')
+        
         except:
-            data = {
-                'success': False,
-                'message': 'Could not create '+lawyer_type
-            }
-        return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse('Could not create '+lawyer_type)
+
     else:
         HttpResponseForbidden('Allowed only via POST')
 
