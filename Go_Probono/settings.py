@@ -160,28 +160,23 @@ CKEDITOR_REQUIRE_STAFF=False
 
 
 
-
-
-STATIC_URL = 'static/'
+# STATIC_ROOT = Path.joinpath(BASE_DIR, "static")
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     Path.joinpath(BASE_DIR, "static"),
 )
 
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = (
-#     Path.joinpath(BASE_DIR, "media"),
-# )
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_DIRS = (
+    Path.joinpath(BASE_DIR, "media"),
+)
 
-# FILES_URL = 'files/'
-# FILES_ROOT = (
-#     Path.joinpath(BASE_DIR, "files"),
-# )
-
-
-MEDIA_ROOT=Path.joinpath(BASE_DIR, "media")
-MEDIA_URL='/media/'
-FILES_ROOT=Path.joinpath(BASE_DIR, "files")
-FILES_URL='/files/'
+FILES_ROOT = Path.joinpath(BASE_DIR, "files")
+FILES_URL = '/files/'
+FILES_DIRS = (
+    Path.joinpath(BASE_DIR, "files"),
+)
 
 
 
