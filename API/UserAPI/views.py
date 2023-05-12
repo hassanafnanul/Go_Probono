@@ -105,19 +105,16 @@ def RegisterUser(request):
         gender = json_data['gender']
         password = make_password(json_data['password'])
 
-        if Customer.objects.filter(mobile=mobile).exists():
-            data = {
-                'success': False,
-                'message': 'Mobile already exists'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+        if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
+            return SimpleApiResponse("Mobile already exists.")
+
+
+        if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
+            return SimpleApiResponse("Email already exists.")
+
 
         if gender not in ['Male', 'Female', 'Other']:
-            data = {
-                'success': False,
-                'message': 'Gender data error'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Gender data error.")
         
 
         # ------------- OTP varification ------------
@@ -138,17 +135,10 @@ def RegisterUser(request):
         try:
             customer = Customer(name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
             customer.save()
+            return SimpleApiResponse("Customer created successfully.", success=True)
 
-            data = {
-                'success': True,
-                'message': 'Customer created successfully.'
-            }
         except:
-            data = {
-                'success': False,
-                'message': 'Could not create customer'
-            }
-        return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Customer creation failed.")
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -228,16 +218,11 @@ def RegisterLawyer(request, lawyerType):
             lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
             lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
 
-            data = {
-                'success': True,
-                'message': lawyer_type+' created successfully.'
-            }
+            return SimpleApiResponse(lawyer_type+' created successfully.')
+        
         except:
-            data = {
-                'success': False,
-                'message': 'Could not create '+lawyer_type
-            }
-        return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse('Could not create '+lawyer_type)
+
     else:
         HttpResponseForbidden('Allowed only via POST')
 
