@@ -57,9 +57,6 @@ def EventAdd(request, task_url="EventManagement", action="add"):
         start_time = r.get('start_date') if r.get('start_date') else None
         end_time = r.get('end_date') if r.get('end_date') else None
 
-        # start_time = datetime_local_to_datetime(r.get('start_date'))
-        # end_time = datetime_local_to_datetime(r.get('end_date'))
-
         if Event.objects.filter(name=title, slug = slug).exists():
             messages.warning(request, f'Event {title} exists.')
             return redirect('EventAdd')
@@ -109,25 +106,24 @@ def EventAdd(request, task_url="EventManagement", action="add"):
 def EventEdit(request, id, task_url="EventManagement", action="edit"):
     if request.method == 'POST':
         r = request.POST
-        name = r.get('name')
-        show = r.get('show')
-        is_archived = r.get('isarchived')
+
+        name = string.capwords(r.get('title'))
+        order = r.get('order')
+        brief_description = r.get('brief_description')
+        location = r.get('location')
+        organizer = r.get('organizer')
         description = r.get('description') if r.get('description') else ''
-
-        if show == 'show':
-            show = True
-        else:
-            show = False
+        image_text = name
         
-        if is_archived == 'disable':
-            is_archived = True
-            show = False
-        else:
-            is_archived = False
+        start_time = r.get('start_date') if r.get('start_date') else None
+        end_time = r.get('end_date') if r.get('end_date') else None
 
-        if Event.objects.filter(event_name=string.capwords(name)).exclude(id=id).exists():
-            messages.warning(request, f'Event name {name} already exists.')
+        is_archived = r.get('is_archived') == 'disable'
+
+        if Event.objects.filter(name=name).exclude(id=id).exists():
+            messages.warning(request, f'Event {name} already exists.')
             return redirect('EventEdit', id=id)
+        
 
         event = Event.objects.get(id=id)
         thumbnail = '/default/default.png'
@@ -136,28 +132,36 @@ def EventEdit(request, id, task_url="EventManagement", action="edit"):
             myfile = request.FILES[filename]
             if filename == 'thumbnail': 
                 fs = FileSystemStorage(
-                    location=Path.joinpath(settings.MEDIA_ROOT, "event_logo"),
-                    base_url='/event_logo/'
+                    location=Path.joinpath(settings.MEDIA_ROOT, "event_thumbnail"),
+                    base_url='/event_thumbnail/'
                 )
                 myfile.name = ChangeFileName(myfile.name)
                 filename = fs.save(myfile.name, file)
                 thumbnail = fs.url(filename)
-                event.logo = thumbnail
-
-        event.event_name = name
-        event.home_event = show
-        event.is_archived = is_archived
+                event.thumbnail = thumbnail
+        
+        event.name = name
+        event.image_text = image_text
+        event.order = order
         event.description = description
+        event.brief_description = brief_description
+        event.location = location
+        event.start_time = start_time
+        event.end_time = end_time
+        event.organizer = organizer
+        event.is_archived = is_archived
         event.save()
 
         messages.success(request, f'Event edited successfully')
         return redirect('EventManagement')
     else:
-        events = Event.objects.get(id=id)
+        event = Event.objects.get(id=id)
         ck_form = EventForm()
-        ck_form['description'].initial = events.description
+        ck_form['description'].initial = event.description
         context = {
-            'events': events,
+            'event': event,
+            'start': event.start_time,
+            'end': event.end_time,
             'ck_form': ck_form,
             'cnav': UserCustomNav(request),
             'privilege': DetailPermissions(request, task_url),

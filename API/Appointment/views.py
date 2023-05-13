@@ -96,7 +96,6 @@ class FilterLawyer(APIView):
         expertise = expertise.split(',')
 
         a = request.GET.get('expertise')
-        print('---------', a, '--------', type(a))
 
         lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise).order_by("created_at").exclude(is_archived = True).distinct()
         # lawyers = Lawyer.objects.filter(address__area__slug = area_slug ).order_by("created_at").exclude(is_archived = True)
