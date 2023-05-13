@@ -32,15 +32,14 @@
                 <div class="d-flex ">
                     <div class="form_container_div">
                         <div class="form-group row mx-0">
-                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="question">Question:</label>
-                            <select class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9"  name="law" id="law" class="mr-1">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="law">Law:</label>
+                            <select class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9"  name="law" id="law" class="mr-1" required>
                                 <option value="">Select Law</option>
                                 {%for l in laws %}
                                 <option value={{l.id}}>{{l.name}}</option>
                                 {%endfor%}
                             </select>
                         </div>
-
 
                         <div class="form-group row mx-0">
                             <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="question">Question:</label>
@@ -59,7 +58,7 @@
 
                         <div class="form-group row mx-0">
                             <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="tags">Tags (Comma seperated):</label>
-                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="tags" id="tags" required maxlength="59"/>
+                            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="tags" id="tags" maxlength="59"/>
                         </div>
 
                     </div>

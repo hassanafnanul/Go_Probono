@@ -9,7 +9,7 @@ import datetime
 
 from Go_Probono.utils import SimpleApiResponse
 from UserAuthentication.models import Lawyer
-from API.Appointment.serializers import Appointment, AppointmentSerializer, AppointmentDetailsSerializer
+from API.Appointment.serializers import Appointment, AppointmentSerializerForLawyer, AppointmentDetailsSerializer
 
 
 
@@ -44,7 +44,7 @@ class StatusWiseAppointments(APIView):
             appointments = Appointment.objects.prefetch_related('lawyer').filter(lawyer__cardno = lawyer.cardno, is_archived = False, status = sts).order_by('-start_date')
         
         
-        serializer = AppointmentSerializer(appointments, many = True)
+        serializer = AppointmentSerializerForLawyer(appointments, many = True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
 

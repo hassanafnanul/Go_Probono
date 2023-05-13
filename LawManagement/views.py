@@ -108,6 +108,8 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
         order = r.get('order')
         headline = r.get('headline')
         description = r.get('description') if r.get('description') else ''
+        show = r.get('show')
+        is_archived = r.get('isarchived')
 
         if show == 'show':
             show = True
@@ -120,12 +122,13 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
         else:
             is_archived = False
 
-        if Law.objects.filter(law_name=name).exclude(id=id).exists():
+        if Law.objects.filter(name=name).exclude(id=id).exists():
             messages.warning(request, f'Law name {name} already exists.')
             return redirect('LawEdit', id=id)
 
         law = Law.objects.get(id=id)
-        thumbnail = '/default/default.png'
+        thumbnail = law.thumbnail
+        print('--------old-----------', thumbnail)
 
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
@@ -137,12 +140,16 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
                 myfile.name = ChangeFileName(myfile.name)
                 filename = fs.save(myfile.name, file)
                 thumbnail = fs.url(filename)
-                law.logo = thumbnail
 
-        law.law_name = name
+                print('--------new-----------', thumbnail)
+
+        law.name = name
+        law.order = order
+        law.headline = headline
         law.home_law = show
         law.is_archived = is_archived
         law.description = description
+        law.thumbnail = thumbnail
         law.save()
 
         messages.success(request, f'Law edited successfully')

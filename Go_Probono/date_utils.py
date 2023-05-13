@@ -26,7 +26,7 @@ def datetime_local_to_datetime(yyyymmddhhmm):
     ret = yyyymmddhhmm.split('T')
     ret[0] = ret[0].split('-')
     ret[1] = ret[1].split(':')
-    return datetime(int(ret[0][0]), int(ret[0][1]), int(ret[0][2]), int(ret[1][0]), int(ret[1][1]))
+    return datetime.datetime(int(ret[0][0]), int(ret[0][1]), int(ret[0][2]), int(ret[1][0]), int(ret[1][1]))
 
 def datetime_to_datetime_local(utctime):
     fmt = '%Y-%m-%dT%H:%M'

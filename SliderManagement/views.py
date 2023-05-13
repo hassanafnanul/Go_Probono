@@ -21,16 +21,16 @@ from Go_Probono.date_utils import datetime_local_to_datetime, datetime_to_dateti
 @login_required
 @view_permission_required
 def SliderManagement(request, task_url="SliderManagement", action="main"):
-    current_date = date.today()
+    current_time = datetime.now()
     sliderq = request.GET.get('slider')
 
     if sliderq:
         sliders = Slider.objects.filter(name__icontains=sliderq).order_by('-start_date', '-end_date', 'order')
     else:
-        # sliders = Slider.objects.all().order_by('-start_date', '-end_date', 'order') end_date__lte=current_date,
+        # sliders = Slider.objects.all().order_by('-start_date', '-end_date', 'order') end_date__lte=current_time,
         sliders = Slider.objects.all().annotate(isLive=
             Case(
-                When(start_date__lte=current_date, end_date__gte=current_date, is_archived=False, then=Value(True)),
+                When(start_date__lte=current_time, end_date__gte=current_time, is_archived=False, then=Value(True)),
                 default=Value(False),
                 output_field=BooleanField()
             )).order_by('-isLive', 'is_archived', 'order')
@@ -161,7 +161,7 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
 
         image = ''
         
-        img_files = []
+        img_files = ['', '']
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
             fs = FileSystemStorage(
