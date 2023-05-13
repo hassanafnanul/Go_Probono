@@ -17,7 +17,7 @@ def KylManagement(request, task_url="KylManagement", action="main"):
     search = request.GET.get('search')
     
     laws = Law.objects.all().order_by('order')
-    kyls = KnowYourLaw.objects.all().order_by('rating')
+    kyls = KnowYourLaw.objects.all().order_by('rating','law')
 
     if law:
         kyls = kyls.filter(law__id__icontains=law)
