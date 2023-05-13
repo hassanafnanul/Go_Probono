@@ -63,9 +63,6 @@ class AppointmentsDetails(APIView):
             appointments = Appointment.objects.prefetch_related('lawyer').get(id = id, lawyer__cardno = lawyer.cardno)
         except:
             return SimpleApiResponse("Invalid ID")
-
-
-        print('appointments---------', appointments)
         
                 
         serializer = AppointmentDetailsSerializer(appointments)

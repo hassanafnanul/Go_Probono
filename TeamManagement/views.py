@@ -100,55 +100,55 @@ def TeamAdd(request, task_url="TeamManagement", action="add"):
 def TeamEdit(request, id, task_url="TeamManagement", action="edit"):
     if request.method == 'POST':
         r = request.POST
-        name = r.get('name')
-        show = r.get('show')
-        is_archived = r.get('isarchived')
+        name = string.capwords(r.get('name'))
+        order = r.get('order')
+        portfolio_url = r.get('portfolio_url')
+        designation = r.get('designation')
         description = r.get('description') if r.get('description') else ''
 
-        if show == 'show':
-            show = True
-        else:
-            show = False
-        
-        if is_archived == 'disable':
-            is_archived = True
-            show = False
-        else:
-            is_archived = False
+        is_archived = r.get('is_archived') == 'disable'
 
-        if Team.objects.filter(team_name=string.capwords(name)).exclude(id=id).exists():
-            messages.warning(request, f'Team name {name} already exists.')
+        if name == "":
+            messages.warning(request, f'Name cannot be blank.')
             return redirect('TeamEdit', id=id)
+        
+        
+        if TeamMember.objects.filter(name=string.capwords(name)).exclude(id=id).exists():
+            messages.warning(request, f'{name} already exists.')
+            return redirect('TeamEdit', id=id)
+        
 
-        team = Team.objects.get(id=id)
+        team = TeamMember.objects.get(id=id)
         thumbnail = '/default/default.png'
 
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
             if filename == 'thumbnail': 
                 fs = FileSystemStorage(
-                    location=Path.joinpath(settings.MEDIA_ROOT, "team_logo"),
-                    base_url='/team_logo/'
+                    location=Path.joinpath(settings.MEDIA_ROOT, "team_thumbnail"),
+                    base_url='/team_thumbnail/'
                 )
                 myfile.name = ChangeFileName(myfile.name)
                 filename = fs.save(myfile.name, file)
                 thumbnail = fs.url(filename)
-                team.logo = thumbnail
+                team.thumbnail = thumbnail
 
-        team.team_name = name
-        team.home_team = show
-        team.is_archived = is_archived
+        team.name = name
+        team.order = order
+        team.portfolio_url = portfolio_url
+        team.designation = designation
         team.description = description
+        team.is_archived = is_archived
         team.save()
 
         messages.success(request, f'Team edited successfully')
         return redirect('TeamManagement')
     else:
-        teams = Team.objects.get(id=id)
+        team = TeamMember.objects.get(id=id)
         ck_form = TeamForm()
-        ck_form['description'].initial = teams.description
+        ck_form['description'].initial = team.description
         context = {
-            'teams': teams,
+            'team': team,
             'ck_form': ck_form,
             'cnav': UserCustomNav(request),
             'privilege': DetailPermissions(request, task_url),

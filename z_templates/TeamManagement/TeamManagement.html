@@ -59,7 +59,7 @@
                     <tbody>
                     {% for team in teams %}
                     <tr>
-                        <td><img src="{{team.thumbnail.url}}" style="width:120px"></td>
+                        <td>{% if team.thumbnail %}<img src="{{team.thumbnail.url}}" style="width:120px">{% endif %}</td>
                         <td style="font-weight: 600;">{{team.name}}</td>
                         <td style="font-weight: 600;">{{team.designation}}</td>
                         <td>

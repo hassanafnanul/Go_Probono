@@ -21,7 +21,7 @@ class Zone(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.name+'---'+self.zone_type+'---'+self.slug
+        return self.name+'->'+self.zone_type+'->'+self.slug
     
     # name, slug, zone_type, parent_slug, parent, note, is_archived, created_at
 
@@ -41,7 +41,7 @@ class Address(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.area.name+'----'+self.note
+        return self.area.name+'->'+self.note
     
     # note, apartment, street_address, area, country, latitude, longitude, is_archived, created_at
 

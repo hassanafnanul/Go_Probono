@@ -128,7 +128,6 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
 
         law = Law.objects.get(id=id)
         thumbnail = law.thumbnail
-        print('--------old-----------', thumbnail)
 
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
@@ -140,8 +139,6 @@ def LawEdit(request, id, task_url="LawManagement", action="edit"):
                 myfile.name = ChangeFileName(myfile.name)
                 filename = fs.save(myfile.name, file)
                 thumbnail = fs.url(filename)
-
-                print('--------new-----------', thumbnail)
 
         law.name = name
         law.order = order

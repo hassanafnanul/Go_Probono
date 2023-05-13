@@ -23,7 +23,6 @@ class LawyerAPI(APIView):
 
 class LawyerDetailsAPI(APIView):
     def get(self, request, id):
-        print('-----------ALLAH----------')
         try: 
             lawyer = Lawyer.objects.get(id = id, is_archived = False)
             serializer = LawyerDetailsSerializer(lawyer)

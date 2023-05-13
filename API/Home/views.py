@@ -16,9 +16,6 @@ from rest_framework.decorators import api_view
 def APItest(request):
     print("ASSSALAMUALIKUM")
 
-    print('request------------', request)
-    print('request.method------------', request.method)
-
     if request.method == 'POST':
         return Response({'req':'post'}, status=status.HTTP_200_OK)
     elif request.method == 'GET':
