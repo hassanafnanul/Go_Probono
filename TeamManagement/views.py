@@ -22,9 +22,9 @@ from LogWithAudit.views import audit_update
 def TeamManagement(request, task_url="TeamManagement", action="main"):
     teamq = request.GET.get('name')
     if teamq:
-        teams = TeamMember.objects.filter(name__icontains=teamq).order_by('order', 'name')
+        teams = TeamMember.objects.filter(name__icontains=teamq).order_by('order')
     else:
-        teams = TeamMember.objects.all().order_by('order', 'name')
+        teams = TeamMember.objects.all().order_by('order')
         
     paginator = Paginator(teams, 20)
     page = request.GET.get('page')

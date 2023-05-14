@@ -101,6 +101,7 @@ class PaymentSummary(APIView):
         
         context = {
             'current_payment_plan' : lawyer.payment_plan.name,
+            'current_payment_plan_id' : lawyer.payment_plan.id,
             'package_expiry_date' : lawyer.expiary_date,
             'days_left' : days_left,
             'current_due' : current_due,

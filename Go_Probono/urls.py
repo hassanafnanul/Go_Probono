@@ -41,6 +41,8 @@ urlpatterns = [
     
     path('ckeditor/', include('Go_Probono.ck_editor_uploader_urls')),
 
+    path('payment/', include('Payment.urls')),
+
 ]
 
 if settings.DEBUG:

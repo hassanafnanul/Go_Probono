@@ -41,7 +41,18 @@ class Address(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.area.name+'->'+self.note
+        thikana = ''
+
+        if self.apartment: thikana = thikana+self.apartment+', '
+        if self.street_address: thikana = thikana+self.street_address+', '
+        if self.area.name: thikana = thikana+self.area.name+', '
+        if self.area.parent.name: thikana = thikana+self.area.parent.name+', '
+        if self.area.parent.parent.name: thikana = thikana+self.area.parent.parent.name+', '
+        if self.country: thikana = thikana+self.country
+        if not thikana == '': thikana = thikana+'.'
+        else: thikana = None
+
+        return thikana
     
     # note, apartment, street_address, area, country, latitude, longitude, is_archived, created_at
 
