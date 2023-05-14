@@ -41,7 +41,7 @@ def RoleAssignment(request, task_url="UserManagement", action="main"):
     nameq = request.GET.get('username')
     if nameq:
         users = users.filter(user__username__icontains=nameq)
-    paginator = Paginator(users, 20)
+    paginator = Paginator(users.order_by('id'), 20)
     page = request.GET.get('page')
     user_list = paginator.get_page(page)
     llist = []

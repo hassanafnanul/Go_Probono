@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.response import Response
 from Address.models import Zone, Address
+from Address.utils import MakeAddressString
 
 
 
@@ -23,31 +24,16 @@ class ZoneDetailsSerializer(serializers.ModelSerializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-    division = serializers.CharField(source = 'area.name')
-    division_slug = serializers.CharField(source = 'area.slug')
+    division = serializers.CharField(source = 'area.parent.parent.name')
+    division_slug = serializers.CharField(source = 'area.parent.parent.slug')
     district = serializers.CharField(source = 'area.parent.name')
     district_slug = serializers.CharField(source = 'area.parent.slug')
-    thana = serializers.CharField(source = 'area.parent.parent.name')
-    thana_slug = serializers.CharField(source = 'area.parent.parent.slug')
+    thana = serializers.CharField(source = 'area.name')
+    thana_slug = serializers.CharField(source = 'area.slug')
     full_address = serializers.SerializerMethodField('MakeAddressString')
     class Meta:
         model = Address
         fields = ['apartment', 'street_address', 'division', 'division_slug', 'district', 'district_slug', 'thana', 'thana_slug', 'country', 'full_address']
     
     def MakeAddressString(request, address):
-        thikana = ''
-
-        try: thikana = thikana+address.apartment+', ';
-        except: pass
-        try: thikana = thikana+address.street_address+', ';
-        except: pass
-        try: thikana = thikana+address.area.name+', ';
-        except: pass
-        try: thikana = thikana+address.area.parent.name+', ';
-        except: pass
-        try: thikana = thikana+address.area.parent.parent.name+', ';
-        except: pass
-        try: thikana = thikana+address.country+'.';
-        except: pass
-
-        return thikana
+        return MakeAddressString(address)

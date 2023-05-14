@@ -21,7 +21,6 @@ def CreateAddress(area_slug, note = '', apartment = '', street_address = '', lat
         return None
 
 
-
 def UpdateAddress(address, area_slug, note = '', apartment = '', street_address = '', latitude = None, longitude = None):
     try:
         area = Zone.objects.get(slug = area_slug, zone_type = Zone.ZoneType.THANA)
@@ -42,4 +41,23 @@ def UpdateAddress(address, area_slug, note = '', apartment = '', street_address 
     except:
         return None
 
+
+
+def MakeAddressString(address):
+    thikana = ''
+
+    try: thikana = thikana+address.apartment+', ';
+    except: pass
+    try: thikana = thikana+address.street_address+', ';
+    except: pass
+    try: thikana = thikana+address.area.name+', ';
+    except: pass
+    try: thikana = thikana+address.area.parent.name+', ';
+    except: pass
+    try: thikana = thikana+address.area.parent.parent.name+', ';
+    except: pass
+    try: thikana = thikana+address.country+'.';
+    except: pass
+
+    return thikana
 

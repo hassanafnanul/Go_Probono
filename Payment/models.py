@@ -41,4 +41,6 @@ class PaymentHistory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.lawyer.name+'->'+str(self.amount)
+
+
