@@ -13,6 +13,7 @@ from .models import PaymentHistory
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
 from Payment.models import PaymentHistory
+from UserAuthentication.models import Lawyer
 
 
 # from LogWithAudit.views import audit_update
@@ -198,24 +199,27 @@ def PaymentApprove(request, id, task_url="PaymentList", action="save"):
 
         if approve and not reject and expiary_date:
             status = PaymentHistory.StatusList.APPROVED
+            lawyer_status = Lawyer.StatusList.ACTIVE
         elif reject and not approve:
             status = PaymentHistory.StatusList.REJECTED
             expiary_date = payment.lawyer.expiary_date
+            lawyer_status = payment.lawyer.status
         else:
             status = None
             expiary_date = payment.lawyer.expiary_date
+            lawyer_status = payment.lawyer.status
 
         print('approve-----------------', approve)
         print('reject-----------------', reject)
         print('expiary_date-----------------', expiary_date)
 
         if status:
-
             payment.status = status
             payment.approved_by = request.user.username
             payment.approved_at = datetime.datetime.now()
             payment.save()
             payment.lawyer.expiary_date = expiary_date
+            payment.lawyer.status = lawyer_status
             payment.lawyer.save()
 
             messages.success(request, f'Payment Status Updated.')
