@@ -1,0 +1,227 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Lawyer Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'LawyerManagement'%}">Lawyer Management</a> / <span
+                style="color: #000000">Details</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 800;">Type</div>
+                            <div class="col-1" style="font-weight: 800;">:</div>
+                            <div class="col-6" style="font-weight: 800;">{{lawyer.lawyer_type}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Mobile</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Email</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.email}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Status</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.status}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Address</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.address}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        {% if lawyer.lawyer_type == 'lawyer' %}
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Gender</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.gender}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Bar Councin Number</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.bar_council_number}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">NID</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.nid}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        {% elif lawyer.lawyer_type == 'lawfirm' %}
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Trade License</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.tradelicense}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Joined At</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.created_at}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form_container_div">
+
+                        <div class="p-5">
+                            <img src="{% if lawyer.thumbnail %}{{lawyer.thumbnail.url}}{% else %}\media\default\default.png{% endif %}" width=150>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="card-header">
+                    <strong>Payment Information Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 800;">Current Payment Plan</div>
+                            <div class="col-1" style="font-weight: 800;">:</div>
+                            <div class="col-6" style="font-weight: 800;">{{lawyer.payment_plan.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Charge</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.payment_plan.balance}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Plan Duration</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.payment_plan.duration}} {{lawyer.payment_plan.duration_type}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Expiary Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer.expiary_date}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                    </div>
+
+                    
+                    <div class="form_container_div">
+                        <table class="table table-sm bg-white mt-3">
+                            <thead>
+                            <tr>
+                                <th>Payment Date</th>
+                                <th>The then payment plan</th>
+                                <th>Payment Method</th>
+                                <th>Amount</th>
+                                <th>status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for ph in paymentHistories %}
+                            <tr>
+                                <td>{{ph.created_at.date}}</td>
+                                <td>{{ph.chosen_payment_plan.name}}</td>
+                                <td>{{ph.payment_method.name}}</td>
+                                <td>{{ph.amount}}</td>
+                                <td>{{ph.status}}</td>
+                                <td><a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'PaymentView' ph.id %}">
+                                    <i class="icon-eye"></i>
+                                </td>
+                            </a></tr>
+                            {%empty%}
+                            <tr class="odd">
+                                <td colspan="5" style="text-align: center;">No data available in table</td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}
+

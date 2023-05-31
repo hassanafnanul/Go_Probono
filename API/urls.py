@@ -8,8 +8,10 @@ from django.urls import path, include
 from API import views
 
 urlpatterns = [
+    
+    path('lawyer-panel/',include('API.LawyerPanel.urls')),
 
-    path('users/',include('API.UserAPI.urls')),
+    path('auth/',include('API.UserAPI.urls')),
 
     path('law/',include('API.Law.urls')),
 
@@ -26,6 +28,12 @@ urlpatterns = [
     path('lawyer/',include('API.Lawyer.urls')),
 
     path('global-search/',include('API.GlobalSearch.urls')),
+
+    path('address/',include('API.Address.urls')),
+    
+    path('appointment/',include('API.Appointment.urls')),
+    
+    path('payment/',include('API.Payment.urls')),
 
 ]
 

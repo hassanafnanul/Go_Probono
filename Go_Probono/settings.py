@@ -1,22 +1,16 @@
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-x=js4414xd7&eg=716%4_=5ytrm-vh%p2uel+iv=-2p91gc*1e'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['www.goprobono.org', 'goprobono.org', '36.255.71.251', '127.0.0.1']
 
-
-# Application definition
 
 INITIAL_APPS = [
     'django.contrib.admin',
@@ -30,7 +24,8 @@ INITIAL_APPS = [
 THIRD_PARTY_APPS = [
     'ckeditor',
     'ckeditor_uploader',
-    'corsheaders'
+    'corsheaders',
+    'rest_framework'
 ]
 
 DEVELOPED_APPS = [
@@ -46,7 +41,10 @@ DEVELOPED_APPS = [
     'KnowYourLaw',
     'EventManagement',
     'TeamManagement',
-    'LawyerManagement'
+    'LawyerManagement',
+    'Appoinment',
+    'Address',
+    'Payment'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS
@@ -162,28 +160,23 @@ CKEDITOR_REQUIRE_STAFF=False
 
 
 
-
-
-STATIC_URL = 'static/'
+# STATIC_ROOT = Path.joinpath(BASE_DIR, "static")
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     Path.joinpath(BASE_DIR, "static"),
 )
 
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = (
-#     Path.joinpath(BASE_DIR, "media"),
-# )
+MEDIA_ROOT = Path.joinpath(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_DIRS = (
+    Path.joinpath(BASE_DIR, "media"),
+)
 
-# FILES_URL = 'files/'
-# FILES_ROOT = (
-#     Path.joinpath(BASE_DIR, "files"),
-# )
-
-
-MEDIA_ROOT=Path.joinpath(BASE_DIR, "media")
-MEDIA_URL='/media/'
-FILES_ROOT=Path.joinpath(BASE_DIR, "files")
-FILES_URL='/files/'
+FILES_ROOT = Path.joinpath(BASE_DIR, "files")
+FILES_URL = '/files/'
+FILES_DIRS = (
+    Path.joinpath(BASE_DIR, "files"),
+)
 
 
 

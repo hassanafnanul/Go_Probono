@@ -3,70 +3,34 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
 from datetime import datetime, date
-import pytz,random,string
+import random,string
 import re
 from django.db.models import Case, When, Value, BooleanField
 
 from .models import Slider, SLIDER_TYPES
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, ChangeFileName
 from LogWithAudit.views import audit_update
-
-
-
-def datetimepicker_to_datetime(mmddyyyyhhmm):
-    arr = mmddyyyyhhmm.split('/')
-    year = int(arr[0])
-    month = int(arr[1])
-    temp = arr[2].split(' ')
-    day = int(temp[0])
-    ret = [day, year, month]
-    temp2 = temp[1].split(':')
-    ret.append(int(temp2[0]))
-    ret.append(int(temp2[1]))
-    if temp[2] == 'PM':
-        ret[3] += 12
-    return datetime(ret[0], ret[1], ret[2], ret[3], ret[4])
-
-def datetime_to_datetimepicker(utctime):
-    fmt = '%m/%d/%Y %H:%M %p'
-    utc = utctime.replace(tzinfo=pytz.UTC)
-    localtz = utc.astimezone(timezone.get_current_timezone())
-    return localtz.strftime(fmt)
-
-def datetime_local_to_datetime(yyyymmddhhmm):
-    ret = yyyymmddhhmm.split('T')
-    ret[0] = ret[0].split('-')
-    ret[1] = ret[1].split(':')
-    return datetime(int(ret[0][0]), int(ret[0][1]), int(ret[0][2]), int(ret[1][0]), int(ret[1][1]))
-
-def datetime_to_datetime_local(utctime):
-    fmt = '%Y-%m-%dT%H:%M'
-    utc = utctime.replace(tzinfo=pytz.UTC)
-    localtz = utc.astimezone(timezone.get_current_timezone())
-    return localtz.strftime(fmt)
-
-
+from Go_Probono.date_utils import datetime_local_to_datetime, datetime_to_datetime_local
 
 
 
 @login_required
 @view_permission_required
 def SliderManagement(request, task_url="SliderManagement", action="main"):
-    current_date = date.today()
+    current_time = datetime.now()
     sliderq = request.GET.get('slider')
 
     if sliderq:
         sliders = Slider.objects.filter(name__icontains=sliderq).order_by('-start_date', '-end_date', 'order')
     else:
-        # sliders = Slider.objects.all().order_by('-start_date', '-end_date', 'order') end_date__lte=current_date,
+        # sliders = Slider.objects.all().order_by('-start_date', '-end_date', 'order') end_date__lte=current_time,
         sliders = Slider.objects.all().annotate(isLive=
             Case(
-                When(start_date__lte=current_date, end_date__gte=current_date, is_archived=False, then=Value(True)),
+                When(start_date__lte=current_time, end_date__gte=current_time, is_archived=False, then=Value(True)),
                 default=Value(False),
                 output_field=BooleanField()
             )).order_by('-isLive', 'is_archived', 'order')
@@ -197,7 +161,7 @@ def SliderEdit(request, id, task_url="SliderManagement", action="edit"):
 
         image = ''
         
-        img_files = []
+        img_files = ['', '']
         for filename, file in request.FILES.items():
             myfile = request.FILES[filename]
             fs = FileSystemStorage(

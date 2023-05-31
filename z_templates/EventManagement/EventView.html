@@ -1,0 +1,112 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>event Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'EventManagement'%}">Event Management</a> / <span style="color: #000000">Details</span></div>
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Thumbnail</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6"><img src="{{event.thumbnail.url}}" width=150></div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">event name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{event.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Order</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{event.order}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Location</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{event.location}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Organizer</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{event.organizer}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{event.start_time}} to {{ event.end_time }}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Brief Description</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{event.brief_description}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">event Description</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{event.description | safe}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}
+

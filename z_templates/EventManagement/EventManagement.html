@@ -1,0 +1,101 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Event Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><span style="color: #000000">Event Management</span></div>
+        
+
+    {% include 'Common/taskbuttons.html'%}
+
+    {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div class="main_wrapper">
+            <div style="display: flex;">
+                {%if privilege and privilege.add_task%}
+                <a class="btn btn-primary btn-sm" href="{%url 'EventAdd'%}">
+                    <i class="icon-plus"></i> Add Event
+                </a>
+                {%endif%}
+                <div style="width: 10px;"></div>
+                <a class="btn btn-success btn-sm" href="{%url 'EventManagement'%}">
+                    <i class="icon-refresh"></i> Reload
+                </a>
+            </div>
+
+            <form method="GET" style="display: flex; margin-top: 10px;">
+                <input type="text" name="title" class="form-control form-control-sm" placeholder="Enter Title" value="{{request.GET.title}}">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+
+            <div class="mt-3">Total: <b>{{events.paginator.count}}</b> events</div>
+
+            <div class="table-responsive-sm">
+                <table class="table table-sm bg-white mt-3">
+                    <thead>
+                    <tr>
+                        <th>Thumbnail</th>
+                        <th>Event Name</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td><img src="{{event.thumbnail.url}}" style="width:120px"></td>
+                        {% if event.is_archived %}
+                        <td style="color: red;">{{event.name}}</td>
+                        {% else %}
+                        <td>{{event.name}}</td>
+                        {% endif %}
+                        <td>{{event.location}}</td>
+
+                        <td>
+                            {%if privilege and privilege.edit_task%}
+                            <a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'EventView' event.id %}">
+                                <i class="icon-eye"></i> View
+                            </a>
+                            {%endif%}
+
+                            {%if privilege and privilege.edit_task%}
+                            <a class="btn btn-sm btn-outline-danger" href="{%url 'EventEdit' event.id %}">
+                                <i class="icon-notebook"></i> Edit
+                            </a>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {%empty%}
+                    <tr class="odd">
+                        <td colspan="4" style="text-align: center;">No data available in table</td>
+                    </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+            {% include 'Common/pagination_with_filter.html' with data=events request=request %}
+
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock %}
+
+{%block js%}
+{%endblock%}

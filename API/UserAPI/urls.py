@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
 
     #REGISTRATION
-    path('register/', views.Register, name='Register'),
+    path('register/user/', views.RegisterUser, name='RegisterUser'),
+    path('register/<str:lawyerType>/', views.RegisterLawyer, name='RegisterLawyer'),
     # path('exist/', views.UserExists),
 
     # #LOGIN
@@ -23,12 +24,13 @@ urlpatterns = [
     # path('email/OTP-resend/', views.EmailOTPResend),
 
     # #PROFILE
-    # # path('profile/<str:token>/', views.CustomerProfile.as_view()),
-    path('profile/', views.CustomerProfile.as_view()),
+    # # path('profile/<str:token>/', views.ProfileDetails.as_view()),
+    path('profile/', views.ProfileDetails.as_view()),
 
     # #RESET PASSWORD
     # path('update/password/', views.UpdatePassword),
 
     # #UPDATE PROFILE
-    path('update/profile/', views.UpdateProfile)
+    path('update/profile/', views.UpdateProfile),
+    path('update/profile/<str:lawyerType>/', views.UpdateLawyerProfile)
 ]

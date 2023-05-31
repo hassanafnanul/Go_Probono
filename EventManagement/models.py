@@ -18,3 +18,6 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+# name, thumbnail, image_text, order, slug, description, brief_description, location, start_time, end_time, organizer, is_archived, created_at
+

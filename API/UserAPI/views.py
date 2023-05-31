@@ -12,7 +12,13 @@ from datetime import date
 from datetime import datetime,timezone
 from Go_Probono import settings
 from .serializers import CustomerSerializer
-from UserAuthentication.models import Customer, OTP
+from API.Lawyer.serializers import LawyerDetailsSerializer
+from UserAuthentication.models import Customer, OTP, Lawyer, GenderType
+from Address.utils import CreateAddress, UpdateAddress
+from LawyerManagement.models import PaymentPlan, LawyerCategory
+from LawyerManagement.utils import isPaymentRequired
+from API.LawyerPanel.views import GetLawyerFromToken
+from Go_Probono.utils import SimpleApiResponse
 
 
 def generate_login_token():
@@ -90,28 +96,25 @@ def TimeExpired(time, limit):  # not implemented
 
 # DONE
 @csrf_exempt
-def Register(request):  # DONE
+def RegisterUser(request):
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
         mobile = json_data['mobile']
         email = json_data['email']
         gender = json_data['gender']
-        password = json_data['password']
+        password = make_password(json_data['password'])
 
-        if Customer.objects.filter(mobile=mobile).exists():
-            data = {
-                'success': False,
-                'message': 'Mobile already exists'
-            }
-            return JsonResponse(data, safe=True)
+        if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
+            return SimpleApiResponse("Mobile already exists.")
+
+
+        if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
+            return SimpleApiResponse("Email already exists.")
+
 
         if gender not in ['Male', 'Female', 'Other']:
-            data = {
-                'success': False,
-                'message': 'Gender data error'
-            }
-            return JsonResponse(data, safe=True)
+            return SimpleApiResponse("Gender data error.")
         
 
         # ------------- OTP varification ------------
@@ -125,27 +128,106 @@ def Register(request):  # DONE
         #         'success': False,
         #         'message': 'OTP not verified'
         #     }
-        #     return JsonResponse(data, safe=True)
+        #     return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         # ------------- OTP varification ------------
 
 
         try:
-            customer = Customer(name=name,
-                                mobile=mobile, email=email, password=make_password(password),
-                                gender = gender, cardno=generate_login_token())
+            customer = Customer(name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
             customer.save()
-            data = {
-                'success': True,
-                'message': 'Customer created successfully.'
-            }
+            return SimpleApiResponse("Customer created successfully.", success=True)
+
         except:
-            data = {
-                'success': False,
-                'message': 'Could not create customer'
-            }
-        return JsonResponse(data, safe=True)
+            return SimpleApiResponse("Customer creation failed.")
     else:
         HttpResponseForbidden('Allowed only via POST')
+
+
+# DONE
+@csrf_exempt
+def RegisterLawyer(request, lawyerType):
+    if request.method == 'POST':
+        json_data = json.loads(str(request.body, encoding='utf-8'))
+
+        lawyer_type = lawyerType
+
+        name = json_data['name']
+        mobile = json_data['mobile']
+        email = json_data['email']
+        gender = json_data['gender']
+
+        apartment = json_data['apartment']
+        street_address = json_data['street_address']
+        area_slug = json_data['area_slug']
+        latitude = json_data['latitude']
+        longitude = json_data['longitude']
+
+        payment_plan = json_data['payment_plan']
+        nid_or_tradelicense = json_data['nid_or_tradelicense']
+        bar_council_number = json_data['bar_council_number']
+        lawyer_category = json_data['lawyer_category']
+        expiary_date = date.todaay()
+
+        password = make_password(json_data['password'])
+        cardno = generate_login_token()
+
+
+        if lawyer_type == Lawyer.LawyerType.LAWYER:
+            nid = nid_or_tradelicense
+            tradelicense = None
+        elif lawyer_type == Lawyer.LawyerType.LAWFIRM:
+            nid = None
+            tradelicense = nid_or_tradelicense
+        else:
+            return SimpleApiResponse("URL mismatch.")
+
+
+        if not PaymentPlan.objects.filter(id = payment_plan).exists():
+            return SimpleApiResponse("Invalid Payment Plan.")
+
+        if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
+            return SimpleApiResponse("Mobile already exists.")
+
+
+        if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
+            return SimpleApiResponse("Email already exists.")
+
+        if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
+            return SimpleApiResponse("Gender data error.")
+
+
+
+        # ------------- OTP varification ------------
+        # try:
+        #     otp_varified = OTP.objects.get(contact=mobile).is_verified
+        # except:
+        #     otp_varified = False
+
+        # if not otp_varified:
+        #     data = {
+        #         'success': False,
+        #         'message': 'OTP not verified'
+        #     }
+        #     return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+        # ------------- OTP varification ------------
+
+
+        try:
+            address = CreateAddress(area_slug = area_slug, note=lawyer_type+': '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
+            lawyer = Lawyer(name = name, mobile = mobile, email = email, password = password, address = address, payment_plan_id = payment_plan, cardno = cardno, gender = gender, bar_council_number = bar_council_number, nid = nid, tradelicense = tradelicense, lawyer_type = lawyer_type, expiary_date = expiary_date)
+            lawyer.save()
+            lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
+            lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
+
+            return SimpleApiResponse(lawyer_type+' created successfully.', success=True)
+        
+        except:
+            return SimpleApiResponse('Could not create '+lawyer_type)
+
+    else:
+        HttpResponseForbidden('Allowed only via POST')
+
+
 
 
 '''checking if the mobile number exist in the database or not. If exist then he will be redirected to the login page
@@ -199,36 +281,90 @@ def UserVerification(request):
         json_data = json.loads(str(request.body, encoding='utf-8'))
         mobile = json_data['mobile']
         password = json_data['password']
-        if Customer.objects.filter(mobile=mobile).exists():
-            customer = Customer.objects.filter(mobile=mobile)[0]
+
+        if Customer.objects.filter(mobile=mobile).exists(): # Customer logging In
+            customer = Customer.objects.get(mobile=mobile)
             if check_password(password, customer.password):
                 data = {
                     'success': True,
-                    'token': customer.cardno
+                    'token': customer.cardno,
+                    'type': 'User',
+                    'msg': 'Login Successful'
                 }
+                sts = status.HTTP_200_OK
             else:
                 data = {
                     'success': False,
                     'token': None,
+                    'type': None,
+                    'msg': 'Password Incorrect'
                 }
-        elif Customer.objects.filter(cardno=mobile).exists():
-            customer = Customer.objects.get(cardno=mobile)
-            if check_password(password, customer.password):
-                data = {
-                    'success': True,
-                    'token': customer.cardno
-                }
+                sts = status.HTTP_401_UNAUTHORIZED
+        elif Lawyer.objects.filter(mobile=mobile).exists():
+            lawyer = Lawyer.objects.get(mobile=mobile)
+            
+            if check_password(password, lawyer.password):
+                            
+                if isPaymentRequired(lawyer):
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Payment is required'
+                    }
+                    sts = status.HTTP_200_OK
+                elif lawyer.status == Lawyer.StatusList.ACTIVE:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Login Successful'
+                    }
+                    sts = status.HTTP_200_OK
+                elif lawyer.status == Lawyer.StatusList.DEACTIVATED:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Account is Deactivated.'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+                elif lawyer.status == Lawyer.StatusList.DELETED or lawyer.is_archived:
+                    data = {
+                        'success': True,
+                        'token': lawyer.cardno,
+                        'type': 'Lawyer',
+                        'msg': 'Account is Deleted.'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+                else:
+                    data = {
+                        'success': False,
+                        'token': None,
+                        'type': None,
+                        'msg': 'Account Not Active'
+                    }
+                    sts = status.HTTP_401_UNAUTHORIZED
+
             else:
                 data = {
                     'success': False,
                     'token': None,
+                    'type': None,
+                    'msg': 'Password Incorrect'
                 }
+                sts = status.HTTP_401_UNAUTHORIZED
+
         else:
             data = {
                 'success': False,
                 'token': None,
+                'type': None,
+                'msg': 'User Not Found'
             }
-        return JsonResponse(data, safe=True)
+            sts = status.HTTP_401_UNAUTHORIZED
+
+        return JsonResponse(data, safe=True, status=sts)
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -593,71 +729,155 @@ def UpdateProfile(request):
 
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
-        # mobile = json_data['phone']
         email = json_data['email']
-        # password = json_data['password']
         gender = json_data['gender']
+        nid = json_data['nid']
+
         apartment = json_data['apartment']
         street_address = json_data['street_address']
-        city = json_data['city']
-        country = json_data['country']
+        area_slug = json_data['area_slug']
         latitude = json_data['latitude']
         longitude = json_data['longitude']
-        # country = 'Bangladesh'#json_data['country']
 
         if gender not in ['Male', 'Female', 'Other']:
-            data = {
-                'success': False,
-                'message': 'Gender data invalid.'
-            }
-            return JsonResponse(data, safe=True)
-        
+            return SimpleApiResponse("Gender data invalid.")
+
+
         try:
             customer = Customer.objects.get(cardno=token)
-            # token = generate_login_token()
-            # customer.cardno = token # store
+
+            address = UpdateAddress(customer.address, area_slug = area_slug, note='Lawyer: '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
+            if not address:
+                return SimpleApiResponse("Area data invalid.")
+            
+            if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exclude(id = customer.id).exists():
+                return SimpleApiResponse("Email already exists.")
+
+
             customer.name = name
-            # customer.mobile = mobile
             customer.email = email
-            customer.apartment = apartment
-            customer.street_address = street_address
-            customer.city = city
-            customer.country = country
-            customer.latitude = latitude
-            customer.longitude = longitude
-            # if password is not None and password != '':
-            #     customer.password = make_password(password)
+            customer.gender = gender
+            customer.nid = nid
+            customer.address = address
             customer.save()
-            data = {
-                'success': True,
-                'message': 'Customer details updated successfully.'
-                # 'new_token': token
-            }
-            return JsonResponse(data, safe=False)
-        except Customer.DoesNotExist:
-            data = {
-                'success': False,
-                'message': 'Customer details update failed.'
-            }
-            return JsonResponse(data, safe=True)
+            
+            return SimpleApiResponse("Customer details updated successfully.", success=True)
+
+        except:
+            return SimpleApiResponse("Customer details update failed.")
+
     else:
         HttpResponseForbidden('Allowed only via POST')
 
 
+
+
 #DONE
-class CustomerProfile(APIView):
-    def get_object(self, token):
+@csrf_exempt
+def UpdateLawyerProfile(request, lawyerType):
+    if request.method == 'POST':
+        json_data = json.loads(str(request.body, encoding='utf-8'))
+        
+        lawyer = GetLawyerFromToken(request)
+        if not lawyer:
+            return SimpleApiResponse(lawyerType+" not found.")
+
+        lawyer_type = lawyerType
+
+        name = json_data['name']
+        email = json_data['email']
+        gender = json_data['gender']
+
+        apartment = json_data['apartment']
+        street_address = json_data['street_address']
+        area_slug = json_data['area_slug']
+        latitude = json_data['latitude']
+        longitude = json_data['longitude']
+
+        nid_or_tradelicense = json_data['nid_or_tradelicense']
+        bar_council_number = json_data['bar_council_number']
+        lawyer_category = json_data['lawyer_category']
+
+        if lawyer_type == Lawyer.LawyerType.LAWYER:
+            nid = nid_or_tradelicense
+            tradelicense = None
+        elif lawyer_type == Lawyer.LawyerType.LAWFIRM:
+            nid = None
+            tradelicense = nid_or_tradelicense
+        else:
+            return SimpleApiResponse("URL mismatch.")
+
+
+        if Lawyer.objects.filter(email=email).exclude(id = lawyer.id).exists() or Customer.objects.filter(email=email).exists():
+            return SimpleApiResponse("Email already exists.")
+
+
+        if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
+            return SimpleApiResponse("Gender data error.")
+
+        
+        address = UpdateAddress(lawyer.address, area_slug = area_slug, note='Lawyer: '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
+        if not address:
+            return SimpleApiResponse("Area data invalid.")
+
         try:
-            return Customer.objects.get(cardno=token)
-        except Customer.DoesNotExist:
-            raise Http404
+
+            lawyer.name = name
+            lawyer.email = email
+            lawyer.gender = gender
+            lawyer.address = address
+            lawyer.nid = nid
+            lawyer.tradelicense = tradelicense
+            lawyer.bar_council_number = bar_council_number
+            lawyer.save()
+
+            LawyerCategory.objects.filter(lawyer=lawyer).delete()
+
+            lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
+            lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
+
+            
+            return SimpleApiResponse("Lawyer details updated successfully.", success=True)
+        
+        except:
+            return SimpleApiResponse("Something went wrong.")
+    else:
+        HttpResponseForbidden('Allowed only via POST')
+
+
+
+
+
+
+#DONE
+class ProfileDetails(APIView):
 
     def get(self, request, format=None):
         token = request.headers['token']
-        customer = self.get_object(token)
-        serializer = CustomerSerializer(customer)
-        return Response(serializer.data)
+        try:
+            customer = Customer.objects.get(cardno=token)
+        except:
+            customer = None
+
+        try:
+            lawyer = Lawyer.objects.get(cardno=token)
+        except:
+            lawyer = None
 
 
+        if customer and lawyer:
+            raise Http404
+        elif customer:
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif lawyer:
+            serializer = LawyerDetailsSerializer(lawyer)
+            return Response(serializer.data)
+        else:
+            raise Http404
+        
 
+
+# user: GP19535QJRJ143ZHAU48615
+# lawyer: GP24249DFLS467VBNP68121
 

@@ -1,0 +1,125 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Team Management</title>
+{%endblock title%}
+
+{%block style%}
+<script src="{%static 'ckeditor/ckeditor-init.js'%}"></script>
+<script src="{%static 'ckeditor/ckeditor/ckeditor.js'%}"></script>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'TeamManagement'%}">Team Management</a> / <span style="color: #000000">Edit</span></div>
+        
+    {% include 'Common/taskbuttons.html'%}
+
+    {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <form method="post" autocomplete="off" enctype="multipart/form-data" class="bg-white p-4" style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+                {%csrf_token%}
+                <div class="d-flex ">
+                    <div class="form_container_div">
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="name">Team Member Name:</label>
+                            <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="name" id="name" placeholder="Enter Member Name" required maxlength="99" value="{{team.name}}"/>
+                        </div>
+
+
+                        <div style="margin: 10px; text-align: center;">
+                            <img id="prevw_img" src="{{team.thumbnail.url}}" width="120px">
+                        </div>
+
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold image_size'" for="thumbnail">Thumbnail:</label>
+                            <input style="all: unset;" type="file" accept="image/*" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="thumbnail" id="thumbnail">
+                            <p>File size should be less than 20 kB(120 x 120)</p>
+                            <p style="color:#788388;"><strong>WEBP format provides better quality with less size</strong></p>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="order">Order:</label>
+                            <input type="number" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="order" id="order" placeholder="Enter Order" required value="{{team.order}}"/>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="designation">Designation:</label>
+                            <!-- <input type="textarea" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="headline" id="headline" placeholder="Headline on card" required/> -->
+                            <textarea style="min-width: 100%" id="designation" name="designation">{{team.designation}}</textarea>
+                        </div>
+                        
+                        <div class="form-group row mx-0">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="portfolio_url">Portfolio URL:</label>
+                            <input type="text" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="portfolio_url" id="portfolio_url" placeholder="Enter Portfolio URL" required value="{{team.portfolio_url}}"/>
+                        </div>
+
+                        <div class="form-group row mx-0 d-flex align-items-center">
+                            <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" style="color: red;" for="is_archived">Disable:</label>
+                            <input type="checkbox" id="is_archived" name="is_archived" value="disable" {%if team.is_archived%}checked{%endif%}>
+                        </div>
+
+                    </div>
+                </div>
+
+                
+                <!-- <div class="form-group row mx-0">
+                    <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="show">Show
+                        in Homepage:</label>
+                    <input type="checkbox" id="show" name="show" value="show" checked>
+                </div> -->
+                <div class="form-group row mx-0">
+                    <label for="description"
+                        class="col-12 col-md-12 col-lg-12 col-xl-12 col-form-label font-weight-bold">Description:</label>
+                        <!-- <textarea style="min-width: 100%" id="long_description" name="long_description"></textarea> -->
+                        {{ck_form.description}}
+                </div>
+
+                <div class="d-flex  mt-2">
+                    <button type="submit" class="submit btn btn-sm btn-primary">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                    <div style="width: 10px"></div>
+                    <button type="reset" class="reset btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                    <div style="width: 10px"></div>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+
+{%endblock content%}
+
+{%block js%}
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#prevw_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#thumbnail").change(function () {
+        readURL(this);
+    });
+
+</script>
+{%endblock js%}
