@@ -10,71 +10,50 @@ from .serializers import Appointment, AppointmentSerializerForUser
 from UserAuthentication.models import Customer, Lawyer
 import datetime
 from API.Lawyer.serializers import LawyerSerializer
+from API.utils import SimpleApiResponse, GetCustomerFromToken
 
 
 @csrf_exempt
 def AddAppointment(request):
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
-        token = request.headers['token']
 
-        customer = None
+        customer = GetCustomerFromToken(request)
+        if not customer:
+            return SimpleApiResponse("Customer not found.")
+
+
         lawyer = json_data['lawyer']
         message = json_data['message']
         start_date = datetime.datetime.strptime(json_data['start_date'], '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(json_data['end_date'], '%Y-%m-%d').date()
         
+
+
         if start_date > end_date:
-            data = {
-                'success': False,
-                'message': 'Start Date and End squence incorrent.'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Start Date and End squence incorrent.")
+
         elif datetime.date.today() >= start_date or datetime.date.today() >= end_date:
-            data = {
-                'success': False,
-                'message': 'Date passed already.'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Date passed already.")
+
         else:
-            print("OK")
+            pass
 
-
-        try:
-            customer = Customer.objects.get(cardno=token)
-        except:
-            data = {
-                'success': False,
-                'message': 'Customer Invalid'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             lawyer = Lawyer.objects.get(id=lawyer)
         except:
-            data = {
-                'success': False,
-                'message': 'Lawyer Invalid'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
-
+            return SimpleApiResponse("Lawyer Invalid.")
 
         try:
             appointment = Appointment(customer=customer, lawyer=lawyer, message=message, start_date=start_date, end_date = end_date)
             appointment.save()
-
-            data = {
-                'success': True,
-                'message': 'Appointment placed successfully.'
-            }
-            return JsonResponse(data, safe=True)
+            
+            return SimpleApiResponse("Appointment placed successfully.", success=True)
 
         except:
-            data = {
-                'success': False,
-                'message': 'Could not place appointmet'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Could not place appointmet.")
+
     else:
         HttpResponseForbidden('Allowed only via POST')
 
@@ -87,18 +66,11 @@ class FilterLawyer(APIView):
         expertise = request.GET.get('expertise')
 
         if not expertise.replace(',','').isdigit():
-            data = {
-                'success': False,
-                'message': 'expertise data invalid'
-            }
-            return JsonResponse(data, safe=True, status=status.HTTP_400_BAD_REQUEST)
+            return SimpleApiResponse("Expertise data invalid.")
         
         expertise = expertise.split(',')
 
-        a = request.GET.get('expertise')
-
         lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise).order_by("created_at").exclude(is_archived = True).distinct()
-        # lawyers = Lawyer.objects.filter(address__area__slug = area_slug ).order_by("created_at").exclude(is_archived = True)
         serializer = LawyerSerializer(lawyers, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -109,9 +81,11 @@ class FilterLawyer(APIView):
 
 class UserAppointments(APIView):
     def get(self, request):
-        token = request.headers['token']
+        customer = GetCustomerFromToken(request)
+        if not customer:
+            return SimpleApiResponse("Customer not found.")
 
-        appointments = Appointment.objects.prefetch_related('customer').filter(customer__cardno = token)
+        appointments = Appointment.objects.prefetch_related('customer').filter(customer = customer)
         serializer = AppointmentSerializerForUser(appointments, many = True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
