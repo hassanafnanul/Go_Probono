@@ -26,6 +26,7 @@ urlpatterns = [
     # #PROFILE
     # # path('profile/<str:token>/', views.ProfileDetails.as_view()),
     path('profile/', views.ProfileDetails.as_view()),
+    path('profile-image/', views.ProfileImage.as_view()),
 
     # #RESET PASSWORD
     # path('update/password/', views.UpdatePassword),
