@@ -4,9 +4,15 @@ body,html{height:100%;overflow-x:hidden;background-color:#eee;}
 .form-control:focus{border:1px solid black;box-shadow: 0 0 0 0.2rem lightgray;}
 .form-control:disabled{cursor:not-allowed}
 .col-form-label {font-weight: bold;}
-.page_header{padding:10px 20px;border-bottom:1px solid #c8ced3;font-weight: bold;color:#028a49;}
+.page_header{padding:10px 20px;border-bottom:1px solid #c8ced3;font-weight: bold;color:#028a49;text-transform: uppercase;}
 .page_header a{color:#028a49;}
-.page_header span{color:black;}
+.page_header h5{color:black;}
+.table-title {
+  background-color: #6F2FA1;
+  border-radius: 5px 5px 0 0;
+  padding: .5rem 1rem;
+  color: white;
+}
 #load_screen{position:fixed;top:0;opacity:1;width:100%;height:100vh;z-index:9999;display:flex;justify-content:center;align-items:center;background:#fff}
 .primarybg {background-color: #C47008;}
 .secondarybg {background-color: #0a8e3f}
