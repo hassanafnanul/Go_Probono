@@ -7,21 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
 
-from Go_Probono.utils import SimpleApiResponse
+from API.utils import SimpleApiResponse, GetLawyerFromToken
 from UserAuthentication.models import Lawyer
 from API.Appointment.serializers import Appointment, AppointmentSerializerForLawyer, AppointmentDetailsSerializer
 
 
 
-
-def GetLawyerFromToken(request):
-    token = request.headers['token']
-    try:
-        lawyer = Lawyer.objects.get(cardno=token)
-    except:
-        lawyer = None
-    
-    return lawyer
 
 
 class StatusWiseAppointments(APIView):

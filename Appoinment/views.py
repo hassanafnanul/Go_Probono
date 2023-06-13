@@ -8,8 +8,8 @@ from django.contrib import messages
 import string, random, datetime
 from pathlib import Path
 
-from .models import AppointmentHistory
-# from AppointmentManagement.forms import AppointmentForm
+from .models import Appointment
+from UserAuthentication.models import Lawyer, Customer
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
 from .models import Appointment
@@ -21,17 +21,30 @@ from .models import Appointment
 @login_required
 @view_permission_required
 def AppointmentList(request, task_url="AppointmentList", action="main"):
+    
+    appointments = Appointment.objects.all().order_by('-created_at')
+
     lawyer = request.GET.get('lawyer')
+    customer = request.GET.get('customer')
+    mobile = request.GET.get('mobile')
+    status = request.GET.get('status')
+    date = request.GET.get('date')
     if lawyer:
-        appointments = AppointmentHistory.objects.filter(lawyer__name__icontains=lawyer).order_by('-created_at')
-    else:
-        appointments = AppointmentHistory.objects.all().order_by('-created_at')
-        
+        appointments = appointments.filter(lawyer__name__icontains=lawyer).order_by('-created_at')
+    
+    lawyers = Lawyer.objects.all()
+    customers = Customer.objects.all()
+    status_list = Appointment.StatusList.choices
+    print('status_list-----------------------', status_list)
+
     paginator = Paginator(appointments, 20)
     page = request.GET.get('page')
     pag_group = paginator.get_page(page)
     context = {
         'appointments': pag_group,
+        # 'lawyers': lawyers,
+        # 'customers': customers,
+        'status_list': status_list,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
@@ -170,8 +183,8 @@ def AppointmentEdit(request, id, task_url="AppointmentList", action="edit"):
 @login_required
 @view_permission_required
 def AppointmentView(request, id, task_url="AppointmentList", action="view"):
-    appointment = get_object_or_404(AppointmentHistory, id=id)
-    appointmentHistories = AppointmentHistory.objects.filter(lawyer = appointment.lawyer).order_by('-created_at')
+    appointment = get_object_or_404(Appointment, id=id)
+    appointmentHistories = Appointment.objects.filter(lawyer = appointment.lawyer).order_by('-created_at')
 
 
     context = {
@@ -194,12 +207,12 @@ def AppointmentApprove(request, id, task_url="AppointmentList", action="save"):
         reject = r.get('reject')
         expiary_date = r.get('expiary_date')
 
-        appointment = AppointmentHistory.objects.get(id=id)
+        appointment = Appointment.objects.get(id=id)
 
         if approve and not reject and expiary_date:
-            status = AppointmentHistory.StatusList.APPROVED
+            status = Appointment.StatusList.APPROVED
         elif reject and not approve:
-            status = AppointmentHistory.StatusList.REJECTED
+            status = Appointment.StatusList.REJECTED
             expiary_date = appointment.lawyer.expiary_date
         else:
             status = None
@@ -228,8 +241,8 @@ def AppointmentApprove(request, id, task_url="AppointmentList", action="save"):
 
 
     else:
-        appointment = AppointmentHistory.objects.get(id=id)
-        appointmentHistories = AppointmentHistory.objects.filter(lawyer = appointment.lawyer).order_by('-created_at')
+        appointment = Appointment.objects.get(id=id)
+        appointmentHistories = Appointment.objects.filter(lawyer = appointment.lawyer).order_by('-created_at')
         context = {
             'appointment': appointment,
             'appointmentHistories': appointmentHistories,

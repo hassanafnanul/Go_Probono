@@ -9,10 +9,10 @@ class CustomerSerializer(serializers.ModelSerializer):
     joined_at = serializers.DateTimeField(source = 'created_at')
     class Meta:
         model = Customer
-        fields = ['id', 'name', 'customer_pic', 'image_text', 'mobile', 'email', 'address', 'nid', 'gender', 'joined_at']
+        fields = ['id', 'name', 'image', 'image_text', 'mobile', 'email', 'address', 'nid', 'gender', 'joined_at']
 
 
-# name, customer_pic, image_text, mobile, email, password, address, nid, cardno, gender, customer_type, balance, is_archived, created_at
+# name, image, image_text, mobile, email, password, address, nid, cardno, gender, customer_type, balance, is_archived, created_at
 
 
 
@@ -20,6 +20,6 @@ class CustomerShortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['id', 'name', 'customer_pic', 'image_text', 'mobile', 'email']
+        fields = ['id', 'name', 'image', 'image_text', 'mobile', 'email']
 
 

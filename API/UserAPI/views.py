@@ -17,8 +17,7 @@ from UserAuthentication.models import Customer, OTP, Lawyer, GenderType
 from Address.utils import CreateAddress, UpdateAddress
 from LawyerManagement.models import PaymentPlan, LawyerCategory
 from LawyerManagement.utils import isPaymentRequired
-from API.LawyerPanel.views import GetLawyerFromToken
-from Go_Probono.utils import SimpleApiResponse
+from API.utils import SimpleApiResponse, GetLawyerFromToken, GetCustomerFromToken
 
 
 def generate_login_token():
@@ -725,7 +724,11 @@ def MobileOTPResend(request):
 @csrf_exempt
 def UpdateProfile(request):
     if request.method == 'POST':
-        token = request.headers['token']
+        customer = GetCustomerFromToken(request)
+        if not customer:
+            return SimpleApiResponse("Customer not found.")
+        
+
 
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
@@ -744,7 +747,6 @@ def UpdateProfile(request):
 
 
         try:
-            customer = Customer.objects.get(cardno=token)
 
             address = UpdateAddress(customer.address, area_slug = area_slug, note='Lawyer: '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
             if not address:
@@ -851,22 +853,14 @@ def UpdateLawyerProfile(request, lawyerType):
 
 #DONE
 class ProfileDetails(APIView):
-
     def get(self, request, format=None):
-        token = request.headers['token']
-        try:
-            customer = Customer.objects.get(cardno=token)
-        except:
-            customer = None
-
-        try:
-            lawyer = Lawyer.objects.get(cardno=token)
-        except:
-            lawyer = None
-
-
-        if customer and lawyer:
-            raise Http404
+        customer = GetCustomerFromToken(request)
+        lawyer = GetLawyerFromToken(request)
+        
+        if not customer and not lawyer:
+            return SimpleApiResponse("User not found.")
+        elif customer and lawyer:
+            return SimpleApiResponse("Something Went Wrong.")
         elif customer:
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
@@ -874,8 +868,37 @@ class ProfileDetails(APIView):
             serializer = LawyerDetailsSerializer(lawyer)
             return Response(serializer.data)
         else:
-            raise Http404
+            return SimpleApiResponse("Something Went Wrong.")
         
+
+
+#DONE
+class ProfileImage(APIView):
+    def get(self, request, format=None):
+        customer = GetCustomerFromToken(request)
+        lawyer = GetLawyerFromToken(request)
+        
+        if not customer and not lawyer:
+            return SimpleApiResponse("User not found.")
+        elif customer and lawyer:
+            return SimpleApiResponse("Something Went Wrong.")
+        elif customer:
+            image = customer.image.url if customer.image else None
+            return JsonResponse({
+                'image': image,
+                'image_text': customer.name
+            }, safe=True, status=status.HTTP_200_OK)
+
+        elif lawyer:
+            image = lawyer.image.url if lawyer.image else None
+            return JsonResponse({
+                'image': image,
+                'image_text': lawyer.name
+            }, safe=True, status=status.HTTP_200_OK)
+        else:
+            return SimpleApiResponse("Something Went Wrong.")
+        
+
 
 
 # user: GP19535QJRJ143ZHAU48615

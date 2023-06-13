@@ -9,8 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import PaymentPlanSerializer, PaymentPlan, PaymentMethod, PaymentMethodSerializer, PaymentHistorySerializer, PaymentHistory
 # from Payment.models import PaymentHistory
-from API.LawyerPanel.views import GetLawyerFromToken
-from Go_Probono.utils import SimpleApiResponse
+from API.utils import SimpleApiResponse, GetLawyerFromToken
 from UserAuthentication.models import Lawyer
 
 

@@ -12,7 +12,7 @@ class GenderType(models.TextChoices):
 
 class Customer(models.Model):
     name = models.CharField(max_length=100, null=True)
-    customer_pic = models.ImageField(null=True, blank=True, upload_to='customer_pic/')
+    image = models.ImageField(null=True, blank=True, upload_to='customer_pic/')
     image_text = models.CharField(default='', max_length=101)
     mobile = models.CharField(max_length=15, null=True)
     email = models.CharField(max_length=100, null=True)
