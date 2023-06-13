@@ -5,10 +5,10 @@ from LawManagement.models import Law
 class KnowYourLaw(models.Model):
     law = models.ForeignKey(Law, on_delete=models.SET_NULL, null=True, blank=True)
     
-    question = models.CharField(max_length=60)
+    question = models.CharField(max_length=300)
     eng_answer = models.TextField(default="")
     ban_answer = models.TextField(default="")
-    tags = models.CharField(max_length=60)
+    tags = models.CharField(max_length=150)
     rating = models.IntegerField(default=0)
 
     is_archived = models.BooleanField(default=False, null=True)

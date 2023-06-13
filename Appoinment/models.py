@@ -31,10 +31,10 @@ class Appointment(models.Model):
 
 
 
-class AppointmentComments(models.Model):
+class AppointmentComment(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.SET_NULL, null=True, blank=True)
-    lawyer = models.ForeignKey(Appointment, on_delete=models.SET_NULL, null=True, blank=True)
+    appointment = models.ForeignKey(Appointment, on_delete=models.SET_NULL, null=True, blank=True)
     message = models.CharField(default='', max_length=543)
 
     is_archived = models.BooleanField(default=False)
