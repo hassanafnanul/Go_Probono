@@ -75,11 +75,9 @@
                 <table class="table table-sm bg-white mt-3">
                     <thead>
                     <tr>
+                        <th>Customer Name</th>
                         <th>Lawyer Name</th>
-                        <th>Mobile</th>
-                        <th>The Then Plan</th>
-                        <th>Amount</th>
-                        <th>Appointment Method</th>
+                        <th>Chosen Date</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -88,11 +86,9 @@
                     {% for appointment in appointments %}
                     <tr {% if appointment.is_archived %}style="color: red;"{% endif %}>
                         
+                        <td><a href="{%url 'CustomerView' appointment.customer.id %}">{{appointment.customer.name}}</a></td>
                         <td><a href="{%url 'LawyerView' appointment.lawyer.id %}">{{appointment.lawyer.name}}</a></td>
-                        <td>{{appointment.lawyer.mobile}}</td>
-                        <td>{{appointment.chosen_appointment_plan.name}}</td>
-                        <td>{{appointment.amount}}</td>
-                        <td>{{appointment.appointment_method.name}}</td>
+                        <td>{{appointment.chosen_date}}</td>
                         <td>{{appointment.status}}</td>
 
                         <td>

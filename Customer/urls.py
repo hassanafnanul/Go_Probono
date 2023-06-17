@@ -4,6 +4,7 @@ from . import views
 urlpatterns=[
     path('',views.CustomerManagement,name='CustomerManagement'),
     # path('add/',views.CustomerAdd,name='CustomerAdd'),
+    path('view/<int:id>/',views.CustomerView,name='CustomerView'),
     path('edit/<int:id>/',views.CustomerEdit,name='CustomerEdit'),
 
 

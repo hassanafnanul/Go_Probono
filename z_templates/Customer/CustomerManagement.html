@@ -97,6 +97,11 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
+                                    {%if privilege and privilege.view_task %}
+                                    <a class="mr-3" href="{%url 'CustomerView' customer.id %}">
+                                        <i class="icon-eye"></i>
+                                    </a>
+                                    {%endif%}
                                     {%if privilege and privilege.edit_task %}
                                     <a class="mr-3" href="{%url 'CustomerEdit' customer.id %}">
                                         <i class="fas fa-edit"></i>
