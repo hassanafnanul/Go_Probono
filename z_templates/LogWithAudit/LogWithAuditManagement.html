@@ -4,6 +4,35 @@
 {%endblock title%}
 
 {%block style%}
+<style>
+    .table th{
+        border-top: none;
+    }
+
+    .table thead th{
+        border-bottom: none;
+    }
+
+    .table td{
+        border-top: 0.5px solid #6F2FA1;
+    }
+
+    .table td, .table th {
+        vertical-align: inherit;
+    }
+    .module-searchbar {
+        border: 2px solid #A184D5;
+        border-radius: 24px;
+        overflow: hidden;
+        padding: 9px;
+        width: 250px;
+        margin-right: 10px;
+    }
+    form .submit {
+        width: 50px;
+        border-radius: 50px;
+    }
+</style>
 {%endblock%}
 
 {%block content%}
@@ -12,7 +41,7 @@
     
     <main class="main">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><span style="color: black;" >Audit</span></div>
+        <div class="page_header"><h5>Audit</h5></div>
         
 
         {% include 'Common/taskbuttons.html'%}
@@ -25,35 +54,36 @@
             {%endfor%}
         {%endif%}
 
-        <div class="container-fluid">
-            <div style="display: flex; justify-content: center;">
-                <a class="btn btn-outline-success btn-sm" href="{%url 'LogWithAuditManagement'%}" id="reloadItem">
-                    <i class="icon-refresh"></i> Reload
-                </a>
+        <div class="main_wrapper">
+            <div class="row mb-3">
+                <div class="col-8 d-flex">
+                    <a class="btn btn-success btn-sm p-2" href="{%url 'LogWithAuditManagement'%}" id="reloadItem">
+                        <i class="icon-refresh"></i> Reload
+                    </a>
+                </div>
             </div>
-
-            <form method="GET" style="display: flex; position: relative; margin-top: 10px;" autocomplete="off">
-                {%csrf_token%}
-                <input type="text" class="form-control form-control-sm" name="uname" id="uname" placeholder="Enter username" style="width: 200px;" value="{{request.GET.uname}}">
-                <input type="text" class="form-control form-control-sm" name="action" id="action" placeholder="Enter action" style="width: 200px;" value="{{request.GET.action}}">
-                <input type="text" class="form-control form-control-sm" name="keyword" id="keyword" placeholder="Enter text" style="width: 200px;" value="{{request.GET.keyword}}">
-                <input type="text" class="form-control form-control-sm datetimepicker-input" id="search_date" name="search_date" data-toggle="datetimepicker" data-target="#search_date" placeholder="Enter date" style="width: 150px;" value="{{request.GET.search_date}}">
-                <button type="submit" class="submit btn btn-sm btn-primary">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-
-            <div class="mt-3">Total: <b>{{audits.paginator.count}}</b></div>
-
-            <table class="table table-striped table-bordered table-sm bg-white mt-3">
-                <thead>
+            <div class="row mb-3">
+                <form method="GET" class="col-12 d-flex" autocomplete="off">
+                    {%csrf_token%}
+                    <input type="text" class="form-control form-control-sm module-searchbar" name="uname" id="uname" placeholder="Enter username" value="{{request.GET.uname}}">
+                    <input type="text" class="form-control form-control-sm module-searchbar" name="action" id="action" placeholder="Enter action" value="{{request.GET.action}}">
+                    <input type="text" class="form-control form-control-sm module-searchbar" name="keyword" id="keyword" placeholder="Enter text" value="{{request.GET.keyword}}">
+                    <input type="text" class="form-control form-control-sm module-searchbar datetimepicker-input" id="search_date" name="search_date" data-toggle="datetimepicker" data-target="#search_date" placeholder="Enter date" value="{{request.GET.search_date}}">
+                    <button type="submit" class="submit btn btn-sm btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="table-title"><h2 class="text-center">Total: {{audits.paginator.count}}</h2></div>
+            <div class="table-responsive-sm p-4 bg-white">
+                <table class="table">
                     <tr>        
                         <th>User Name</th>
                         <th>Action Name</th>
                         <th>Date</th>
                         <th>Time</th>
                         <th colspan="8">Details</th>
-                        <th>Action</th>
+                        <th class="text-center">Operation</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,18 +95,20 @@
                         <td>{{ad.timestamp|date:"h:i a"}}</td>
                         <td colspan="8">{{ad.action_details}}</td>
                         <td>
-                            {%if privilege and privilege.view_task%}
-                            <a class="btn btn-sm btn-primary" href="{%url 'LogWithAuditDetailsView' ad.id %}">
-                                <i class="icon-eye"></i> View
-                            </a>
-                            {%endif%}
+                            <div class="d-flex justify-content-center">
+                                {%if privilege and privilege.view_task%}
+                                <a class="mr-3" href="{%url 'LogWithAuditDetailsView' ad.id %}">
+                                    <i class="icon-eye"></i>
+                                </a>
+                                {%endif%}
+                            </div>
                         </td>
                     </tr>
                     {%endfor%}
                     {% if audits %}
                         <tr></tr>
                     {%else%}
-                        <tr class="odd"><td colspan="13" style="text-align: center;">No data available in table</td></tr>
+                        <tr class="odd"><td colspan="9" style="text-align: center;">No data available in table</td></tr>
                     {%endif%}
                 </tbody>
             </table>

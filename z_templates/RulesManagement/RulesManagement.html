@@ -3,6 +3,35 @@
 <title>Rules Management</title>
 {%endblock title%}
 {%block style%}
+<style>
+    .table th{
+        border-top: none;
+    }
+
+    .table thead th{
+        border-bottom: none;
+    }
+
+    .table td{
+        border-top: 0.5px solid #6F2FA1;
+    }
+
+    .table td, .table th {
+        vertical-align: inherit;
+    }
+    .module-searchbar {
+        border: 2px solid #A184D5;
+        border-radius: 24px;
+        overflow: hidden;
+        padding: 9px;
+        width: 250px;
+        margin-right: 10px;
+    }
+    form .submit {
+        width: 50px;
+        border-radius: 50px;
+    }
+</style>
 {%endblock%}
 
 
@@ -24,12 +53,10 @@
         {%endfor%}
         {%endif%}
         <div class="main_wrapper">
-            <div style="display: flex;">
-
-                <div style="width: 10px;"></div>
-                <a class="btn btn-success btn-sm" href="{%url 'RulesManagement'%}">
-                    <i class="icon-refresh"></i> Reload
-                </a>
+            <div class="row mb-3">
+                <div class="col-8 d-flex">
+                    <a class="btn btn-success btn-sm p-2" href="{%url 'RulesManagement'%}"><i class="icon-refresh"></i> Reload</a>
+                </div>
             </div>
 
             <!-- <form method="GET" style="display: flex; margin-top: 10px;">
@@ -40,36 +67,34 @@
                 </button>
             </form> -->
 
-            <div class="mt-3">Total: <b>{{ruless.paginator.count}}</b> rules</div>
-
-            <div class="table-responsive-sm">
-                <table class="table table-sm bg-white mt-3">
+            <div class="table-title"><h2 class="text-center">Total rules: {{ruless.paginator.count}}</h2></div>
+            <div class="table-responsive-sm p-4 bg-white">
+                <table class="table">
                     <thead>
                     <tr>
                         <th>Helpline Number</th>
                         <th>Rules</th>
-                        <th>Actions</th>
+                        <th class="text-center">Operation</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for rule in rules %}
                     <tr>
-
                         <td>{{rule.helpline}}</td>
-                        <td>Rules Updated at {{rule.created_at}}</td>
-                        
+                        <td>Rules Updated at {{rule.created_at}}</td>                        
                         <td>
-
-                            {%if privilege and privilege.edit_task%}
-                            <a class="btn btn-sm btn-outline-danger" href="{%url 'RulesEdit' rule.id %}">
-                                <i class="icon-notebook"></i> Edit
-                            </a>
-                            {%endif%}
+                            <div class="d-flex justify-content-center">
+                                {%if privilege and privilege.edit_task%}
+                                <a href="{%url 'RulesEdit' rule.id %}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {%endif%}
+                            </div>
                         </td>
                     </tr>
                     {%empty%}
                     <tr class="odd">
-                        <td colspan="3" style="text-align: center;">No data available in table</td>
+                        <td colspan="9" style="text-align: center;">No data available in table</td>
                     </tr>
                     {%endfor%}
                     </tbody>
