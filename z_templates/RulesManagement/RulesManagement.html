@@ -84,8 +84,13 @@
                         <td>Rules Updated at {{rule.created_at}}</td>                        
                         <td>
                             <div class="d-flex justify-content-center">
+                                {%if privilege and privilege.view_task%}
+                                <a class="mr-3" href="{%url 'RulesView' rule.id %}">
+                                    <i class="icon-eye"></i>
+                                </a>
+                                {%endif%}
                                 {%if privilege and privilege.edit_task%}
-                                <a href="{%url 'RulesEdit' rule.id %}">
+                                <a class="mr-3" href="{%url 'RulesEdit' rule.id %}">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 {%endif%}

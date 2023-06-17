@@ -35,7 +35,6 @@ def AppointmentList(request, task_url="AppointmentList", action="main"):
     lawyers = Lawyer.objects.all()
     customers = Customer.objects.all()
     status_list = Appointment.StatusList.choices
-    print('status_list-----------------------', status_list)
 
     paginator = Paginator(appointments, 20)
     page = request.GET.get('page')

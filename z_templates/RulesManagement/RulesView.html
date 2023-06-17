@@ -28,7 +28,7 @@
                 <div class="card-header" style="text-align: center;">
                     <strong>Detailed Information</strong>
                 </div>
-                <div class="card-body" style="display: flex; justify-content: center;">
+                <div class="card-body" style="display: flex;">
                     <div class="form_container_div">
 
                         {% if rules.thumbnail %}
@@ -43,37 +43,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Rules name</div>
+                            <div class="col-5" style="font-weight: 600;">Rules</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{rules.rules_name}}</div>
+                            <div class="col-6">{{rules.rules | safe}}</div>
                             <br>
                             <br>
                         </div>
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Available in Home</div>
+                            <div class="col-5" style="font-weight: 600;">Helpline</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            {% if rules.home_rules %}
-                            <div class="col-6" style="color: green;"><b>&check;</b></div>
-                            {% else %}
-                            <div class="col-6" style="color: red;"><b>&cross;</b></div>
-                            {% endif %}
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Logo</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6"><img src="{{rules.logo.url}}" width=150></div>
-                            <br>
-                            <br>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Rules Description</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{rules.description | safe}}</div>
+                            <div class="col-6">{{rules.helpline}}</div>
                             <br>
                             <br>
                         </div>
@@ -93,17 +73,6 @@
 
 {%block js%}
 <script>
-    var a = {{rules.rules}}
-    document.getElementById("rules_view").innerHTML = '&lt;p&gt;rules 1&lt;/p&gt;
-
-&lt;p&gt;rules 2&lt;/p&gt;
-
-&lt;p&gt;rules 3&lt;/p&gt;
-
-&lt;p&gt;rules 4&lt;/p&gt;
-
-&lt;p&gt;rules 5&lt;/p&gt;';
-    
 </script>
 
 {%endblock%}

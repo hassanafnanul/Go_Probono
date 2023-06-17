@@ -73,6 +73,25 @@ def CustomerManagement(request, task_url="CustomerManagement", action="main"):
 #         return render(request, 'Customer/CustomerAdd.html', context)
 
 
+
+
+@login_required
+@view_permission_required
+def CustomerView(request, id, task_url="CustomerManagement", action='view'):
+    if request.method == 'GET':
+        context = {
+            'cnav': UserCustomNav(request),
+            'c': Customer.objects.get(id=id)
+        }
+        return render(request, 'Customer/CustomerView.html', context)
+    else:
+        messages.success(request, f'Only GET request allowed.')
+        return redirect('CustomerManagement')
+
+
+
+
+
 @login_required
 @view_permission_required
 def CustomerEdit(request, id, task_url="CustomerManagement", action='edit'):
