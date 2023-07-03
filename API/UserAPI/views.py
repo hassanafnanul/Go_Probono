@@ -165,7 +165,7 @@ def RegisterLawyer(request, lawyerType):
         nid_or_tradelicense = json_data['nid_or_tradelicense']
         bar_council_number = json_data['bar_council_number']
         lawyer_category = json_data['lawyer_category']
-        expiary_date = date.todaay()
+        expiary_date = date.today()
 
         password = make_password(json_data['password'])
         cardno = generate_login_token()
@@ -216,7 +216,7 @@ def RegisterLawyer(request, lawyerType):
             lawyer = Lawyer(name = name, mobile = mobile, email = email, password = password, address = address, payment_plan_id = payment_plan, cardno = cardno, gender = gender, bar_council_number = bar_council_number, nid = nid, tradelicense = tradelicense, lawyer_type = lawyer_type, expiary_date = expiary_date)
             lawyer.save()
             lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
-            lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
+            lawyer.lawyer_category.add(*lawyer_category) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
 
             return SimpleApiResponse(lawyer_type+' created successfully.', success=True)
         

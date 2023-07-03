@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 
 import string, random, datetime
+from datetime import date
 from pathlib import Path
 
 from .models import Appointment
@@ -166,7 +167,8 @@ def AppointmentEdit(request, id, task_url="AppointmentList", action="edit"):
         return redirect('AppointmentManagement')
     else:
         appointments = Appointment.objects.get(id=id)
-        ck_form = AppointmentForm()
+        # ck_form = AppointmentForm()
+        ck_form = None
         ck_form['description'].initial = appointments.description
         context = {
             'appointments': appointments,
@@ -183,12 +185,11 @@ def AppointmentEdit(request, id, task_url="AppointmentList", action="edit"):
 @view_permission_required
 def AppointmentView(request, id, task_url="AppointmentList", action="view"):
     appointment = get_object_or_404(Appointment, id=id)
-    appointmentHistories = Appointment.objects.filter(lawyer = appointment.lawyer).order_by('-created_at')
-
+    dueAppointments = Appointment.objects.filter(lawyer = appointment.lawyer, end_date__lte = date.today()).order_by('-created_at')
 
     context = {
         'appointment': appointment,
-        'appointmentHistories': appointmentHistories,
+        'dueAppointments': dueAppointments,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)

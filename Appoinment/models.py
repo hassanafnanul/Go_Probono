@@ -2,6 +2,7 @@ from django.db import models
 from UserAuthentication.models import Customer, Lawyer
 from LawyerManagement.models import LawyerCategory
 from Address.models import Address
+from LawyerManagement.models import LawyerCategory
 
 
 
@@ -13,8 +14,10 @@ class Appointment(models.Model):
         REJECTED = 'rejected'
         DELETED = 'deleted'
 
+    slug = models.CharField(default='', max_length=15)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.SET_NULL, null=True, blank=True)
+    lawyer_category = models.ManyToManyField(LawyerCategory)
     message = models.CharField(default='', max_length=543)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)

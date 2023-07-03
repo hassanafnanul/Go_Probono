@@ -1,0 +1,126 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Appointment Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'AppointmentList'%}">Appointment Management</a> / <span
+                style="color: #000000">Details</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Lawyer Information</strong>
+                </div>                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 800;">Lawyer Type</div>
+                            <div class="col-1" style="font-weight: 800;">:</div>
+                            <div class="col-6" style="font-weight: 800;">{{appointment.lawyer.lawyer_type}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.lawyer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Mobile</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.lawyer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Expiary Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.lawyer.expiary_date}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Status</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.status}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form_container_div">
+                        <p><b>Due Appointments by this lawyer</b></p>
+                        <table class="table table-sm bg-white mt-3">
+                            <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Appointment Method</th>
+                                <th>Amount</th>
+                                <th>status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for da in dueAppointments %}
+                            <tr>
+                                <td>{{da.customer.name}}</td>
+                                <td>{{da.status}}</td>
+                                <td>{{da.appointment_method.name}}</td>
+                                <td>{{da.amount}}</td>
+                                <td>{{da.status}}</td>
+                                <td><a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'AppointmentView' da.id %}">
+                                    <i class="icon-eye"></i>
+                                </td>
+                            </a></tr>
+                            {%empty%}
+                            <tr class="odd">
+                                <td colspan="5" style="text-align: center;">No data available in table</td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}
+

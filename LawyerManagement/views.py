@@ -171,9 +171,11 @@ def LawyerEdit(request, id, task_url="LawyerManagement", action="edit"):
 @view_permission_required
 def LawyerView(request, id, task_url="LawyerManagement", action="view"):
     lawyer = get_object_or_404(Lawyer, id=id)
+    lawyerCategories = lawyer.lawyer_category.all()
     paymentHistories = PaymentHistory.objects.filter(lawyer = lawyer).order_by('-created_at')
     context = {
         'lawyer': lawyer,
+        'lawyerCategories': lawyerCategories,
         'paymentHistories': paymentHistories,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
