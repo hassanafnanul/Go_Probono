@@ -97,12 +97,14 @@
                                 <i class="icon-eye"></i> View
                             </a>
                             {%endif%}
-
+                            
+                            {% comment %}
                             {%if privilege and privilege.save_task%}
                             <a class="btn btn-sm btn-outline-danger" href="{%url 'AppointmentApprove' appointment.id %}">
                                 <i class="icon-notebook"></i> Approve
                             </a>
                             {%endif%}
+                            {% endcomment %}
                         </td>
                     </tr>
                     {%empty%}

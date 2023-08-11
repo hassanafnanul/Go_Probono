@@ -26,42 +26,19 @@
         <div style="padding: 30px 20px;">
             <div class="card">
                 <div class="card-header">
-                    <strong>Lawyer Information</strong>
-                </div>                <div class="card-body" style="display: flex;">
+                    <strong>Appointment Details</strong>
+                </div>                
+                <div class="card-body" style="display: flex;">
                     <div class="form_container_div">
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 800;">Lawyer Type</div>
+                            <div class="col-5" style="font-weight: 800;">Appointment Number</div>
                             <div class="col-1" style="font-weight: 800;">:</div>
-                            <div class="col-6" style="font-weight: 800;">{{appointment.lawyer.lawyer_type}}</div>
+                            <div class="col-6" style="font-weight: 800;">{{appointment.Appointment_num}}</div>
                             <br>
                             <br>
                         </div>
 
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Lawyer Name</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{appointment.lawyer.name}}</div>
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Mobile</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{appointment.lawyer.mobile}}</div>
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Lawyer Expiary Date</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{appointment.lawyer.expiary_date}}</div>
-                            <br>
-                            <br>
-                        </div>
-                        
                         <div class="row">
                             <div class="col-5" style="font-weight: 600;">Status</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
@@ -69,41 +46,138 @@
                             <br>
                             <br>
                         </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Status Changed By</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.status_changed_by}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Category</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer_categories}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Start Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.start_date}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">End Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.end_date}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Chosen Date</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.chosen_date}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
                     </div>
 
                     
                     <div class="form_container_div">
-                        <p><b>Due Appointments by this lawyer</b></p>
-                        <table class="table table-sm bg-white mt-3">
-                            <thead>
-                            <tr>
-                                <th>Customer</th>
-                                <th>Status</th>
-                                <th>Appointment Method</th>
-                                <th>Amount</th>
-                                <th>status</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for da in dueAppointments %}
-                            <tr>
-                                <td>{{da.customer.name}}</td>
-                                <td>{{da.status}}</td>
-                                <td>{{da.appointment_method.name}}</td>
-                                <td>{{da.amount}}</td>
-                                <td>{{da.status}}</td>
-                                <td><a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'AppointmentView' da.id %}">
-                                    <i class="icon-eye"></i>
-                                </td>
-                            </a></tr>
-                            {%empty%}
-                            <tr class="odd">
-                                <td colspan="5" style="text-align: center;">No data available in table</td>
-                            </tr>
-                            {%endfor%}
-                            </tbody>
-                        </table>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Message</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{appointment.message}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+                <div class="card-header">
+                    <strong>Lawyer & Customer</strong>
+                </div>                
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 800;">Lawyer Name</div>
+                            <div class="col-1" style="font-weight: 800;">:</div>
+                            <div class="col-6" style="font-weight: 800;">{{appointment.lawyer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Type</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.lawyer.lawyer_type}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Mobile</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.lawyer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Lawyer Status</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.lawyer.status}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 800;">Customer Name</div>
+                            <div class="col-1" style="font-weight: 800;">:</div>
+                            <div class="col-6" style="font-weight: 800;">{{appointment.customer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Customer Gender</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.customer.gender}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Customer Mobile</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.customer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Customer NID</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="font-weight: 600;">{{appointment.customer.nid}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
                     </div>
                     
                 </div>

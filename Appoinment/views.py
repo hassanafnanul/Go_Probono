@@ -22,7 +22,6 @@ from .models import Appointment
 @login_required
 @view_permission_required
 def AppointmentList(request, task_url="AppointmentList", action="main"):
-    
     appointments = Appointment.objects.all().order_by('-created_at')
 
     lawyer = request.GET.get('lawyer')
@@ -185,11 +184,11 @@ def AppointmentEdit(request, id, task_url="AppointmentList", action="edit"):
 @view_permission_required
 def AppointmentView(request, id, task_url="AppointmentList", action="view"):
     appointment = get_object_or_404(Appointment, id=id)
-    dueAppointments = Appointment.objects.filter(lawyer = appointment.lawyer, end_date__lte = date.today()).order_by('-created_at')
-
+    lawyer_categories = ", ".join( [c.name for c in appointment.lawyer_category.all()])
+    
     context = {
         'appointment': appointment,
-        'dueAppointments': dueAppointments,
+        'lawyer_categories': lawyer_categories,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)

@@ -1,0 +1,131 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>LawyerCategory Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'LawyerCategoryManagement'%}">LawyerCategory Management</a> / <span
+                style="color: #000000">Details</span></div>
+        
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer_cat.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Order</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer_cat.order}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Number of Lawyers</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyers.count}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Status</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            {% if lawyer_cat.is_archived %}
+                            <div class="col-6">Deactivated</div>
+                            {% else %}
+                            <div class="col-6">Activated</div>
+                            {% endif %}
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Created At</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{lawyer_cat.created_at}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+
+                    
+                    <div class="form_container_div">
+                        <table class="table table-sm bg-white mt-3">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Payment Plan</th>
+                                <th>Type</th>
+                                <th>status</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for lwr in lawyers %}
+                            <tr>
+                                <td>{{lwr.name}}</td>
+                                <td>{{lwr.mobile}}</td>
+                                <td>{{lwr.payment_plan.name}}</td>
+                                <td>{{lwr.lawyer_type}}</td>
+                                <td>{{lwr.status}}</td>
+                                <td><a class="btn btn-sm btn-outline-primary mr-1" href="{%url 'LawyerView' lwr.id %}">
+                                    <i class="icon-eye"></i>
+                                </td>
+                            </a></tr>
+                            {%empty%}
+                            <tr class="odd">
+                                <td colspan="5" style="text-align: center;">No data available in table</td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+
+
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}
+

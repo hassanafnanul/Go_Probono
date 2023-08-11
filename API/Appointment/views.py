@@ -14,6 +14,18 @@ from API.Lawyer.serializers import LawyerSerializer
 from API.utils import SimpleApiResponse, GetCustomerFromToken
 
 
+def MakeAppointmentNumber():
+    new_number = 1
+
+    try:
+        new_number = int(Appointment.objects.latest('id').Appointment_num[3:])+1
+    except:
+        pass
+    a_num = f"GOP{new_number:09}"
+
+    return a_num
+
+
 @csrf_exempt
 def AddAppointment(request):
     if request.method == 'POST':
@@ -68,7 +80,7 @@ def AddAppointment(request):
 
 
         try:
-            appointment = Appointment(customer=customer, lawyer=lawyer, message=message, start_date=start_date, end_date = end_date)
+            appointment = Appointment(Appointment_num = MakeAppointmentNumber(),customer=customer, lawyer=lawyer, message=message, start_date=start_date, end_date = end_date)
             appointment.save()
             appointment.lawyer_category.add(*matched_category)
             
