@@ -1,0 +1,98 @@
+{% extends "Common/base.html" %}
+{%load static%}
+{%block title%}
+<title>Call History Management</title>
+{%endblock title%}
+
+{%block style%}
+<script src="{%static 'ckeditor/ckeditor-init.js'%}"></script>
+<script src="{%static 'ckeditor/ckeditor/ckeditor.js'%}"></script>
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'CallHistoryManagement'%}">Call History Management</a> / <span
+                style="color: #000000">Edit</span></div>
+        
+
+    {% include 'Common/taskbuttons.html'%}
+
+    {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <form method="post" autocomplete="off" enctype="multipart/form-data" class="bg-white p-4 m-4"
+            style="box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);">
+            {%csrf_token%}
+            <div class="d-flex ">
+                <div class="form_container_div">
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="mobile">Mobile:</label>
+                        <input type="text" class="is-invalid form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="mobile" id="mobile" placeholder="Enter Plane Mobile Number" required maxlength="15" />
+                    </div>
+                    
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="minutes">Minutes:</label>
+                        <input type="number" class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="minutes" id="minutes" placeholder="Enter Minutes" min="0" />
+                    </div>
+
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold" for="comments">Comments:</label>
+                        <textarea style="min-width: 100%;margin-top: 2px;" id="comments" name="comments"></textarea>
+                    </div>
+
+                    <div class="form-group row mx-0">
+                        <label class="col-12 col-md-3 col-lg-3 col-xl-3 col-form-label font-weight-bold image_size" for="record">Call Record:</label>
+                        <input style="all: unset;" type="file" accept="audio/*"
+                            class="form-control form-control-sm col-12 col-md-9 col-lg-9 col-xl-9" name="record"
+                            id="record">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex mt-2">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                    <i class="fa fa-angle-left"></i> Back
+                </button>
+                <div style="width: 10px"></div>
+                <button type="reset" class="reset btn btn-sm btn-danger">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+                <div style="width: 10px"></div>
+                <button type="submit" class="submit btn btn-sm btn-primary">
+                    <i class="fa fa-dot-circle-o"></i> Submit
+                </button>
+            </div>
+        </form>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+
+{%endblock content%}
+
+{%block js%}
+<script>
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#prevw_img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#thumbnail").change(function () {
+        readURL(this);
+    });
+
+</script>
+{%endblock js%}

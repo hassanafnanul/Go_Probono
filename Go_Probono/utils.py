@@ -150,6 +150,20 @@ def ChangeFileName(filename):
     return "%s%s" % (changed_file_name, extension)
 
 
+
+ 
+def isValidBangladehiNumber(s):
+    try:
+        s = s.split('+88')[1]
+    except:
+        pass
+
+    Pattern = re.compile("(01)[3-9][0-9]{8}")
+    if Pattern.match(s):
+        return s
+    else:
+        return False
+
 # def ChangeFileName(filename):
 #     extension = filename.split(".")[-1]
 #     changed_file_name = filename.split(".")[0]

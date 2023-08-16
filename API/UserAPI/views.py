@@ -18,6 +18,8 @@ from Address.utils import CreateAddress, UpdateAddress
 from LawyerManagement.models import PaymentPlan, LawyerCategory
 from LawyerManagement.utils import isPaymentRequired
 from API.utils import SimpleApiResponse, GetLawyerFromToken, GetCustomerFromToken
+from Go_Probono.utils import isValidBangladehiNumber
+from HelpCenter.models import CallHistory
 
 
 def generate_login_token():
@@ -99,10 +101,14 @@ def RegisterUser(request):
     if request.method == 'POST':
         json_data = json.loads(str(request.body, encoding='utf-8'))
         name = json_data['name']
-        mobile = json_data['mobile']
+        mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
         email = json_data['email']
         gender = json_data['gender']
         password = make_password(json_data['password'])
+        
+        
+        if not mobile: # mobile == False
+            return SimpleApiResponse("Please Provide valid Number.")
 
         if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
             return SimpleApiResponse("Mobile already exists.")
@@ -134,6 +140,10 @@ def RegisterUser(request):
         try:
             customer = Customer(name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
             customer.save()
+
+            # Set Previous CallHistoris as this users call list
+            CallHistory.objects.filter(no_customers_mobile = mobile).update(customer = customer, no_customers_mobile = '')
+
             return SimpleApiResponse("Customer created successfully.", success=True)
 
         except:
@@ -151,7 +161,7 @@ def RegisterLawyer(request, lawyerType):
         lawyer_type = lawyerType
 
         name = json_data['name']
-        mobile = json_data['mobile']
+        mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
         email = json_data['email']
         gender = json_data['gender']
 
@@ -170,6 +180,8 @@ def RegisterLawyer(request, lawyerType):
         password = make_password(json_data['password'])
         cardno = generate_login_token()
 
+        if not mobile: # mobile == False
+            return SimpleApiResponse("Please Provide valid Number.")
 
         if lawyer_type == Lawyer.LawyerType.LAWYER:
             nid = nid_or_tradelicense
@@ -217,6 +229,10 @@ def RegisterLawyer(request, lawyerType):
             lawyer.save()
             lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
             lawyer.lawyer_category.add(*lawyer_category) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
+
+            # Set Previous CallHistoris as this lawyer's call list
+            CallHistory.objects.filter(no_customers_mobile = mobile).update(lawyer = lawyer, no_customers_mobile = '')
+
 
             return SimpleApiResponse(lawyer_type+' created successfully.', success=True)
         

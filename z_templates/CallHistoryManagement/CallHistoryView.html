@@ -1,0 +1,149 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Call History Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'CallHistoryManagement'%}">Call History Management</a> / <span style="color: #000000">Details</span></div>
+        
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+                        {% if call_history.customer %}
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Mobile Number</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.customer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">User Type</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">Customer</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.customer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        {% elif call_history.lawyer %}
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Mobile Number</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.lawyer.mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">User Type</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">Lawyer</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.lawyer.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        {% else %}
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Mobile Number</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.no_customers_mobile}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">User Type</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">Not registered</div>
+                            <br>
+                            <br>
+                        </div>
+                        {% endif %}
+
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Minutes</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.minutes}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Comments</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.comments}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Called at</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{call_history.created_at}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Call Record</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6"><a href="{{call_history.recorded_file_info}}" >{{call_history.recorded_file_info}}</a></div>
+                            <br>
+                            <br>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+<script>
+</script>
+
+{%endblock%}
+
