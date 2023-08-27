@@ -4,6 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 
 from pathlib import Path
 
@@ -21,7 +22,19 @@ from LogWithAudit.views import audit_update
 @login_required
 @view_permission_required
 def CallHistoryManagement(request, task_url="CallHistoryManagement", action="main"):
-    CallHistories = CallHistory.objects.all()
+    CallHistories = CallHistory.objects.all().order_by('-created_at')
+
+    caller = request.GET.get('caller')
+    received_by = request.GET.get('received_by')
+    if caller:
+        CallHistories = CallHistories.filter(Q(customer__name__icontains=caller) | Q(lawyer__name__icontains=caller) | Q(lawyer__mobile__icontains=caller) | Q(lawyer__mobile__icontains=caller) | Q(no_customers_mobile__icontains=caller))
+    elif received_by:
+        CallHistories = CallHistories.filter(Q(received_by__username__icontains = received_by))
+    else:
+        pass
+
+    print('CallHistories--------------', len(CallHistories))
+    
 
     paginator = Paginator(CallHistories, 20)
     page = request.GET.get('page')
@@ -99,7 +112,7 @@ def CallHistoryCreate(request, task_url="CallHistoryManagement", action="add"):
 @view_permission_required
 def CallHistoryView(request, id, task_url="CallHistoryManagement", action="view"):
     call_history = get_object_or_404(CallHistory, id=id)
-    print('call_history---------------------------', call_history)
+    
     context = {
         'call_history': call_history,
         'cnav': UserCustomNav(request),

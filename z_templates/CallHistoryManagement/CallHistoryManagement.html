@@ -62,8 +62,8 @@
 
             <div class="row mb-3">
                 <form method="GET" class="col-4 d-flex">
-                    <input type="text" class="form-control form-control-sm module-searchbar" name="customer" placeholder="Enter customer">
-                    <input type="text" class="form-control form-control-sm module-searchbar" name="received_by" placeholder="Enter receiver">
+                    <input type="text" class="form-control form-control-sm module-searchbar" name="caller" placeholder="Enter caller" value="{{request.GET.caller}}">
+                    <input type="text" class="form-control form-control-sm module-searchbar" name="received_by" placeholder="Enter receiver" value="{{request.GET.received_by}}">
                     <button type="submit" class="submit btn btn-sm btn-primary">
                         <i class="fa fa-search"></i>
                     </button>
@@ -76,7 +76,7 @@
                     <thead>
                     <tr>
                         <th>Date Time</th>
-                        <th>Customer</th>
+                        <th>Caller</th>
                         <th>Received By</th>
                         <th>Minutes</th>
                         <th class="text-center">Operation</th>
@@ -86,8 +86,14 @@
                     {% for ch in CallHistories %}
                     <tr>
                         <td>{{ch.created_at}}</td>
-                        <td>{{ch.customer}}</td>
-                        <td>{{ch.received_by}}</td>
+                        {% if ch.customer %}
+                        <td><a style="color: black;" href="{%url 'CustomerView' ch.customer.id %}">{{ch.customer.name}} (C)</a></td>
+                        {% elif ch.lawyer %}
+                        <td><a style="color: black;" href="{%url 'LawyerView' ch.lawyer.id %}">{{ch.lawyer.name}} (L)</a></td>
+                        {% else %}
+                        <td>{{ch.no_customers_mobile}}</td>
+                        {% endif %}
+                        <td><a style="color: black;" class="mr-3" href="{%url 'RoleAssignmentView' ch.received_by.id %}">{{ch.received_by.username}}</a></td>
                         <td>{{ch.minutes}}</td>
                         <td>
                             <div class="d-flex justify-content-center">

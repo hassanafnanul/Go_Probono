@@ -27,6 +27,11 @@ class CallHistory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.customer.name + '->'+ self.received_by.first_name + '->'+str(self.created_at)
+        if self.customer:
+            return self.customer.name + '(C) ->'+ self.received_by.first_name + '->'+str(self.created_at)
+        elif self.lawyer:
+            return self.lawyer.name + '(L) ->'+ self.received_by.first_name + '->'+str(self.created_at)
+        else:
+            return self.no_customers_mobile + '->'+ self.received_by.first_name + '->'+str(self.created_at)
 
 
