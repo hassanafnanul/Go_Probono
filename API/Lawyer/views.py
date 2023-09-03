@@ -7,7 +7,6 @@ from .serializers import LawyerSerializer, LawyerDetailsSerializer, Lawyer, Lawy
 import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
-from LawyerManagement.models import PaymentPlan
 
 
 

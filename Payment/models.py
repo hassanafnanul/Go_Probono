@@ -1,6 +1,6 @@
 from django.db import models
 from UserAuthentication.models import Lawyer
-from LawyerManagement.models import PaymentPlan
+from PaymentPlans.models import PaymentPlan
 
 
 

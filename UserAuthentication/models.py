@@ -1,7 +1,7 @@
 from django.db import models
 from LawyerManagement.models import LawyerCategory
 from Address.models import Address
-from LawyerManagement.models import PaymentPlan
+from PaymentPlans.models import PaymentPlan
 
 
 class GenderType(models.TextChoices):

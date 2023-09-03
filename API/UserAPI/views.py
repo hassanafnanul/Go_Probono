@@ -15,7 +15,8 @@ from .serializers import CustomerSerializer
 from API.Lawyer.serializers import LawyerDetailsSerializer
 from UserAuthentication.models import Customer, OTP, Lawyer, GenderType
 from Address.utils import CreateAddress, UpdateAddress
-from LawyerManagement.models import PaymentPlan, LawyerCategory
+from LawyerManagement.models import LawyerCategory
+from PaymentPlans.models import PaymentPlan
 from LawyerManagement.utils import isPaymentRequired
 from API.utils import SimpleApiResponse, GetLawyerFromToken, GetCustomerFromToken
 from Go_Probono.utils import isValidBangladehiNumber
