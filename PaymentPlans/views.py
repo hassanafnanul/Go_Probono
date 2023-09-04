@@ -8,7 +8,7 @@ from django.contrib import messages
 import string, random
 from pathlib import Path
 
-from .models import TeamMember
+from .models import PaymentPlan
 from TeamManagement.forms import TeamForm
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
@@ -20,22 +20,22 @@ from LogWithAudit.views import audit_update
 @login_required
 @view_permission_required
 def PaymentPlans(request, task_url="TeamManagement", action="main"):
-    teamq = request.GET.get('name')
-    if teamq:
-        teams = TeamMember.objects.filter(name__icontains=teamq).order_by('order')
+    pp_name = request.GET.get('pp_name')
+    if pp_name:
+        payment_plans = PaymentPlan.objects.filter(name__icontains=pp_name).order_by('order')
     else:
-        teams = TeamMember.objects.all().order_by('order')
+        payment_plans = PaymentPlan.objects.all().order_by('order')
         
-    paginator = Paginator(teams, 20)
+    paginator = Paginator(payment_plans, 20)
     page = request.GET.get('page')
     pag_group = paginator.get_page(page)
     context = {
-        'teams': pag_group,
+        'payment_plans': pag_group,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
-    return render(request, 'TeamManagement/TeamManagement.html', context)
+    return render(request, 'PaymentPlans/PaymentPlans.html', context)
 
 
 @login_required

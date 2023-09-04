@@ -45,6 +45,8 @@ urlpatterns = [
 
     path('appoinment/', include('Appoinment.urls')),
 
+    path('payment-plans/', include('PaymentPlans.urls')),
+
 ]
 
 if settings.DEBUG:
