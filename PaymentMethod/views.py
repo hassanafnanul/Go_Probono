@@ -8,8 +8,8 @@ from django.contrib import messages
 import string, random
 from pathlib import Path
 
-from .models import PaymentPlan
-from .forms import PaymentPlanForm
+from .models import PaymentMethod
+from .forms import PaymentMethodForm
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks, formattedUrl, ChangeFileName
 from LogWithAudit.views import audit_update
 
@@ -19,46 +19,43 @@ from LogWithAudit.views import audit_update
 
 @login_required
 @view_permission_required
-def PaymentPlans(request, task_url="PaymentPlans", action="main"):
-    pp_name = request.GET.get('pp_name')
-    if pp_name:
-        payment_plans = PaymentPlan.objects.filter(name__icontains=pp_name).order_by('order')
+def PaymentMethodList(request, task_url="PaymentMethod", action="main"):
+    pm_name = request.GET.get('pm_name')
+    if pm_name:
+        payment_methods = PaymentMethod.objects.filter(name__icontains=pm_name).order_by('order')
     else:
-        payment_plans = PaymentPlan.objects.all().order_by('order')
-        
-    paginator = Paginator(payment_plans, 20)
+        payment_methods = PaymentMethod.objects.all().order_by('order')
+    
+    print('payment_methods----------------', payment_methods)
+
+    paginator = Paginator(payment_methods, 20)
     page = request.GET.get('page')
     pag_group = paginator.get_page(page)
     context = {
-        'payment_plans': pag_group,
+        'payment_methods': pag_group,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
-    return render(request, 'PaymentPlans/PaymentPlans.html', context)
+    return render(request, 'PaymentMethod/PaymentMethods.html', context)
 
 
 @login_required
 @view_permission_required
-def PaymentPlansAdd(request, task_url="PaymentPlans", action="add"):
+def PaymentMethodAdd(request, task_url="PaymentMethod", action="add"):
     if request.method == 'POST':
         r = request.POST
         name = r.get('name')
         order = r.get('order')
-        balance = r.get('balance')
-        duration = r.get('duration')
-        duration_type = r.get('d_type')
         description = r.get('description') if r.get('description') else ''
 
-        print(r)
-
-        if PaymentPlan.objects.filter(name=name).exists():
-            messages.warning(request, f'Plan {name} exists.')
-            return redirect('PaymentPlansAdd')
+        if PaymentMethod.objects.filter(name=name).exists():
+            messages.warning(request, f'Method {name} exists.')
+            return redirect('PaymentMethodAdd')
 
 
         fs = FileSystemStorage(
-            location=Path.joinpath(settings.MEDIA_ROOT, "payment_plan_thumbnail"),
+            location=Path.joinpath(settings.MEDIA_ROOT, "payment_method_thumbnail"),
             base_url='/thumbnail/'
         )
 
@@ -76,37 +73,32 @@ def PaymentPlansAdd(request, task_url="PaymentPlans", action="add"):
                 thumbnail = fs.url(filename)
 
 
-        pp = PaymentPlan(name=name, image_text=name, thumbnail=thumbnail, order = order, balance = balance, duration = duration, duration_type = duration_type, note=description)
-        pp.save()
+        pm = PaymentMethod(name=name, image_text=name, thumbnail=thumbnail, order = order, note=description)
+        pm.save()
 
-        audit_update(request, "Add", "PaymentPlan", "PaymentPlansAdd", "added new payment plan", name)
-        messages.success(request, f'Plan added successfully')
-        return redirect('PaymentPlans')
+        audit_update(request, "Add", "PaymentMethod", "PaymentMethodAdd", "added new payment method", name)
+        messages.success(request, f'Method added successfully')
+        return redirect('PaymentMethod')
     else:
-        ck_form = PaymentPlanForm()
-        d_types = PaymentPlan.DurationType
+        ck_form = PaymentMethodForm()
 
         context = {
             'ck_form': ck_form,
-            'd_types': d_types,
             'cnav': UserCustomNav(request),
             'privilege': DetailPermissions(request, task_url),
             'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
         }
-        return render(request, 'PaymentPlans/PPAdd.html', context)
+        return render(request, 'PaymentMethod/PMAdd.html', context)
 
 
 @login_required
 @view_permission_required
-def PaymentPlansEdit(request, id, task_url="PaymentPlans", action="edit"):
-    pp = PaymentPlan.objects.get(id=id)
+def PaymentMethodEdit(request, id, task_url="PaymentMethod", action="edit"):
+    pm = PaymentMethod.objects.get(id=id)
     if request.method == 'POST':
         r = request.POST
         name = r.get('name')
         order = r.get('order')
-        balance = r.get('balance')
-        duration = r.get('duration')
-        duration_type = r.get('d_type')
         description = r.get('description') if r.get('description') else ''
 
         is_archived = r.get('is_archived') == 'disable'
@@ -116,9 +108,9 @@ def PaymentPlansEdit(request, id, task_url="PaymentPlans", action="edit"):
             return redirect('TeamEdit', id=id)
         
         
-        if PaymentPlan.objects.filter(name=name).exclude(id=id).exists():
+        if PaymentMethod.objects.filter(name=name).exclude(id=id).exists():
             messages.warning(request, f'{name} already exists.')
-            return redirect('PaymentPlansEdit', id=id)
+            return redirect('PaymentMethodEdit', id=id)
         
 
         
@@ -134,47 +126,42 @@ def PaymentPlansEdit(request, id, task_url="PaymentPlans", action="edit"):
                 myfile.name = ChangeFileName(myfile.name)
                 filename = fs.save(myfile.name, file)
                 thumbnail = fs.url(filename)
-                pp.thumbnail = thumbnail
+                pm.thumbnail = thumbnail
 
-        pp.name = name
-        pp.image_text = name
-        pp.order = order
-        pp.balance = balance
-        pp.duration = duration
-        pp.duration_type = duration_type
-        pp.note = description
-        pp.is_archived = is_archived
-        pp.save()
+        pm.name = name
+        pm.image_text = name
+        pm.order = order
+        pm.note = description
+        pm.is_archived = is_archived
+        pm.save()
 
-        messages.success(request, f'Plan edited successfully')
-        return redirect('PaymentPlans')
+        messages.success(request, f'Method edited successfully')
+        return redirect('PaymentMethod')
     else:
         
-        ck_form = PaymentPlanForm()
-        ck_form['description'].initial = pp.note
-        d_types = PaymentPlan.DurationType
+        ck_form = PaymentMethodForm()
+        ck_form['description'].initial = pm.note
         context = {
-            'pp': pp,
+            'pm': pm,
             'ck_form': ck_form,
-            'd_types': d_types,
             'cnav': UserCustomNav(request),
             'privilege': DetailPermissions(request, task_url),
             'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
         }
-        return render(request, 'PaymentPlans/PPEdit.html', context)
+        return render(request, 'PaymentMethod/PMEdit.html', context)
 
 
 
 @login_required
 @view_permission_required
-def PaymentPlansView(request, id, task_url="PaymentPlans", action="view"):
-    pp = get_object_or_404(PaymentPlan, id=id)
+def PaymentMethodView(request, id, task_url="PaymentMethod", action="view"):
+    pm = get_object_or_404(PaymentMethod, id=id)
     context = {
-        'pp': pp,
+        'pm': pm,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
-    return render(request, 'PaymentPlans/PPView.html', context)
+    return render(request, 'PaymentMethod/PMView.html', context)
 
 

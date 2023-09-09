@@ -47,6 +47,8 @@ urlpatterns = [
 
     path('payment-plans/', include('PaymentPlans.urls')),
 
+    path('payment-methods/', include('PaymentMethod.urls')),
+
 ]
 
 if settings.DEBUG:

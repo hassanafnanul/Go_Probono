@@ -46,6 +46,7 @@ DEVELOPED_APPS = [
     'Address',
     'Payment',
     'PaymentPlans',
+    'PaymentMethod',
     'CallHistory'
 ]
 

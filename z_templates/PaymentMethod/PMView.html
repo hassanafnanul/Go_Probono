@@ -1,6 +1,6 @@
 {% extends "Common/base.html" %}
 {%block title%}
-<title>Team Management</title>
+<title>Payment Method Management</title>
 {%endblock title%}
 {%block style%}
 {%endblock%}
@@ -10,10 +10,8 @@
 <div class="app-body mt-0">
     <main class="main p-0">
         {% include 'Common/navbar.html'%}
-        <div class="page_header"><a href="{%url 'TeamManagement'%}">Team Management</a> / <span
-                style="color: #000000">Details</span></div>
+        <div class="page_header"><a href="{%url 'PaymentList' %}">Payment Method Management</a> / <span style="color: #000000">Details</span></div>
         
-
         {% include 'Common/taskbuttons.html'%}
 
         {%if messages%}
@@ -32,17 +30,21 @@
                     <div class="form_container_div">
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Image</div>
+                            <div class="col-5" style="font-weight: 600;">Thumbnail</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6"><img src="{{team.thumbnail.url}}" width=150></div>
+                            {% if pm.thumbnail %}
+                            <div class="col-6"><img src="{{pm.thumbnail.url}}" width=150></div>
+                            {% else %}
+                            <div class="col-6"></div>
+                            {% endif %}
                             <br>
                             <br>
                         </div>
 
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Team member name</div>
+                            <div class="col-5" style="font-weight: 600;">Name</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{team.name}}</div>
+                            <div class="col-6">{{pm.name}}</div>
                             <br>
                             <br>
                         </div>
@@ -50,31 +52,15 @@
                         <div class="row">
                             <div class="col-5" style="font-weight: 600;">Order</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6" style="color: green;">{{team.order}}</div>
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Designation</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{team.designation}}</div>
-                            <br>
-                            <br>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Portfolio URL</div>
-                            <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6"><a href="{{team.portfolio_url}}" target=”_blank”>T{{team.portfolio_url}}</a></div>
+                            <div class="col-6" style="color: green;">{{pm.order}}</div>
                             <br>
                             <br>
                         </div>
                         
                         <div class="row">
-                            <div class="col-5" style="font-weight: 600;">Team Description</div>
+                            <div class="col-5" style="font-weight: 600;">Description</div>
                             <div class="col-1" style="font-weight: 600;">:</div>
-                            <div class="col-6">{{team.description | safe}}</div>
+                            <div class="col-6">{{pm.note | safe}}</div>
                             <br>
                             <br>
                         </div>

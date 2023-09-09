@@ -1,0 +1,100 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Payment Plan Management</title>
+{%endblock title%}
+{%block style%}
+{%endblock%}
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><a href="{%url 'PaymentList' %}">Payment Plan Management</a> / <span style="color: #000000">Details</span></div>
+        
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div style="padding: 30px 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Detailed Information</strong>
+                </div>
+                <div class="card-body" style="display: flex;">
+                    <div class="form_container_div">
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Thumbnail</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            {% if pp.thumbnail %}
+                            <div class="col-6"><img src="{{pp.thumbnail.url}}" width=150></div>
+                            {% else %}
+                            <div class="col-6"></div>
+                            {% endif %}
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Name</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{pp.name}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Order</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6" style="color: green;">{{pp.order}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Balance</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{pp.balance}}</div>
+                            <br>
+                            <br>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Duration</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{pp.duration}} {{pp.duration_type}}</div>
+                            <br>
+                            <br>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-5" style="font-weight: 600;">Description</div>
+                            <div class="col-1" style="font-weight: 600;">:</div>
+                            <div class="col-6">{{pp.note | safe}}</div>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="display:flex;">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="javascript:window.history.back();">
+                        <i class="fa fa-angle-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock%}
+
+{%block js%}
+
+{%endblock%}
+
