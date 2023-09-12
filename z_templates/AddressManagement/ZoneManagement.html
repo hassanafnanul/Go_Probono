@@ -1,0 +1,124 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Zone Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+    #catlist ul {
+        margin: 0px 0px 0px 20px;
+        list-style: none;
+        line-height: 2em;
+    }
+
+    #catlist ul li {
+        font-size: 16px;
+        position: relative;
+    }
+
+    #catlist ul li:before {
+        position: absolute;
+        left: -15px;
+        top: 0px;
+        content: '';
+        display: block;
+        border-left: 1px solid #808080;
+        height: 1em;
+        border-bottom: 1px solid #808080;
+        width: 10px;
+    }
+
+    #catlist ul li:after {
+        position: absolute;
+        left: -15px;
+        bottom: -7px;
+        content: '';
+        display: block;
+        border-left: 1px solid #808080;
+        height: 100%;
+    }
+
+    #catlist ul li.root {
+        font-size: .875rem;
+        margin: 0px 0px 0px -20px;
+    }
+
+    #catlist ul li.root:before {
+        display: none;
+    }
+
+    #catlist ul li.root:after {
+        display: none;
+    }
+
+    #catlist ul li:last-child:after {
+        display: none;
+    }
+
+    #catlist span {
+        font-size: 12px;
+        padding: 2px 5px;
+        margin-right: 3px;
+        border-radius: 3px;
+        background-color: #abd1ff;
+        line-height: 1rem;
+    }
+</style>
+{%endblock%}
+
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><span style="color: #000000">Zone Mathod</span></div>
+
+
+        {% include 'Common/taskbuttons.html'%}
+
+        {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div class="main_wrapper">
+            <div style="display: flex;">
+                {%if privilege and privilege.add_task%}
+                <a class="btn btn-primary btn-sm" href="{%url 'ZoneCreate'%}">
+                    <i class="icon-plus"></i> Add New
+                </a>
+                {%endif%}
+                <div style="width: 10px;"></div>
+                <a class="btn btn-success btn-sm" href="{%url 'ZoneManagement'%}">
+                    <i class="icon-refresh"></i> Reload
+                </a>
+            </div>
+
+            <!-- <form method="GET" style="display: flex; margin-top: 10px;">
+                <input type="text" name="pm_name" class="form-control form-control-sm" placeholder="Enter Name" value="{{request.GET.pm_name}}">
+                <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+            </form> -->
+
+            <div class="mt-3">Total: <b>{{zones.paginator.count}}</b> Zones</div>
+
+            <div class="card mt-3 p-3" style="margin: 30px;" id="zonelist">
+                <ul>
+                    <li class="root">
+                        All Zones
+                        {{zones | safe}}
+                    </li>
+                </ul>
+            </div>
+
+            {% include 'Common/pagination_with_filter.html' with data=payment_methods request=request %}
+
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock %}
+
+{%block js%}
+{%endblock%}
