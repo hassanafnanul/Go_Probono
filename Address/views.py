@@ -1,6 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from random import randint
+import string, random
+
+from LogWithAudit.views import audit_update
 from .models import Zone
 from Go_Probono.utils import UserCustomNav, DetailPermissions, view_permission_required, PermittedSiblingTasks
 
@@ -29,7 +33,7 @@ def generate_zone_tree(zonelist, parentid, depth):
             ans = ans + '<button class="btn collapsed" style="color:red" type="button" data-toggle="collapse" data-target="#collapse'+pid+'" aria-expanded="false" aria-controls="#collapse'+pid+'"><b>' + p.name + '</b></button>'
         else:
             ans = ans + '<button class="btn collapsed" type="button" data-toggle="collapse" data-target="#collapse'+pid+'" aria-expanded="false" aria-controls="#collapse'+pid+'"><b>' + p.name + '</b></button>'
-        ans = ans + '<a class="btn btn-sm" style="padding:0;" href="/zoneegory/zoneegory/edit/'+pid+'/"><i class="icon-pencil"></i></a></div>'
+        ans = ans + '<a class="btn btn-sm" style="padding:0;" href="/address/zones/edit/'+pid+'/"><i class="icon-pencil"></i></a></div>'
         if parentid is None:
             ans = ans + '<div class="col-5" style="display:flex;align-items:center;">'
             ans = ans + '</div>'
@@ -37,10 +41,6 @@ def generate_zone_tree(zonelist, parentid, depth):
         ans = ans + '<div id="collapse'+pid+'" class="collapse" data-parent="#allzone'+rid+'">'+rval+'</div></li>'
     ans = ans + '</ul>'
     return ans 
-
-
-
-
 
 
 
@@ -66,126 +66,107 @@ def ZoneManagement(request, task_url="ZoneManagement", action="main"):
 
 @login_required
 @view_permission_required
-def ZoneCreate(request, task_url="ZoneManagement", action="add"):
+def ZoneCreate(request, task_name="ZoneManagement", action="add"):
     if request.method == 'POST':
         r = request.POST
         name = r.get('name')
-        order = r.get('order')
-        description = r.get('description') if r.get('description') else ''
+        latitude = r.get('latitude')
+        longitude = r.get('longitude')
+        zone_type = None if r.get('zone_type') == '' else r.get('zone_type')
+        parent = None if r.get('parent') == '' else Zone.objects.get(id = r.get('parent'))
+        slug = name.lower().replace(' ', '')+'_'+''.join(random.choices(string.ascii_lowercase, k=5))
+        parent_slug = parent.slug if parent else None
 
-        if PaymentMethod.objects.filter(name=name).exists():
-            messages.warning(request, f'Method {name} exists.')
-            return redirect('PaymentMethodAdd')
-
-
-        fs = FileSystemStorage(
-            location=Path.joinpath(settings.MEDIA_ROOT, "payment_method_thumbnail"),
-            base_url='/thumbnail/'
-        )
-
-        thumbnail = '/default/default.png'
-
-        for filename, file in request.FILES.items():
-            myfile = request.FILES[filename]
-            if filename == 'thumbnail':
-                fs = FileSystemStorage(
-                    location=Path.joinpath(settings.MEDIA_ROOT, "thumbnail"),
-                    base_url='/thumbnail/'
-                )
-                myfile.name = ChangeFileName(myfile.name)
-                filename = fs.save(myfile.name, file)
-                thumbnail = fs.url(filename)
+        if Zone.objects.filter(slug = slug).exists():
+            messages.warning(request, f'Try Again Please.')
+            return redirect('ZoneCreate')
 
 
-        pm = PaymentMethod(name=name, image_text=name, thumbnail=thumbnail, order = order, note=description)
-        pm.save()
+        if not (zone_type == Zone.ZoneType.DIVISION and parent == None or  zone_type == Zone.ZoneType.DISTRICT and parent.zone_type == Zone.ZoneType.DIVISION or zone_type == Zone.ZoneType.THANA and parent.zone_type == Zone.ZoneType.DISTRICT):
+            messages.warning(request, f'Type error')
+            return redirect('ZoneCreate')
 
-        audit_update(request, "Add", "PaymentMethod", "PaymentMethodAdd", "added new payment method", name)
-        messages.success(request, f'Method added successfully')
-        return redirect('PaymentMethod')
+
+        z = Zone(name=name, slug=slug, zone_type=zone_type, parent_slug = parent_slug, parent=parent, latitude = latitude, longitude = longitude)
+        z.save()
+
+        audit_update(request, "Add", "Zone", "ZoneCreate", "added new zone", name)
+        messages.success(request, f'Zone added successfully')
+        return redirect('ZoneManagement')
     else:
-        ck_form = PaymentMethodForm()
+        zone_types = Zone.ZoneType.choices
+        parent_zones = Zone.objects.all().order_by('zone_type', 'name')
 
         context = {
-            'ck_form': ck_form,
+            'zone_types': zone_types,
+            'parent_zones': parent_zones,
             'cnav': UserCustomNav(request),
-            'privilege': DetailPermissions(request, task_url),
-            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
+            'privilege': DetailPermissions(request, task_name),
+            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
         }
-        return render(request, 'PaymentMethod/PMAdd.html', context)
+        return render(request, 'AddressManagement/ZoneAdd.html', context)
+
+
+
 
 
 @login_required
 @view_permission_required
-def ZoneEdit(request, id, task_url="ZoneManagement", action="edit"):
-    pm = PaymentMethod.objects.get(id=id)
+def ZoneEdit(request, id, task_name="ZoneManagement", action="edit"):
+    zone = Zone.objects.get(id=id)
     if request.method == 'POST':
         r = request.POST
         name = r.get('name')
-        order = r.get('order')
-        description = r.get('description') if r.get('description') else ''
+        latitude = r.get('latitude')
+        longitude = r.get('longitude')
+        zone_type = None if r.get('zone_type') == '' else r.get('zone_type')
+        parent = None if r.get('parent') == '' else Zone.objects.get(id = r.get('parent'))
+        parent_slug = parent.slug if parent else None
 
         is_archived = r.get('is_archived') == 'disable'
 
-        if name == "":
-            messages.warning(request, f'Name cannot be blank.')
-            return redirect('TeamEdit', id=id)
-        
-        
-        if PaymentMethod.objects.filter(name=name).exclude(id=id).exists():
-            messages.warning(request, f'{name} already exists.')
-            return redirect('PaymentMethodEdit', id=id)
+        if not (zone_type == Zone.ZoneType.DIVISION and parent == None or  zone_type == Zone.ZoneType.DISTRICT and parent.zone_type == Zone.ZoneType.DIVISION or zone_type == Zone.ZoneType.THANA and parent.zone_type == Zone.ZoneType.DISTRICT):
+            messages.warning(request, f'Type error')
+            return redirect('ZoneEdit', id=id)
         
 
-        
-        thumbnail = '/default/default.png'
+        zone.name = name
+        zone.zone_type = zone_type
+        zone.parent_slug = parent_slug
+        zone.parent = parent
+        zone.latitude = latitude
+        zone.longitude = longitude
+        zone.is_archived = is_archived
+        zone.save()
 
-        for filename, file in request.FILES.items():
-            myfile = request.FILES[filename]
-            if filename == 'thumbnail': 
-                fs = FileSystemStorage(
-                    location=Path.joinpath(settings.MEDIA_ROOT, "thumbnail"),
-                    base_url='/thumbnail/'
-                )
-                myfile.name = ChangeFileName(myfile.name)
-                filename = fs.save(myfile.name, file)
-                thumbnail = fs.url(filename)
-                pm.thumbnail = thumbnail
-
-        pm.name = name
-        pm.image_text = name
-        pm.order = order
-        pm.note = description
-        pm.is_archived = is_archived
-        pm.save()
-
-        messages.success(request, f'Method edited successfully')
-        return redirect('PaymentMethod')
+        messages.success(request, f'Zone edited successfully')
+        return redirect('ZoneManagement')
     else:
-        
-        ck_form = PaymentMethodForm()
-        ck_form['description'].initial = pm.note
+        zone_types = Zone.ZoneType.choices
+        parent_zones = Zone.objects.all().order_by('zone_type', 'name')
         context = {
-            'pm': pm,
-            'ck_form': ck_form,
+            'zone': zone,
+            'zone_types': zone_types,
+            'parent_zones': parent_zones,
             'cnav': UserCustomNav(request),
-            'privilege': DetailPermissions(request, task_url),
-            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
+            'privilege': DetailPermissions(request, task_name),
+            'PermittedSiblingTasks': PermittedSiblingTasks(request, task_name)
         }
-        return render(request, 'PaymentMethod/PMEdit.html', context)
+        return render(request, 'AddressManagement/ZoneEdit.html', context)
+
 
 
 
 @login_required
 @view_permission_required
 def ZoneView(request, id, task_url="ZoneManagement", action="view"):
-    pm = get_object_or_404(PaymentMethod, id=id)
+    pm = get_object_or_404(Zone, id=id)
     context = {
         'pm': pm,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
     }
-    return render(request, 'PaymentMethod/PMView.html', context)
+    return render(request, 'AddressManagement/ZoneView.html', context)
 
 
