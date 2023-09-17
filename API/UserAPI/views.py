@@ -19,7 +19,7 @@ from LawyerManagement.models import LawyerCategory
 from PaymentPlans.models import PaymentPlan
 from LawyerManagement.utils import isPaymentRequired
 from API.utils import SimpleApiResponse, GetLawyerFromToken, GetCustomerFromToken
-from Go_Probono.utils import isValidBangladehiNumber
+from Go_Probono.utils import isValidBangladehiNumber, MakeUniqueNewId
 from HelpCenter.models import CallHistory
 
 
@@ -139,7 +139,7 @@ def RegisterUser(request):
 
 
         try:
-            customer = Customer(name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
+            customer = Customer(customer_id = MakeUniqueNewId(Customer, "customer_id", "CUS"), name=name, mobile=mobile, email=email, password=password, gender = gender, cardno=generate_login_token())
             customer.save()
 
             # Set Previous CallHistoris as this users call list
@@ -176,6 +176,8 @@ def RegisterLawyer(request, lawyerType):
         nid_or_tradelicense = json_data['nid_or_tradelicense']
         bar_council_number = json_data['bar_council_number']
         lawyer_category = json_data['lawyer_category']
+        lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
+
         expiary_date = date.today()
 
         password = make_password(json_data['password'])
@@ -185,9 +187,11 @@ def RegisterLawyer(request, lawyerType):
             return SimpleApiResponse("Please Provide valid Number.")
 
         if lawyer_type == Lawyer.LawyerType.LAWYER:
+            id_prefix = "LWR"
             nid = nid_or_tradelicense
             tradelicense = None
         elif lawyer_type == Lawyer.LawyerType.LAWFIRM:
+            id_prefix = "LWF"
             nid = None
             tradelicense = nid_or_tradelicense
         else:
@@ -206,6 +210,9 @@ def RegisterLawyer(request, lawyerType):
 
         if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
             return SimpleApiResponse("Gender data error.")
+        
+        if len(lawyer_categories) == 0:
+            return SimpleApiResponse("Invalid Lawyer Category.")
 
 
 
@@ -226,10 +233,9 @@ def RegisterLawyer(request, lawyerType):
 
         try:
             address = CreateAddress(area_slug = area_slug, note=lawyer_type+': '+name, apartment=apartment, street_address=street_address, latitude=latitude, longitude=longitude)
-            lawyer = Lawyer(name = name, mobile = mobile, email = email, password = password, address = address, payment_plan_id = payment_plan, cardno = cardno, gender = gender, bar_council_number = bar_council_number, nid = nid, tradelicense = tradelicense, lawyer_type = lawyer_type, expiary_date = expiary_date)
+            lawyer = Lawyer(lawyer_id = MakeUniqueNewId(Lawyer, "lawyer_id", id_prefix), name = name, image_text = name, mobile = mobile, email = email, password = password, address = address, payment_plan_id = payment_plan, cardno = cardno, gender = gender, bar_council_number = bar_council_number, nid = nid, tradelicense = tradelicense, lawyer_type = lawyer_type, expiary_date = expiary_date)
             lawyer.save()
-            lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
-            lawyer.lawyer_category.add(*lawyer_category) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
+            lawyer.lawyer_category.add(*lawyer_categories) # '*' operator to unpack the QuerySet into separate arguments for the add() method.
 
             # Set Previous CallHistoris as this lawyer's call list
             CallHistory.objects.filter(no_customers_mobile = mobile).update(lawyer = lawyer, no_customers_mobile = '')

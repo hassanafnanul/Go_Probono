@@ -171,3 +171,20 @@ def isValidBangladehiNumber(s):
 #     changed_file_name = changed_file_name + "."
 #     return "%s%s" % (changed_file_name, extension)
 
+
+
+# from django.db.models.base import ModelBase
+
+
+def MakeUniqueNewId(model, field, prefix):
+    new_number = 1
+    
+    try:
+        new_number = int(getattr(model.objects.latest('id'), field)[len(prefix):])+1
+    except:
+        pass
+    a_num = f"{prefix}{new_number:09}"
+
+    return a_num
+
+

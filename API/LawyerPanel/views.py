@@ -107,7 +107,6 @@ def AppointmentStatusChange(request):
         if (status.lower(), status.capitalize()) not in Appointment.StatusList.choices:
             return SimpleApiResponse("Invalid status.")
         
-
         if not lawyer == appointment.lawyer:
             return SimpleApiResponse("Lawyer Invalid")
 

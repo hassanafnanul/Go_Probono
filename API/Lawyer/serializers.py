@@ -29,6 +29,6 @@ class LawyerDetailsSerializer(serializers.ModelSerializer):
     payment_plan = PaymentPlanSerializer(many = False)
     class Meta:
         model = Lawyer
-        fields = ['id', 'name', 'image', 'image_text', 'mobile', 'email', 'address', 'payment_plan', 'gender', 'lawyer_category', 'bar_council_number', 'nid', 'tradelicense', 'lawyer_type', 'status', 'balance', 'created_at']
+        fields = ['id', 'lawyer_id', 'name', 'image', 'image_text', 'mobile', 'email', 'address', 'payment_plan', 'gender', 'lawyer_category', 'bar_council_number', 'nid', 'tradelicense', 'lawyer_type', 'status', 'balance', 'created_at']
 
 

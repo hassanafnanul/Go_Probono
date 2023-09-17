@@ -11,6 +11,7 @@ class GenderType(models.TextChoices):
 
 
 class Customer(models.Model):
+    customer_id = models.CharField(default='', max_length=15)
     name = models.CharField(max_length=100, null=True)
     image = models.ImageField(null=True, blank=True, upload_to='customer_pic/')
     image_text = models.CharField(default='', max_length=101)
@@ -60,6 +61,7 @@ class Lawyer(models.Model):
         DEACTIVATED = 'deactivated'
         DELETED = 'deleted'
 
+    lawyer_id = models.CharField(default='', max_length=15)
     name = models.CharField(max_length=100, null=True)
     image = models.ImageField(null=True, blank=True, upload_to='lawyer_pic/')
     image_text = models.CharField(default='', max_length=101)

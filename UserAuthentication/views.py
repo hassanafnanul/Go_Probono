@@ -47,7 +47,25 @@ def logout_view(request):
 
 @login_required
 def gohome(request):
+    from Payment.models import PaymentHistory
+    from Appoinment.models import Appointment
+    from UserAuthentication.models import Lawyer, Customer
+    from django.db.models import Sum, Count
+
     print('-----Assalam u alikum-----')
+    total_payment = PaymentHistory.objects.filter(status = PaymentHistory.StatusList.APPROVED).aggregate(Sum('amount'))
+    total_appointments = Appointment.objects.filter(status = Appointment.StatusList.APPROVED).aggregate(Count('Appointment_num'))
+    total_lawyers = Lawyer.objects.filter(status = Lawyer.StatusList.ACTIVE).aggregate(Count('name'))
+    total_customers = Customer.objects.all().aggregate(Count('name'))
+
+    print('total_payment-----------------', total_payment)
+    print('total_appointments------------', total_appointments)
+    print('total_lawyers------------', total_lawyers)
+    print('total_customers------------', total_customers)
+
+
+
+
     context = {
         'cnav': UserCustomNav(request),
     }

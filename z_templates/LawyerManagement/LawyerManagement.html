@@ -53,6 +53,7 @@
                 <table class="table table-sm bg-white mt-3">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Lawyer Name</th>
                         <th>Mobile</th>
                         <th>Current Plan</th>
@@ -65,6 +66,7 @@
                     {% for lawyer in lawyers %}
                     <tr {% if lawyer.is_archived %}style="color: red;"{% endif %}>
                         
+                        <td>{{lawyer.lawyer_id}}</td>
                         <td>{{lawyer.name}}</td>
                         <td>{{lawyer.mobile}}</td>
                         <td>{{lawyer.payment_plan.name}}</td>
