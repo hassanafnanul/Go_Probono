@@ -69,7 +69,7 @@ def AddAppointment(request):
 
 
         try:
-            appointment = Appointment(Appointment_num = MakeUniqueNewId(Appointment, "Appointment_num", "GOP"),customer=customer, lawyer=lawyer, message=message, start_date=start_date, end_date = end_date)
+            appointment = Appointment(appointment_num = MakeUniqueNewId(Appointment, "appointment_num", "GOP"),customer=customer, lawyer=lawyer, message=message, start_date=start_date, end_date = end_date)
             appointment.save()
             appointment.lawyer_category.add(*matched_category)
             

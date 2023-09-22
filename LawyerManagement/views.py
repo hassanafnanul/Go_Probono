@@ -22,16 +22,27 @@ from Payment.models import PaymentHistory
 @view_permission_required
 def LawyerManagement(request, task_url="LawyerManagement", action="main"):
     lawyerq = request.GET.get('lawyer')
+    lawyer_idq = request.GET.get('lawyer_id')
+    mobileq = request.GET.get('mobile')
+    statusq = request.GET.get('status')
+
+    lawyers = Lawyer.objects.all().order_by('created_at')
+
     if lawyerq:
-        lawyers = Lawyer.objects.filter(name__icontains=lawyerq).order_by('name')
-    else:
-        lawyers = Lawyer.objects.all().order_by('name')
+        lawyers = lawyers.filter(name__icontains=lawyerq)
+    if lawyer_idq:
+        lawyers = lawyers.filter(lawyer_id__icontains=lawyer_idq)
+    if mobileq:
+        lawyers = lawyers.filter(mobile__icontains=mobileq)
+    if statusq:
+        lawyers = lawyers.filter(status=statusq)
         
     paginator = Paginator(lawyers, 20)
     page = request.GET.get('page')
     pag_group = paginator.get_page(page)
     context = {
         'lawyers': pag_group,
+        'status_list': Lawyer.StatusList.choices,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)

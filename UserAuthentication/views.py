@@ -53,20 +53,45 @@ def gohome(request):
     from django.db.models import Sum, Count
 
     print('-----Assalam u alikum-----')
-    total_payment = PaymentHistory.objects.filter(status = PaymentHistory.StatusList.APPROVED).aggregate(Sum('amount'))
-    total_appointments = Appointment.objects.filter(status = Appointment.StatusList.APPROVED).aggregate(Count('Appointment_num'))
-    total_lawyers = Lawyer.objects.filter(status = Lawyer.StatusList.ACTIVE).aggregate(Count('name'))
-    total_customers = Customer.objects.all().aggregate(Count('name'))
-
-    print('total_payment-----------------', total_payment)
-    print('total_appointments------------', total_appointments)
-    print('total_lawyers------------', total_lawyers)
-    print('total_customers------------', total_customers)
+    total_payment = PaymentHistory.objects.filter(status = PaymentHistory.StatusList.APPROVED).aggregate(Sum('amount'))['amount__sum']
+    total_appointments = Appointment.objects.filter(status = Appointment.StatusList.APPROVED).aggregate(Count('appointment_num'))['appointment_num__count']
+    total_lawyers = Lawyer.objects.filter(status = Lawyer.StatusList.ACTIVE).aggregate(Count('name'))['name__count']
+    total_customers = Customer.objects.all().aggregate(Count('name'))['name__count']
 
 
+
+    tiles = [{
+        "title": "Total Payments",
+        "data": str(total_payment)+" BDT",
+        "icon": "fa fa-money"
+    },
+    {
+        "title": "Total Appointments",
+        "data": str(total_appointments)+"",
+        "icon": "fa fa-calendar"
+    },
+    {
+        "title": "Total Lawyers",
+        "data": str(total_lawyers)+"",
+        "icon": "fa fa-gavel"
+    },
+    {
+        "title": "Total Customers",
+        "data": str(total_customers)+"",
+        "icon": "fa fa-users"
+    }]
+
+    
+    p_lawyers = Lawyer.objects.filter(status=Lawyer.StatusList.PENDING).order_by('-created_at')
+    p_payments = PaymentHistory.objects.filter(status=PaymentHistory.StatusList.PENDING).order_by('-created_at')
+    p_appointments = Appointment.objects.filter(status=Appointment.StatusList.PENDING).order_by('-created_at')
 
 
     context = {
+        'tiles': tiles,
+        'p_lawyers': p_lawyers,
+        'p_payments': p_payments,
+        'p_appointments': p_appointments,
         'cnav': UserCustomNav(request),
     }
 

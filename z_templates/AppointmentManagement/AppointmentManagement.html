@@ -40,8 +40,7 @@
             </div>
 
             <form method="GET" style="display: flex; margin-top: 10px;">
-                <input type="text" name="appointment" class="form-control form-control-sm mr-1" placeholder="Enter Appointment Name" value="{{request.GET.appointment}}">       
-
+                <input type="text" name="appointment_num" class="form-control form-control-sm mr-1" placeholder="Enter Appointment Number" value="{{request.GET.appointment_num}}">       
 
                 <select name="lawyer" id="lawyer" class="mr-1">
                     <option value="">Select lawyer</option>
@@ -60,7 +59,7 @@
                 <select name="status" id="status" class="mr-1">
                     <option value="">Select Status</option>
                     {%for st in status_list %}
-                    <option value="{{st.1}}" {% if request.GET.status == st.1 %}selected{% endif %} >{{st.1}}</option>
+                    <option value="{{st.0}}" {% if request.GET.status == st.0 %}selected{% endif %} >{{st.1}}</option>
                     {%endfor%}
                 </select>
 
@@ -75,6 +74,7 @@
                 <table class="table table-sm bg-white mt-3">
                     <thead>
                     <tr>
+                        <th>Appointment Num</th>
                         <th>Customer Name</th>
                         <th>Lawyer Name</th>
                         <th>Chosen Date</th>
@@ -85,9 +85,10 @@
                     <tbody>
                     {% for appointment in appointments %}
                     <tr {% if appointment.is_archived %}style="color: red;"{% endif %}>
-                        
+                        <td>{{appointment.appointment_num}}</td>
                         <td><a href="{%url 'CustomerView' appointment.customer.id %}">{{appointment.customer.name}}</a></td>
                         <td><a href="{%url 'LawyerView' appointment.lawyer.id %}">{{appointment.lawyer.name}}</a></td>
+                        
                         <td>{{appointment.chosen_date}}</td>
                         <td>{{appointment.status}}</td>
 

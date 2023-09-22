@@ -14,7 +14,7 @@ class Appointment(models.Model):
         REJECTED = 'rejected'
         DELETED = 'deleted'
 
-    Appointment_num = models.CharField(default='', max_length=15)
+    appointment_num = models.CharField(default='', max_length=15)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.SET_NULL, null=True, blank=True)
     lawyer_category = models.ManyToManyField(LawyerCategory)

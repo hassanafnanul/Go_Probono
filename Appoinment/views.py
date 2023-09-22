@@ -22,18 +22,29 @@ from .models import Appointment
 @login_required
 @view_permission_required
 def AppointmentList(request, task_url="AppointmentList", action="main"):
+
+    appointment_numq = request.GET.get('appointment_num')
+    lawyerq = request.GET.get('lawyer')
+    customerq = request.GET.get('customer')
+    statusq = request.GET.get('status')
+    dateq = request.GET.get('date')
+
+    
     appointments = Appointment.objects.all().order_by('-created_at')
 
-    lawyer = request.GET.get('lawyer')
-    customer = request.GET.get('customer')
-    mobile = request.GET.get('mobile')
-    status = request.GET.get('status')
-    date = request.GET.get('date')
-    if lawyer:
-        appointments = appointments.filter(lawyer__name__icontains=lawyer).order_by('-created_at')
+    if appointment_numq:
+        appointments = appointments.filter(appointment_num=appointment_numq)
+    if lawyerq:
+        appointments = appointments.filter(lawyer__id=lawyerq)
+    if customerq:
+        appointments = appointments.filter(customer__id=lawyerq)
+    if statusq:
+        appointments = appointments.filter(status=statusq)
+    if dateq:
+        appointments = appointments.filter(start_date__lte=dateq, end_date__gte=dateq)
     
-    lawyers = Lawyer.objects.all()
-    customers = Customer.objects.all()
+    lawyers = Lawyer.objects.all().order_by('name')
+    customers = Customer.objects.all().order_by('name')
     status_list = Appointment.StatusList.choices
 
     paginator = Paginator(appointments, 20)
@@ -41,8 +52,8 @@ def AppointmentList(request, task_url="AppointmentList", action="main"):
     pag_group = paginator.get_page(page)
     context = {
         'appointments': pag_group,
-        # 'lawyers': lawyers,
-        # 'customers': customers,
+        'lawyers': lawyers,
+        'customers': customers,
         'status_list': status_list,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),

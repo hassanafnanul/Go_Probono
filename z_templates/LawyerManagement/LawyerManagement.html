@@ -40,8 +40,16 @@
             </div>
 
             <form method="GET" style="display: flex; margin-top: 10px;">
-                <input type="text" name="lawyer" class="form-control form-control-sm" placeholder="Enter Lawyer Name"
-                       value="{{request.GET.lawyer}}">
+                <input type="text" name="lawyer" class="form-control form-control-sm" placeholder="Enter Lawyer Name" value="{{request.GET.lawyer}}">
+                <input type="text" name="lawyer_id" class="form-control form-control-sm" placeholder="Enter Lawyer ID" value="{{request.GET.lawyer_id}}">
+                <input type="number" name="mobile" class="form-control form-control-sm" placeholder="Enter Mobile" value="{{request.GET.mobile}}">
+                <select name="status" id="status" class="mr-1">
+                    <option value="">--------</option>
+                    {%for sl in status_list %}
+                    <option value="{{sl.0}}" {% if request.GET.status == sl.0 %}selected{% endif %} >{{sl.1}}</option>
+                    {%endfor%}
+                </select>
+
                 <button type="submit" class="btn btn-sm btn-primary">
                     <i class="fa fa-search"></i>
                 </button>

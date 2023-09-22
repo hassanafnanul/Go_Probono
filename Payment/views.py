@@ -22,17 +22,32 @@ from UserAuthentication.models import Lawyer
 @login_required
 @view_permission_required
 def PaymentList(request, task_url="PaymentList", action="main"):
-    lawyer = request.GET.get('lawyer')
-    if lawyer:
-        payments = PaymentHistory.objects.filter(lawyer__name__icontains=lawyer).order_by('-created_at')
-    else:
-        payments = PaymentHistory.objects.all().order_by('-created_at')
+    lawyer_nameq = request.GET.get('lawyer_name')
+    lawyer_idq = request.GET.get('lawyer_id')
+    mobileq = request.GET.get('mobile')
+    statusq = request.GET.get('status')
+    p_id = request.GET.get('status')
+
+    
+    payments = PaymentHistory.objects.all().order_by('-created_at')
+    
+    if lawyer_nameq:
+        payments = payments.filter(lawyer__name__icontains=lawyer_nameq)
+    if lawyer_idq:
+        payments = payments.filter(lawyer__lawyer_id__icontains=lawyer_idq)
+    if mobileq:
+        payments = payments.filter(lawyer__mobile__icontains=mobileq)
+    if statusq:
+        payments = payments.filter(status=statusq)
+    if p_id:
+        payments = payments.filter(id=p_id)
         
     paginator = Paginator(payments, 20)
     page = request.GET.get('page')
     pag_group = paginator.get_page(page)
     context = {
         'payments': pag_group,
+        'status_list': PaymentHistory.StatusList.choices,
         'cnav': UserCustomNav(request),
         'privilege': DetailPermissions(request, task_url),
         'PermittedSiblingTasks': PermittedSiblingTasks(request, task_url)
