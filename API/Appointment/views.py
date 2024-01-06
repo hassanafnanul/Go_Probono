@@ -27,13 +27,16 @@ def AddAppointment(request):
 
         lawyer = json_data['lawyer']
         message = json_data['message']
-        expertise = json_data['expertise']
+        try:
+            expertise = json_data['expertise']
+        except:
+            expertise = ""
         start_date = datetime.datetime.strptime(json_data['start_date'], '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(json_data['end_date'], '%Y-%m-%d').date()
         
 
         if not expertise.replace(',','').isdigit():
-            return SimpleApiResponse("Expertise data invalid.")
+            return SimpleApiResponse("Lawyer Category data invalid.")
         else:
             expertise = expertise.split(',')
 

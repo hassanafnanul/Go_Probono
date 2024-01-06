@@ -7,16 +7,31 @@ from .serializers import LawyerSerializer, LawyerDetailsSerializer, Lawyer, Lawy
 import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
+from API.utils import SimpleApiResponse
 
 
 
 
 class LawyerAPI(APIView):
     def get(self, request):
-        lawyers = Lawyer.objects.all().order_by("created_at").exclude(is_archived = True)
+        area_slug = request.GET.get('area_slug')
+        expertise = request.GET.get('expertise')
+
+        if area_slug and expertise:
+
+            if not expertise.replace(',','').isdigit():
+                return SimpleApiResponse("Expertise data invalid.")
+            
+            expertise = expertise.split(',')
+
+            lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise, status=Lawyer.StatusList.ACTIVE).order_by("created_at").exclude(is_archived = True).distinct()
+        else:
+            lawyers = Lawyer.objects.all().order_by("created_at").exclude(is_archived = True)
+            
         serializer = LawyerSerializer(lawyers, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
