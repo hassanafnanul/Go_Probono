@@ -21,10 +21,18 @@ class LawyerAPI(APIView):
 
             if not expertise.replace(',','').isdigit():
                 return SimpleApiResponse("Expertise data invalid.")
-            
             expertise = expertise.split(',')
 
             lawyers = Lawyer.objects.filter(address__area__slug = area_slug, lawyer_category__in = expertise, status=Lawyer.StatusList.ACTIVE).order_by("created_at").exclude(is_archived = True).distinct()
+        
+        elif area_slug and not expertise:
+            lawyers = Lawyer.objects.filter(address__area__slug = area_slug, status=Lawyer.StatusList.ACTIVE).order_by("created_at").exclude(is_archived = True).distinct()
+        elif not area_slug and expertise:
+            if not expertise.replace(',','').isdigit():
+                return SimpleApiResponse("Expertise data invalid.")
+            expertise = expertise.split(',')
+            lawyers = Lawyer.objects.filter(lawyer_category__in = expertise, status=Lawyer.StatusList.ACTIVE).order_by("created_at").exclude(is_archived = True).distinct()
+        
         else:
             lawyers = Lawyer.objects.all().order_by("created_at").exclude(is_archived = True)
             
