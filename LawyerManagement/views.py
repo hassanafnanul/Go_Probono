@@ -4,7 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib import messages
-
+from datetime import datetime
 import string, random
 from pathlib import Path
 
@@ -218,6 +218,8 @@ def LawyerApprove(request, id, task_url="LawyerManagement", action="save"):
             lawyer = Lawyer.objects.get(id=id)
 
             lawyer.status = status
+            lawyer.status_changed_by = request.user.username
+            lawyer.status_changed_at = datetime.now().strftime("%Y-%M-%d %H:%M:%S")
             lawyer.save()
 
             messages.success(request, f'Lawyer Status Updated.')

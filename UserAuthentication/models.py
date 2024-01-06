@@ -79,7 +79,10 @@ class Lawyer(models.Model):
     lawyer_type=models.CharField(choices=LawyerType.choices,default=LawyerType.LAWYER, blank = True, max_length=9) #dr,cr
     status=models.CharField(choices=StatusList.choices,default=StatusList.PENDING, blank = True, max_length=15) #dr,cr
     balance = models.DecimalField(max_digits=15,decimal_places=2,default=0.00)
-    
+    status_changed_by = models.CharField(default='', max_length=100)
+    status_changed_at = models.CharField(default='', max_length=100)
+
+
     expiary_date = models.DateField(null=True, blank=True)
     warning_day = models.IntegerField(default=5, null=True, blank=True)
 
