@@ -100,27 +100,30 @@ def TimeExpired(time, limit):  # not implemented
 @csrf_exempt
 def RegisterUser(request):
     if request.method == 'POST':
-        json_data = json.loads(str(request.body, encoding='utf-8'))
-        name = json_data['name']
-        mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
-        email = json_data['email']
-        gender = json_data['gender']
-        password = make_password(json_data['password'])
-        
-        
-        if not mobile: # mobile == False
-            return SimpleApiResponse("Please Provide valid Number.")
+        try:
+            json_data = json.loads(str(request.body, encoding='utf-8'))
+            name = json_data['name']
+            mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
+            email = json_data['email']
+            gender = json_data['gender']
+            password = make_password(json_data['password'])
+            
+            
+            if not mobile: # mobile == False
+                return SimpleApiResponse("Please Provide valid Number.")
 
-        if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
-            return SimpleApiResponse("Mobile already exists.")
-
-
-        if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
-            return SimpleApiResponse("Email already exists.")
+            if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
+                return SimpleApiResponse("Mobile already exists.")
 
 
-        if gender not in ['Male', 'Female', 'Other']:
-            return SimpleApiResponse("Gender data error.")
+            if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
+                return SimpleApiResponse("Email already exists.")
+
+
+            if gender not in ['Male', 'Female', 'Other']:
+                return SimpleApiResponse("Gender data error.")
+        except:
+            return SimpleApiResponse("Please Provide valid data.")
         
 
         # ------------- OTP varification ------------
@@ -157,62 +160,65 @@ def RegisterUser(request):
 @csrf_exempt
 def RegisterLawyer(request, lawyerType):
     if request.method == 'POST':
-        json_data = json.loads(str(request.body, encoding='utf-8'))
+        try:
+            json_data = json.loads(str(request.body, encoding='utf-8'))
 
-        lawyer_type = lawyerType
+            lawyer_type = lawyerType
 
-        name = json_data['name']
-        mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
-        email = json_data['email']
-        gender = json_data['gender']
+            name = json_data['name']
+            mobile = isValidBangladehiNumber(json_data['mobile']) # if valid returns number else return False
+            email = json_data['email']
+            gender = json_data['gender']
 
-        apartment = json_data['apartment']
-        street_address = json_data['street_address']
-        area_slug = json_data['area_slug']
-        latitude = json_data['latitude']
-        longitude = json_data['longitude']
+            apartment = json_data['apartment']
+            street_address = json_data['street_address']
+            area_slug = json_data['area_slug']
+            latitude = json_data['latitude']
+            longitude = json_data['longitude']
 
-        payment_plan = json_data['payment_plan']
-        nid_or_tradelicense = json_data['nid_or_tradelicense']
-        bar_council_number = json_data['bar_council_number']
-        lawyer_category = json_data['lawyer_category']
-        lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
+            payment_plan = json_data['payment_plan']
+            nid_or_tradelicense = json_data['nid_or_tradelicense']
+            bar_council_number = json_data['bar_council_number']
+            lawyer_category = json_data['lawyer_category']
+            lawyer_categories = LawyerCategory.objects.filter(id__in=lawyer_category)
 
-        expiary_date = date.today()
+            expiary_date = date.today()
 
-        password = make_password(json_data['password'])
-        cardno = generate_login_token()
+            password = make_password(json_data['password'])
+            cardno = generate_login_token()
 
-        if not mobile: # mobile == False
-            return SimpleApiResponse("Please Provide valid Number.")
+            if not mobile: # mobile == False
+                return SimpleApiResponse("Please Provide valid Number.")
 
-        if lawyer_type == Lawyer.LawyerType.LAWYER:
-            id_prefix = "LWR"
-            nid = nid_or_tradelicense
-            tradelicense = None
-        elif lawyer_type == Lawyer.LawyerType.LAWFIRM:
-            id_prefix = "LWF"
-            nid = None
-            tradelicense = nid_or_tradelicense
-        else:
-            return SimpleApiResponse("URL mismatch.")
-
-
-        if not PaymentPlan.objects.filter(id = payment_plan).exists():
-            return SimpleApiResponse("Invalid Payment Plan.")
-
-        if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
-            return SimpleApiResponse("Mobile already exists.")
+            if lawyer_type == Lawyer.LawyerType.LAWYER:
+                id_prefix = "LWR"
+                nid = nid_or_tradelicense
+                tradelicense = None
+            elif lawyer_type == Lawyer.LawyerType.LAWFIRM:
+                id_prefix = "LWF"
+                nid = None
+                tradelicense = nid_or_tradelicense
+            else:
+                return SimpleApiResponse("URL mismatch.")
 
 
-        if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
-            return SimpleApiResponse("Email already exists.")
+            if not PaymentPlan.objects.filter(id = payment_plan).exists():
+                return SimpleApiResponse("Invalid Payment Plan.")
 
-        if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
-            return SimpleApiResponse("Gender data error.")
-        
-        if len(lawyer_categories) == 0:
-            return SimpleApiResponse("Invalid Lawyer Category.")
+            if Lawyer.objects.filter(mobile=mobile).exists() or Customer.objects.filter(mobile=mobile).exists():
+                return SimpleApiResponse("Mobile already exists.")
+
+
+            if Lawyer.objects.filter(email=email).exists() or Customer.objects.filter(email=email).exists():
+                return SimpleApiResponse("Email already exists.")
+
+            if gender not in ['Male', 'Female', 'Other'] and not lawyer_type == Lawyer.LawyerType.LAWFIRM:
+                return SimpleApiResponse("Gender data error.")
+            
+            if len(lawyer_categories) == 0:
+                return SimpleApiResponse("Invalid Lawyer Category.")
+        except:
+            return SimpleApiResponse("Please Provide valid data.")
 
 
 
@@ -922,8 +928,7 @@ class ProfileImage(APIView):
             return SimpleApiResponse("Something Went Wrong.")
         
 
-
-
 # user: GP19535QJRJ143ZHAU48615
 # lawyer: GP24249DFLS467VBNP68121
+
 
