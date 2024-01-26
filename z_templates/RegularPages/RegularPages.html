@@ -1,0 +1,120 @@
+{% extends "Common/base.html" %}
+{%block title%}
+<title>Regular Pages Management</title>
+{%endblock title%}
+{%block style%}
+<style>
+    .table th{
+        border-top: none;
+    }
+
+    .table thead th{
+        border-bottom: none;
+    }
+
+    .table td{
+        border-top: 0.5px solid #6F2FA1;
+    }
+
+    .table td, .table th {
+        vertical-align: inherit;
+    }
+    .module-searchbar {
+        border: 2px solid #A184D5;
+        border-radius: 24px;
+        overflow: hidden;
+        padding: 9px;
+        width: 250px;
+        margin-right: 10px;
+    }
+    form .submit {
+        width: 50px;
+        border-radius: 50px;
+    }
+</style>
+{%endblock%}
+
+
+{%block content%}
+{% include 'Common/sidebar.html' with data=cnav %}
+<div class="app-body mt-0">
+    <main class="main p-0">
+        {% include 'Common/navbar.html'%}
+        <div class="page_header"><span style="color: #000000">Regular Pages Management</span></div>
+        
+
+    {% include 'Common/taskbuttons.html'%}
+
+    {%if messages%}
+        {%for message in messages%}
+        <script type="text/javascript">
+            toastr["{{message.tags}}"]("{{message}}", "{{message.tags|upper}}");
+        </script>
+        {%endfor%}
+        {%endif%}
+        <div class="main_wrapper">
+            <div class="row mb-3">
+                <div class="col-8 d-flex">
+                    <a class="btn btn-success btn-sm p-2" href="{%url 'RegularPage'%}"><i class="icon-refresh"></i> Reload</a>
+                </div>
+            </div>
+
+            <!-- <form method="GET" style="display: flex; margin-top: 10px;">
+                <input type="text" name="pages" class="form-control form-control-sm" placeholder="Enter RegularPages Name"
+                       value="{{request.GET.pages}}">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form> -->
+
+            <div class="table-title"><h2 class="text-center">Total pages: {{pagess.paginator.count}}</h2></div>
+            <div class="table-responsive-sm p-4 bg-white">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Page Name</th>
+                        <th>Updated At</th>
+                        <th>Updated By</th>
+                        <th class="text-center">Operation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for page in pages %}
+                    <tr>
+                        <td>{{page.page_name}}</td>
+                        <td>{{page.created_at}}</td>
+                        <td>{{page.updated_by}}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                {%if privilege and privilege.view_task%}
+                                <a class="mr-3" href="{%url 'RegularPageView' page.id %}">
+                                    <i class="icon-eye"></i>
+                                </a>
+                                {%endif%}
+                                {%if privilege and privilege.edit_task%}
+                                <a class="mr-3" href="{%url 'RegularPageEdit' page.id %}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {%endif%}
+                            </div>
+                        </td>
+                    </tr>
+                    {%empty%}
+                    <tr class="odd">
+                        <td colspan="9" style="text-align: center;">No data available in table</td>
+                    </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+            {% include 'Common/pagination_with_filter.html' with data=pages request=request %}
+
+        </div>
+    </main>
+</div>
+{% include 'Common/footer.html'%}
+{%endblock %}
+
+{%block js%}
+{%endblock%}

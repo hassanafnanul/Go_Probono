@@ -34,6 +34,8 @@ urlpatterns = [
     path('appointment/',include('API.Appointment.urls')),
     
     path('payment/',include('API.Payment.urls')),
+    
+    path('regular-pages/',include('API.RegularPage.urls')),
 
 ]
 

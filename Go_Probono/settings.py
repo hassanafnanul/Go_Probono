@@ -47,7 +47,8 @@ DEVELOPED_APPS = [
     'Payment',
     'PaymentPlans',
     'PaymentMethod',
-    'CallHistory'
+    'CallHistory',
+    'RegularPages'
 ]
 
 INSTALLED_APPS = INITIAL_APPS + THIRD_PARTY_APPS + DEVELOPED_APPS
@@ -160,6 +161,30 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_REQUIRE_STAFF=False
+
+
+CKEDITOR_CONFIGS = {
+    'full': {
+        'toolbar': 'full',
+        'height': 300,
+    },
+    'default': {
+        'toolbar': 'Basic',
+        'height': 300,
+        'width': 300,
+    },
+    'short': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': 300,
+        'width': 300,
+    }
+}
 
 
 

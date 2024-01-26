@@ -51,6 +51,8 @@ urlpatterns = [
 
     path('address/', include('Address.urls')),
 
+    path('regular-page/', include('RegularPages.urls')),
+
 ]
 
 if settings.DEBUG:
