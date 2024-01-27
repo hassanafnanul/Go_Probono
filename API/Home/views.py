@@ -4,10 +4,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import SliderSerializer, Slider
-import json, datetime
+import json
 from django.http import Http404, JsonResponse, HttpResponseForbidden
 from rest_framework.decorators import api_view
 from django.db.models import Case, When, Value, BooleanField
+from datetime import datetime, date
 
 
 
@@ -28,15 +29,7 @@ def APItest(request):
 
 class SliderAPI(APIView):
     def get(self, request):
-        # slider = Slider.objects.all().order_by("order").exclude(is_archived = True)
-
         current_time = datetime.now()
-        # sliders = Slider.objects.all().order_by("order").annotate(isLive=
-        #     Case(
-        #         When(start_date__lte=current_time, end_date__gte=current_time, is_archived=False, then=Value(True)),
-        #         default=Value(False),
-        #         output_field=BooleanField()
-        #     )).exclude(is_archived = True, is_live = False)
         
         sliders = Slider.objects.filter(start_date__lte=current_time, end_date__gte=current_time).order_by("order").exclude(is_archived = True)
 
