@@ -7,8 +7,8 @@ from RegularPages.models import RegularPage
 class RegularPagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegularPage
-        #fields = ['page_name']
-        fields = '__all__'
+        fields = ['page_name', 'page_view']
+        # fields = '__all__'
 
 
 # class CallHistorySerializer(serializers.ModelSerializer):
